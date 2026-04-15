@@ -1,3 +1,6 @@
+
+
+
 <!DOCTYPE html>
 <html lang="pt-br">
 
@@ -6049,8 +6052,10 @@ tbody tr:last-child td { border-bottom: none !important; }
                     carregarPerfil(), carregarTiposExtintor(), carregarPermissoes(),
                     carregarVistoriasAgendadas(), carregarVistoriasRealizadas(), carregarVistoriasParaFazer()
                 ]);
+                // OS e Usuários disponíveis para todos os planos
+                await Promise.all([carregarUsuarios(), carregarOS()]);
                 if (estado.versao === 'premium') {
-                    await Promise.all([carregarLotes(), carregarLotesInmetro(), carregarUsuarios(), carregarOS()]);
+                    await Promise.all([carregarLotes(), carregarLotesInmetro()]);
                 }
                 atualizarConexaoUI(true);
                 renderizarTudo();
@@ -6606,7 +6611,6 @@ tbody tr:last-child td { border-bottom: none !important; }
             // Carregar config campos
             carregarConfigCampos();
             // NOVAS LINHAS: Renderizar controle de menu e aplicar config
-            // Renderizar controle de menu e aplicar configuração salva
             setTimeout(async () => {
                 await renderMenuControle();
                 await aplicarMenuConfig();
@@ -8908,20 +8912,22 @@ Responda APENAS com JSON: {"c1":"CODIGO1","c2":"CODIGO2","codU":"CODIGO1-CODIGO2
         // PERMISSÕES
         // ══════════════════════════════════════════════════════════════
         const ABA_DEFS = [
-            { id: 'extintores', label: 'Extintores', icon: 'fire-extinguisher' },
-            { id: 'clientes', label: 'Clientes', icon: 'user-tie' },
-            { id: 'empresas', label: 'Executoras', icon: 'building' },
-            { id: 'vendedores', label: 'Vendedores', icon: 'handshake' },
-            { id: 'etiquetas', label: 'Etiquetas', icon: 'tag' },
-            { id: 'lotes', label: 'Lotes de Selos', icon: 'tags' },
-            { id: 'consultas', label: 'Consultas', icon: 'search' },
-            { id: 'os', label: 'Ordens de Serviço', icon: 'file-invoice' },
-            { id: 'catalogo', label: 'Catálogo', icon: 'book-open' },
-            { id: 'idsetiquetas', label: 'IDs Etiquetas', icon: 'fingerprint' },
-            { id: 'logistica', label: 'Logística', icon: 'truck' },
-            { id: 'usuarios', label: 'Usuários', icon: 'users-cog' },
-            { id: 'perfil', label: 'Perfil', icon: 'id-card' },
-            { id: 'config', label: 'Configuração', icon: 'cog' }
+            { id: 'extintores',  label: 'Extintores',       icon: 'fire-extinguisher' },
+            { id: 'clientes',    label: 'Clientes',          icon: 'user-tie' },
+            { id: 'empresas',    label: 'Executoras',        icon: 'building' },
+            { id: 'vendedores',  label: 'Vendedores',        icon: 'handshake' },
+            { id: 'etiquetas',   label: 'Etiquetas',         icon: 'tag' },
+            { id: 'vistoria',    label: 'Vistoria',          icon: 'clipboard-list' },
+            { id: 'os',          label: 'Ordens de Serviço', icon: 'file-invoice' },
+            { id: 'catalogo',    label: 'Catálogo',          icon: 'book-open' },
+            { id: 'idsetiquetas',label: 'IDs Etiquetas',     icon: 'fingerprint' },
+            { id: 'consultas',   label: 'Consultas',         icon: 'search' },
+            { id: 'relatorios',  label: 'Relatórios',        icon: 'chart-bar' },
+            { id: 'lotes',       label: 'Lotes de Selos',    icon: 'tags' },
+            { id: 'logistica',   label: 'Logística',         icon: 'truck' },
+            { id: 'usuarios',    label: 'Usuários',          icon: 'users-cog' },
+            { id: 'perfil',      label: 'Perfil',            icon: 'id-card' },
+            { id: 'config',      label: 'Configuração',      icon: 'cog' }
         ];
         const LOCK_ADMIN = ['usuarios', 'perfil', 'config'];
         const LOCK_GERENTE = ['usuarios', 'config'];
@@ -8954,11 +8960,18 @@ Responda APENAS com JSON: {"c1":"CODIGO1","c2":"CODIGO2","codU":"CODIGO1-CODIGO2
         async function salvarPermissoesNivel(nivel) {
             const abas = estado.permissoes[nivel] || [];
             try {
-                const rows = await supa.getAll('permissoes_nivel', `nivel=eq.${nivel}&limit=1`);
-                if (rows && rows[0]) { await supa.update('permissoes_nivel', rows[0].id, { abas: JSON.stringify(abas) }); }
-                else { await supa.insert('permissoes_nivel', { nivel, abas: JSON.stringify(abas) }); }
-                notif('Permissões salvas para ' + nivel + '!', 'success');
-            } catch (e) { notif('Erro: ' + e.message, 'danger'); }
+                const base = supa._url.replace(/\/+$/, '');
+                const h = {'Content-Type':'application/json','apikey':supa._key,'Authorization':'Bearer '+supa._key,'Prefer':'return=representation'};
+                // PATCH por nivel (sem buscar id — evita problema de tipo)
+                const patch = await fetch(base+'/rest/v1/permissoes_nivel?nivel=eq.'+nivel,
+                    {method:'PATCH',headers:h,body:JSON.stringify({abas:abas})});
+                const patched = patch.ok ? await patch.json() : [];
+                if (!Array.isArray(patched)||!patched.length) {
+                    await fetch(base+'/rest/v1/permissoes_nivel',
+                        {method:'POST',headers:h,body:JSON.stringify({nivel:nivel,abas:abas})});
+                }
+                notif('✅ Permissões salvas para ' + nivel + '!', 'success');
+            } catch (e) { notif('Erro ao salvar permissões: ' + e.message, 'danger'); }
         }
 
         // ══════════════════════════════════════════════════════════════
@@ -9400,45 +9413,56 @@ Responda APENAS com JSON: {"c1":"CODIGO1","c2":"CODIGO2","codU":"CODIGO1-CODIGO2
         const ABAS_BLOQUEADAS_CTRL = ['usuarios', 'perfil', 'config'];
 
         // Carregar configuração do menu do Supabase
-        async function carregarMenuConfig() {
+        async function carregarMenuConfig(forceReload = false) {
+            if (!forceReload && window._menuConfigCache) return window._menuConfigCache;
             const LS = 'pci_menu_abas_ativas';
             try {
-                const res = await supa.getAll('config_sistema', 'chave=eq.menu_abas_ativas&limit=1');
-                if (res && res[0]) {
-                    let v = res[0].valor;
-                    if (typeof v === 'string') { try { v = JSON.parse(v); } catch(e) { console.warn('[Menu] parse:', e); } }
-                    if (Array.isArray(v) && v.length > 0) {
-                        try { localStorage.setItem(LS, JSON.stringify(v)); } catch(e) {}
-                        return v;
+                if (supa._url && supa._key) {
+                    const res = await supa.getAll('config_sistema', 'chave=eq.menu_abas_ativas&limit=1');
+                    if (res && res[0] && res[0].valor) {
+                        let v = res[0].valor;
+                        if (typeof v === 'string') { try { v = JSON.parse(v); } catch(e) {} }
+                        if (Array.isArray(v) && v.length > 0) {
+                            window._menuConfigCache = v;
+                            try { localStorage.setItem(LS, JSON.stringify(v)); } catch(e) {}
+                            return v;
+                        }
                     }
                 }
             } catch(e) { console.warn('[Menu] carregar:', e.message); }
             try {
                 const c = localStorage.getItem(LS);
-                if (c) { const a = JSON.parse(c); if (Array.isArray(a) && a.length) return a; }
+                if (c) { const a = JSON.parse(c); if (Array.isArray(a) && a.length) { window._menuConfigCache = a; return a; } }
             } catch(e) {}
-            return ABAS_MENU_CTRL.filter(a => !ABAS_BLOQUEADAS_CTRL.includes(a.id)).map(a => a.id);
+            const padrao = ABAS_MENU_CTRL.filter(a => !ABAS_BLOQUEADAS_CTRL.includes(a.id)).map(a => a.id);
+            window._menuConfigCache = padrao;
+            return padrao;
         }
 
         async function salvarMenuConfigSistema() {
-            const checks = document.querySelectorAll('#menuCtrlLista .menu-ctrl-row input[type="checkbox"]');
-            if (!checks || !checks.length) { notif('⚠️ Abra Configuração → Controle de Abas primeiro.','warning'); return; }
+            const container = document.getElementById('menuCtrlLista');
+            if (!container) { notif('⚠️ Elemento não encontrado.','warning'); return; }
+            const checks = container.querySelectorAll('.sw-wrap input[type="checkbox"]');
+            if (!checks || !checks.length) { notif('⚠️ Nenhuma aba encontrada.','warning'); return; }
             const abasAtivas = Array.from(checks).filter(c => c.checked).map(c => c.value);
+            window._menuConfigCache = abasAtivas;
             try { localStorage.setItem('pci_menu_abas_ativas', JSON.stringify(abasAtivas)); } catch(e) {}
             let supaOk = false;
             try {
-                const base = supa._url.replace(/\/+$/, '');
-                const h = {'Content-Type':'application/json','apikey':supa._key,'Authorization':'Bearer '+supa._key,'Prefer':'return=representation'};
-                const patch = await fetch(base+'/rest/v1/config_sistema?chave=eq.menu_abas_ativas',
-                    {method:'PATCH',headers:h,body:JSON.stringify({valor:abasAtivas})});
-                const patched = patch.ok ? await patch.json() : [];
-                if (Array.isArray(patched) && patched.length > 0) { supaOk = true; }
-                else {
-                    const post = await fetch(base+'/rest/v1/config_sistema',
-                        {method:'POST',headers:h,body:JSON.stringify({chave:'menu_abas_ativas',valor:abasAtivas})});
-                    supaOk = post.ok;
+                if (supa._url && supa._key) {
+                    const base = supa._url.replace(/\/+$/, '');
+                    const h = {'Content-Type':'application/json','apikey':supa._key,'Authorization':'Bearer '+supa._key,'Prefer':'return=representation'};
+                    const patch = await fetch(base+'/rest/v1/config_sistema?chave=eq.menu_abas_ativas',
+                        {method:'PATCH',headers:h,body:JSON.stringify({valor:abasAtivas})});
+                    const patched = patch.ok ? await patch.json() : [];
+                    if (Array.isArray(patched) && patched.length > 0) { supaOk = true; }
+                    else {
+                        const post = await fetch(base+'/rest/v1/config_sistema',
+                            {method:'POST',headers:h,body:JSON.stringify({chave:'menu_abas_ativas',valor:abasAtivas})});
+                        supaOk = post.ok;
+                    }
                 }
-            } catch(e) { console.warn('[Menu] salvar:', e.message); notif('⚠️ Configuração salva apenas localmente.','warning'); }
+            } catch(e) { console.warn('[Menu] salvar:', e.message); }
             _aplicarVisibilidadeMenu(abasAtivas);
             await renderMenuControle();
             notif((supaOk?'✅ ':'💾 ')+abasAtivas.length+' abas '+(supaOk?'salvas!':'salvas localmente!'),'success');
@@ -9446,16 +9470,19 @@ Responda APENAS com JSON: {"c1":"CODIGO1","c2":"CODIGO2","codU":"CODIGO1-CODIGO2
 
         async function resetarMenuConfig() {
             const abasPadrao = ABAS_MENU_CTRL.filter(a => !ABAS_BLOQUEADAS_CTRL.includes(a.id)).map(a => a.id);
+            window._menuConfigCache = abasPadrao;
             try { localStorage.setItem('pci_menu_abas_ativas', JSON.stringify(abasPadrao)); } catch(e) {}
             try {
-                const base = supa._url.replace(/\/+$/, '');
-                const h = {'Content-Type':'application/json','apikey':supa._key,'Authorization':'Bearer '+supa._key,'Prefer':'return=representation'};
-                const patch = await fetch(base+'/rest/v1/config_sistema?chave=eq.menu_abas_ativas',
-                    {method:'PATCH',headers:h,body:JSON.stringify({valor:abasPadrao})});
-                const patched = patch.ok ? await patch.json() : [];
-                if (!Array.isArray(patched)||!patched.length) {
-                    await fetch(base+'/rest/v1/config_sistema',
-                        {method:'POST',headers:h,body:JSON.stringify({chave:'menu_abas_ativas',valor:abasPadrao})});
+                if (supa._url && supa._key) {
+                    const base = supa._url.replace(/\/+$/, '');
+                    const h = {'Content-Type':'application/json','apikey':supa._key,'Authorization':'Bearer '+supa._key,'Prefer':'return=representation'};
+                    const patch = await fetch(base+'/rest/v1/config_sistema?chave=eq.menu_abas_ativas',
+                        {method:'PATCH',headers:h,body:JSON.stringify({valor:abasPadrao})});
+                    const patched = patch.ok ? await patch.json() : [];
+                    if (!Array.isArray(patched)||!patched.length) {
+                        await fetch(base+'/rest/v1/config_sistema',
+                            {method:'POST',headers:h,body:JSON.stringify({chave:'menu_abas_ativas',valor:abasPadrao})});
+                    }
                 }
             } catch(e) { console.warn('[Menu] reset:', e.message); }
             _aplicarVisibilidadeMenu(abasPadrao);
@@ -9473,7 +9500,7 @@ Responda APENAS com JSON: {"c1":"CODIGO1","c2":"CODIGO2","codU":"CODIGO1-CODIGO2
                 if (!tabId) return;
                 if (ABAS_ADMIN.includes(tabId)) return;
                 if (ABAS_PREMIUM.includes(tabId) && !isPremium) { el.style.display='none'; return; }
-                el.style.display = ativasSet.has(tabId) ? '' : 'none';
+                el.style.display = ativasSet.has(tabId) ? 'flex' : 'none';
             });
         }
 
@@ -9485,7 +9512,7 @@ Responda APENAS com JSON: {"c1":"CODIGO1","c2":"CODIGO2","codU":"CODIGO1-CODIGO2
         async function renderMenuControle() {
             const container = document.getElementById('menuCtrlLista');
             if (!container) { console.warn('[Menu] #menuCtrlLista não encontrado'); return; }
-            const abasAtivas = await carregarMenuConfig();
+            const abasAtivas = await carregarMenuConfig(true); // sempre recarrega ao abrir painel
             const abasAtivasSet = new Set(abasAtivas);
             const grupos = {};
             ABAS_MENU_CTRL.forEach(aba => {
