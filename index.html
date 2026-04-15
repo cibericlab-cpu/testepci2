@@ -1,11 +1,13 @@
-
-
-
 <!DOCTYPE html>
 <html lang="pt-br">
 
 <head>
     <meta charset="UTF-8">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="PCI Manager">
+    <meta name="theme-color" content="#0d2137">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
     <title>PCI Manager Pro - Gestão Completa de Extintores</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
@@ -2152,6 +2154,70 @@
                 transform: translate(-50%, -50%) scale(1);
                 opacity: 1
             }
+        }
+
+        
+        /* ── CONTROLE DE ABAS DO MENU ── */
+        .mc-group-label {
+            display: flex; align-items: center; gap: 10px;
+            margin: 20px 0 10px; font-size: .65rem; font-weight: 800;
+            text-transform: uppercase; letter-spacing: 1.2px; color: #94a3b8;
+        }
+        .mc-group-label::after { content:''; flex:1; height:1px; background:#e8eef5; }
+        .mc-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 8px; margin-bottom: 4px;
+        }
+        .mc-card {
+            display: flex; align-items: center; gap: 12px;
+            padding: 12px 14px; border-radius: 14px; cursor: pointer;
+            border: 2px solid transparent; transition: all .18s cubic-bezier(.4,0,.2,1);
+            user-select: none; position: relative; overflow: hidden;
+        }
+        .mc-on {
+            background: linear-gradient(135deg, #eff6ff, #dbeafe);
+            border-color: #2a5c9a;
+            box-shadow: 0 2px 8px rgba(42,92,154,.12);
+        }
+        .mc-off {
+            background: #f8fafd; border-color: #e2eaf2;
+            opacity: .65;
+        }
+        .mc-card:hover { transform: translateY(-1px); box-shadow: 0 4px 14px rgba(0,0,0,.1); opacity: 1 !important; }
+        .mc-card-icon {
+            width: 36px; height: 36px; border-radius: 10px; flex-shrink: 0;
+            display: flex; align-items: center; justify-content: center; font-size: .9rem;
+            transition: all .18s;
+        }
+        .mc-on .mc-card-icon { background: linear-gradient(135deg,#1e3b5a,#2a5c9a); color: #fff; }
+        .mc-off .mc-card-icon { background: #e8eef5; color: #9ca3af; }
+        .mc-card-body { flex: 1; min-width: 0; }
+        .mc-card-name { font-size: .82rem; font-weight: 700; color: #0d2137; margin-bottom: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .mc-off .mc-card-name { color: #9ca3af; }
+        .mc-card-desc { font-size: .7rem; color: #9ca3af; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .mc-toggle {
+            width: 28px; height: 16px; border-radius: 16px; flex-shrink: 0;
+            transition: background .18s; position: relative;
+        }
+        .mc-on .mc-toggle { background: #1e3b5a; }
+        .mc-off .mc-toggle { background: #d1d5db; }
+        .mc-toggle-dot {
+            position: absolute; width: 12px; height: 12px; border-radius: 50%;
+            background: #fff; top: 2px; transition: left .18s;
+            box-shadow: 0 1px 3px rgba(0,0,0,.2);
+        }
+        .mc-on .mc-toggle-dot { left: 14px; }
+        .mc-off .mc-toggle-dot { left: 2px; }
+        .mc-toolbar {
+            display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+            margin-bottom: 16px; padding: 10px 14px;
+            background: #f8fafd; border-radius: 10px; border: 1px solid #e8eef5;
+        }
+        .mc-count {
+            margin-left: auto; font-size: .76rem; font-weight: 600;
+            color: #2a5c9a; background: #dbeafe; padding: 3px 10px;
+            border-radius: 20px;
         }
 
         </style>
@@ -5275,7 +5341,38 @@
                         </div>
                     </div>
 
-                    
+
+                    <!-- ══ CONTROLE DE ABAS DO MENU ══ -->
+                    <div class="card config-section" style="margin-bottom:20px;" id="cardMenuCtrl">
+                        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;flex-wrap:wrap;gap:10px;">
+                            <h2 style="margin-bottom:0;"><i class="fas fa-sliders-h" style="color:#1D9E75;"></i> Controle de Abas do Menu</h2>
+                            <span id="mcVisCount" style="font-size:.76rem;font-weight:600;color:#2a5c9a;background:#dbeafe;padding:3px 12px;border-radius:20px;"></span>
+                        </div>
+                        <p style="font-size:.82rem;color:#6b7280;margin-bottom:14px;line-height:1.6;">
+                            Selecione quais abas ficam <strong>visíveis</strong> no menu lateral.
+                            Abas desmarcadas ficam ocultas para todos os usuários.
+                            <br><span style="color:#f59e0b;font-weight:600;"><i class="fas fa-lock" style="font-size:.72rem;"></i> Config, Perfil e Usuários são sempre visíveis.</span>
+                        </p>
+                        <!-- Toolbar -->
+                        <div class="mc-toolbar">
+                            <button type="button" onclick="menuToggleTodos(true)" class="secondary small" style="margin:0;"><i class="fas fa-check-double"></i> Marcar todas</button>
+                            <button type="button" onclick="menuToggleTodos(false)" class="secondary small" style="margin:0;"><i class="fas fa-times"></i> Desmarcar todas</button>
+                            <span class="mc-count" id="mcContAtivo">— abas ativas</span>
+                        </div>
+                        <!-- Grid de cards -->
+                        <div id="menuCtrlContainer">
+                            <div style="text-align:center;padding:30px;color:#9ca3af;">
+                                <span class="loading-spinner"></span>
+                                <div style="margin-top:10px;font-size:.82rem;">Carregando configuração...</div>
+                            </div>
+                        </div>
+                        <!-- Botões de ação -->
+                        <div style="display:flex;gap:10px;margin-top:20px;padding-top:16px;border-top:1px solid #e8eef5;flex-wrap:wrap;">
+                            <button id="btnMenuSalvar" onclick="menuSalvarClick()" class="success"><i class="fas fa-save"></i> Salvar Menu</button>
+                            <button id="btnMenuRestaurar" onclick="menuRestaurarPadrao()" class="secondary"><i class="fas fa-redo"></i> Restaurar Padrão</button>
+                        </div>
+                    </div>
+
                     <div class="app-footer">
                         <p><i class="fas fa-copyright"></i> 2026 &nbsp;·&nbsp; <strong>ciberic.lab</strong>
                             &nbsp;·&nbsp; PCI Manager Pro</p>
@@ -5908,7 +6005,7 @@
             // Ao entrar em OS, renderizar lista
             if (aba === 'os') renderizarOS();
             // Ao entrar em config, renderizar permissões, tipos e controle de menu
-            if (aba === 'config') { renderTiposLista(); }
+            if (aba === 'config') { renderTiposLista(); menuRenderPainel().then(() => atualizarContadorMenu()); }
         }
 
         function fecharModal() { document.getElementById('editModal').classList.add('hidden'); }
@@ -6143,7 +6240,10 @@
             carregarTudo();
             // Carregar config campos
             carregarConfigCampos();
-            // Menu: sem controle central de abas
+            // Aplicar visibilidade do menu (carrega do Supabase/localStorage)
+            setTimeout(async () => {
+                await menuAplicar();
+            }, 600);
         }
 
         // Verifica se nível atual tem permissão para uma aba
@@ -8425,6 +8525,208 @@ Responda APENAS com JSON: {"c1":"CODIGO1","c2":"CODIGO2","codU":"CODIGO1-CODIGO2
         function mostrarAddTipoInline() { document.getElementById('addTipoInlineWrap').style.display = 'block'; document.getElementById('novoTipoInput').focus(); }
         async function confirmarNovoTipo() { const v = (document.getElementById('novoTipoInput')?.value || '').toUpperCase().trim(); if (!v) return; if (!estado.tiposExtintor.includes(v)) { estado.tiposExtintor.push(v); await supa.upsert('config_sistema', { chave: 'tipos_extintor', valor: JSON.stringify(estado.tiposExtintor) }, 'chave'); renderTiposSelect(); } document.getElementById('tipo').value = v; document.getElementById('addTipoInlineWrap').style.display = 'none'; notif('Tipo adicionado!', 'success'); }
 
+
+        // ══════════════════════════════════════════════════════════════
+        // CONTROLE DE ABAS DO MENU — definição e funções
+        // ══════════════════════════════════════════════════════════════
+        const MENU_ABAS = [
+            // Cadastros
+            { id:'extintores',   label:'Extintores',       icon:'fa-fire-extinguisher', grupo:'Cadastros',   desc:'Cadastro e gestão de extintores' },
+            { id:'clientes',     label:'Clientes',          icon:'fa-user-tie',           grupo:'Cadastros',   desc:'Base de clientes' },
+            { id:'empresas',     label:'Executoras',        icon:'fa-building',           grupo:'Cadastros',   desc:'Empresas executoras' },
+            { id:'vendedores',   label:'Vendedores',        icon:'fa-handshake',          grupo:'Cadastros',   desc:'Equipe de vendas' },
+            // Operações
+            { id:'etiquetas',    label:'Etiquetas',         icon:'fa-tag',                grupo:'Operações',   desc:'Gerar e imprimir etiquetas QR' },
+            { id:'vistoria',     label:'Vistoria',          icon:'fa-clipboard-list',     grupo:'Operações',   desc:'Agendamento e realização de vistorias' },
+            { id:'os',           label:'Ordens de Serviço', icon:'fa-file-invoice',       grupo:'Operações',   desc:'Gestão de OS' },
+            { id:'catalogo',     label:'Catálogo',          icon:'fa-book-open',          grupo:'Operações',   desc:'Itens e serviços' },
+            { id:'idsetiquetas', label:'IDs Etiquetas',     icon:'fa-fingerprint',        grupo:'Operações',   desc:'Consultar IDs gerados' },
+            { id:'consultas',    label:'Consultas',         icon:'fa-search',             grupo:'Operações',   desc:'Filtros avançados de extintores' },
+            { id:'relatorios',   label:'Relatórios',        icon:'fa-chart-bar',          grupo:'Operações',   desc:'Relatórios INMETRO Anexo P e O' },
+            // Premium
+            { id:'lotes',        label:'Lotes de Selos',   icon:'fa-tags',               grupo:'Premium',     desc:'Gerenciar lotes e ranges de selos' },
+            { id:'logistica',    label:'Logística',         icon:'fa-truck',              grupo:'Premium',     desc:'Rotas e entregas' },
+        ];
+        // Abas PROTEGIDAS — sempre visíveis (não entram no controle)
+        const MENU_ABAS_PROTEGIDAS = ['usuarios','perfil','config'];
+
+        // ── Estado das abas (carregado do Supabase/localStorage) ──
+        let _menuAbasVisiveis = null; // null = ainda não carregou
+
+        // ── Carregar configuração salva ──
+        async function menuCarregar(forceReload = false) {
+            if (!forceReload && _menuAbasVisiveis !== null) return _menuAbasVisiveis;
+            const LS = 'pci_abas_visiveis';
+            try {
+                if (supa._url && supa._key) {
+                    const res = await supa.getAll('config_sistema','chave=eq.abas_visiveis&limit=1');
+                    if (res && res[0]) {
+                        let v = res[0].valor;
+                        if (typeof v === 'string') { try { v = JSON.parse(v); } catch(e){} }
+                        if (Array.isArray(v) && v.length > 0) {
+                            _menuAbasVisiveis = v;
+                            try { localStorage.setItem(LS, JSON.stringify(v)); } catch(e){}
+                            return v;
+                        }
+                    }
+                }
+            } catch(e) { console.warn('[Menu] fetch:', e.message); }
+            // Fallback localStorage
+            try {
+                const c = localStorage.getItem(LS);
+                if (c) { const a = JSON.parse(c); if (Array.isArray(a) && a.length) { _menuAbasVisiveis = a; return a; } }
+            } catch(e) {}
+            // Padrão: todas visíveis
+            const todas = MENU_ABAS.map(a => a.id);
+            _menuAbasVisiveis = todas;
+            return todas;
+        }
+
+        // ── Salvar no Supabase + localStorage ──
+        async function menuSalvar(abasVisiveis) {
+            _menuAbasVisiveis = abasVisiveis;
+            try { localStorage.setItem('pci_abas_visiveis', JSON.stringify(abasVisiveis)); } catch(e){}
+            let supaOk = false;
+            try {
+                if (supa._url && supa._key) {
+                    const base = supa._url.replace(/\/+$/, '');
+                    const h = { 'Content-Type':'application/json', 'apikey':supa._key, 'Authorization':'Bearer '+supa._key, 'Prefer':'return=representation' };
+                    const patch = await fetch(base+'/rest/v1/config_sistema?chave=eq.abas_visiveis',
+                        { method:'PATCH', headers:h, body:JSON.stringify({ valor:abasVisiveis }) });
+                    const patched = patch.ok ? await patch.json() : [];
+                    if (Array.isArray(patched) && patched.length > 0) { supaOk = true; }
+                    else {
+                        const post = await fetch(base+'/rest/v1/config_sistema',
+                            { method:'POST', headers:h, body:JSON.stringify({ chave:'abas_visiveis', valor:abasVisiveis }) });
+                        supaOk = post.ok;
+                    }
+                }
+            } catch(e) { console.warn('[Menu] salvar:', e.message); }
+            return supaOk;
+        }
+
+        // ── Aplicar visibilidade no sidebar ──
+        async function menuAplicar(abasVisiveis) {
+            if (!abasVisiveis) abasVisiveis = await menuCarregar();
+            const visSet = new Set(abasVisiveis);
+            const isPremium = estado.versao === 'premium';
+            document.querySelectorAll('.sidebar-nav .nav-item[data-tab]').forEach(el => {
+                const id = el.dataset.tab;
+                if (!id) return;
+                if (MENU_ABAS_PROTEGIDAS.includes(id)) return; // nunca esconde protegidas
+                if ((id === 'lotes' || id === 'logistica') && !isPremium) { el.style.display = 'none'; return; }
+                el.style.display = visSet.has(id) ? 'flex' : 'none';
+            });
+        }
+
+        // ── Renderizar painel de controle ──
+        async function menuRenderPainel() {
+            const container = document.getElementById('menuCtrlContainer');
+            if (!container) return;
+            const visiveis = await menuCarregar(true); // sempre busca atual
+            const visSet = new Set(visiveis);
+            const isPremium = estado.versao === 'premium';
+            const grupos = {};
+            MENU_ABAS.forEach(a => {
+                // Premium: só mostrar se for premium
+                if ((a.id === 'lotes' || a.id === 'logistica') && !isPremium) return;
+                if (!grupos[a.grupo]) grupos[a.grupo] = [];
+                grupos[a.grupo].push(a);
+            });
+            let h = '';
+            for (const [grupo, abas] of Object.entries(grupos)) {
+                h += `<div class="mc-group-label"><span>${grupo}</span></div>`;
+                h += `<div class="mc-grid">`;
+                abas.forEach(a => {
+                    const on = visSet.has(a.id);
+                    h += `<label class="mc-card ${on ? 'mc-on' : 'mc-off'}" data-id="${a.id}">
+                        <input type="checkbox" value="${a.id}" ${on ? 'checked' : ''} class="mc-chk" style="display:none">
+                        <div class="mc-card-icon"><i class="fas ${a.icon}"></i></div>
+                        <div class="mc-card-body">
+                            <div class="mc-card-name">${a.label}</div>
+                            <div class="mc-card-desc">${a.desc}</div>
+                        </div>
+                        <div class="mc-toggle">
+                            <span class="mc-toggle-dot"></span>
+                        </div>
+                    </label>`;
+                });
+                h += `</div>`;
+            }
+            container.innerHTML = h;
+            // Evento click nos cards
+            container.querySelectorAll('.mc-card').forEach(card => {
+                card.addEventListener('click', function() {
+                    const chk = this.querySelector('.mc-chk');
+                    chk.checked = !chk.checked;
+                    this.classList.toggle('mc-on', chk.checked);
+                    this.classList.toggle('mc-off', !chk.checked);
+                    setTimeout(atualizarContadorMenu, 10);
+                });
+            });
+            // Atualizar contador inicial
+            setTimeout(atualizarContadorMenu, 50);
+        }
+
+        // ── Salvar clicado ──
+        async function menuSalvarClick() {
+            const container = document.getElementById('menuCtrlContainer');
+            if (!container) return;
+            const checks = container.querySelectorAll('.mc-chk:checked');
+            const visiveis = Array.from(checks).map(c => c.value);
+            if (visiveis.length === 0) { notif('⚠️ Selecione ao menos uma aba', 'warning'); return; }
+            const btn = document.getElementById('btnMenuSalvar');
+            if (btn) { btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Salvando...'; }
+            const supaOk = await menuSalvar(visiveis);
+            await menuAplicar(visiveis);
+            await menuRenderPainel(); // re-renderiza com estado salvo
+            if (btn) { btn.disabled = false; btn.innerHTML = '<i class="fas fa-save"></i> Salvar Menu'; }
+            atualizarContadorMenu();
+            notif((supaOk ? '✅ Menu salvo!' : '💾 Menu salvo localmente!'), supaOk ? 'success' : 'warning');
+        }
+
+        // ── Restaurar padrão ──
+        async function menuRestaurarPadrao() {
+            const todas = MENU_ABAS.map(a => a.id);
+            const btn = document.getElementById('btnMenuRestaurar');
+            if (btn) { btn.disabled = true; }
+            await menuSalvar(todas);
+            await menuAplicar(todas);
+            await menuRenderPainel();
+            if (btn) { btn.disabled = false; }
+            notif('✅ Menu restaurado para o padrão!', 'success');
+        }
+
+
+        function atualizarContadorMenu() {
+            const container = document.getElementById('menuCtrlContainer');
+            const el = document.getElementById('mcContAtivo');
+            if (!container || !el) return;
+            const total = container.querySelectorAll('.mc-chk').length;
+            const ativos = container.querySelectorAll('.mc-chk:checked').length;
+            el.textContent = ativos + '/' + total + ' abas ativas';
+            const badge = document.getElementById('mcVisCount');
+            if (badge) badge.textContent = ativos + ' visíveis';
+            // Atualizar ao marcar/desmarcar
+            container.querySelectorAll('.mc-card').forEach(card => {
+                card.addEventListener('click', function() {
+                    setTimeout(atualizarContadorMenu, 10);
+                }, { once: false });
+            });
+        }
+
+        // ── Selecionar/Deselecionar todos ──
+        function menuToggleTodos(sel) {
+            const container = document.getElementById('menuCtrlContainer');
+            if (!container) return;
+            container.querySelectorAll('.mc-card').forEach(card => {
+                const chk = card.querySelector('.mc-chk');
+                chk.checked = sel;
+                card.classList.toggle('mc-on', sel);
+                card.classList.toggle('mc-off', !sel);
+            });
+        }
+
         // ══════════════════════════════════════════════════════════════
         // PERFIL - LOGO
         // ══════════════════════════════════════════════════════════════
@@ -9513,6 +9815,16 @@ Responda APENAS com JSON: {"c1":"CODIGO1","c2":"CODIGO2","codU":"CODIGO1-CODIGO2
 })();
 </script>
 
+
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                    .then(r  => console.log('[SW] OK:', r.scope))
+                    .catch(e => console.warn('[SW] Falhou:', e.message));
+            });
+        }
+    </script>
 </body>
 
 </html>
