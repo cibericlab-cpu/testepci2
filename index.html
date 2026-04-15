@@ -1,3 +1,6 @@
+
+
+
 <!DOCTYPE html>
 <html lang="pt-br">
 
@@ -2219,6 +2222,21 @@
             color: #2a5c9a; background: #dbeafe; padding: 3px 10px;
             border-radius: 20px;
         }
+
+        
+        /* ── CARD PERMISSÕES POR NÍVEL ── */
+        .perm-row {
+            display: flex; align-items: center; gap: 7px;
+            padding: 5px 8px; border-radius: 7px; font-size: .78rem;
+            font-weight: 600; margin-bottom: 4px;
+        }
+        .perm-row::before { content: ''; width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+        .perm-ok    { color: #15803d; background: rgba(21,128,61,.08); }
+        .perm-ok::before { background: #22c55e; }
+        .perm-block { color: #dc2626; background: rgba(220,38,38,.07); }
+        .perm-block::before { background: #ef4444; }
+        .perm-no    { color: #92400e; background: rgba(245,158,11,.08); }
+        .perm-no::before { background: #f59e0b; }
 
         </style>
 </head>
@@ -5173,8 +5191,103 @@
 
                 <!-- ══ CONFIGURAÇÃO ══ -->
                 <div id="configTab" class="tab-content">
-                    <!-- Conexão Supabase -->
-                    <div class="card config-section" style="margin-bottom:20px;">
+
+                    <!-- ══ TABELA DE PERMISSÕES POR NÍVEL ══ -->
+                    <div class="card config-section" id="cardPermissoes" style="margin-bottom:20px;">
+                        <h2><i class="fas fa-shield-alt" style="color:#7c3aed;"></i> Níveis de Acesso e Permissões</h2>
+                        <p style="font-size:.82rem;color:#6b7280;margin-bottom:18px;line-height:1.6;">
+                            Regras fixas do sistema — definem o que cada nível pode ver e fazer.
+                        </p>
+
+                        <!-- Legenda -->
+                        <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px;">
+                            <span style="display:inline-flex;align-items:center;gap:5px;font-size:.76rem;font-weight:600;color:#15803d;"><i class="fas fa-check-circle"></i> Permitido</span>
+                            <span style="display:inline-flex;align-items:center;gap:5px;font-size:.76rem;font-weight:600;color:#dc2626;"><i class="fas fa-times-circle"></i> Bloqueado</span>
+                            <span style="display:inline-flex;align-items:center;gap:5px;font-size:.76rem;font-weight:600;color:#f59e0b;"><i class="fas fa-eye-slash"></i> Oculto</span>
+                            <span style="display:inline-flex;align-items:center;gap:5px;font-size:.76rem;font-weight:600;color:#6b7280;"><i class="fas fa-minus"></i> N/A</span>
+                        </div>
+
+                        <!-- Cards por nível -->
+                        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;">
+
+                            <!-- SuperAdmin -->
+                            <div style="border-radius:14px;border:2px solid #dc2626;background:linear-gradient(135deg,#fff5f5,#fef2f2);padding:16px;">
+                                <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">
+                                    <span style="background:#dc2626;color:#fff;padding:3px 12px;border-radius:20px;font-size:.72rem;font-weight:800;letter-spacing:.5px;">⭐ SUPERADMIN</span>
+                                </div>
+                                <div style="font-size:.8rem;color:#4a5b6e;margin-bottom:10px;">Acesso <strong>irrestrito</strong> a tudo.</div>
+                                <div class="perm-row perm-ok">Todas as abas</div>
+                                <div class="perm-row perm-ok">Configuração completa</div>
+                                <div class="perm-row perm-ok">Editar registros</div>
+                                <div class="perm-row perm-ok">Excluir registros</div>
+                                <div class="perm-row perm-ok">Criar usuários</div>
+                                <div class="perm-row perm-ok">Controle de menu</div>
+                            </div>
+
+                            <!-- Admin -->
+                            <div style="border-radius:14px;border:2px solid #f59e0b;background:linear-gradient(135deg,#fffbeb,#fef9c3);padding:16px;">
+                                <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">
+                                    <span style="background:#f59e0b;color:#fff;padding:3px 12px;border-radius:20px;font-size:.72rem;font-weight:800;letter-spacing:.5px;">🛡 ADMIN</span>
+                                </div>
+                                <div style="font-size:.8rem;color:#4a5b6e;margin-bottom:10px;">Todas as abas. Config <strong>limitada</strong>.</div>
+                                <div class="perm-row perm-ok">Todas as abas do menu</div>
+                                <div class="perm-row perm-ok">Editar e excluir</div>
+                                <div class="perm-row perm-ok">Criar usuários</div>
+                                <div class="perm-row perm-ok">Tipos de Extintor</div>
+                                <div class="perm-row perm-no"><i class="fas fa-eye-slash" style="width:12px;"></i> Supabase / IA / Menu</div>
+                                <div class="perm-row perm-ok">Vendedores</div>
+                            </div>
+
+                            <!-- Gerente -->
+                            <div style="border-radius:14px;border:2px solid #0080C7;background:linear-gradient(135deg,#eff6ff,#dbeafe);padding:16px;">
+                                <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">
+                                    <span style="background:#0080C7;color:#fff;padding:3px 12px;border-radius:20px;font-size:.72rem;font-weight:800;letter-spacing:.5px;">👔 GERENTE</span>
+                                </div>
+                                <div style="font-size:.8rem;color:#4a5b6e;margin-bottom:10px;">Operação completa, sem Config.</div>
+                                <div class="perm-row perm-ok">Editar e excluir</div>
+                                <div class="perm-row perm-ok">Vendedores</div>
+                                <div class="perm-row perm-ok">Todas abas operacionais</div>
+                                <div class="perm-row perm-block"><i class="fas fa-times-circle" style="width:12px;"></i> Configuração</div>
+                                <div class="perm-row perm-block"><i class="fas fa-times-circle" style="width:12px;"></i> Perfil</div>
+                                <div class="perm-row perm-block"><i class="fas fa-times-circle" style="width:12px;"></i> Usuários</div>
+                            </div>
+
+                            <!-- Operador -->
+                            <div style="border-radius:14px;border:2px solid #10b981;background:linear-gradient(135deg,#ecfdf5,#d1fae5);padding:16px;">
+                                <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">
+                                    <span style="background:#10b981;color:#fff;padding:3px 12px;border-radius:20px;font-size:.72rem;font-weight:800;letter-spacing:.5px;">👷 OPERADOR</span>
+                                </div>
+                                <div style="font-size:.8rem;color:#4a5b6e;margin-bottom:10px;">Somente <strong>visualização</strong>.</div>
+                                <div class="perm-row perm-ok">Ver extintores, clientes…</div>
+                                <div class="perm-row perm-ok">Gerar etiquetas</div>
+                                <div class="perm-row perm-block"><i class="fas fa-times-circle" style="width:12px;"></i> Editar / Excluir</div>
+                                <div class="perm-row perm-block"><i class="fas fa-times-circle" style="width:12px;"></i> Vendedores</div>
+                                <div class="perm-row perm-block"><i class="fas fa-times-circle" style="width:12px;"></i> Config / Perfil / Usuários</div>
+                                <div class="perm-row perm-block"><i class="fas fa-times-circle" style="width:12px;"></i> Criar / Cadastrar</div>
+                            </div>
+
+                        </div><!-- /grid -->
+
+                        <!-- Tabela resumo compacta -->
+                        <div style="margin-top:20px;overflow-x:auto;border-radius:12px;border:1px solid #e8eef5;">
+                            <table style="width:100%;border-collapse:collapse;font-size:.78rem;">
+                                <thead>
+                                    <tr style="background:linear-gradient(135deg,#f8fafd,#f0f4f8);">
+                                        <th style="padding:10px 14px;text-align:left;font-weight:700;color:#374151;border-bottom:2px solid #e8eef5;">Recurso</th>
+                                        <th style="padding:10px 8px;text-align:center;font-weight:700;color:#dc2626;border-bottom:2px solid #e8eef5;white-space:nowrap;">⭐ SuperAdmin</th>
+                                        <th style="padding:10px 8px;text-align:center;font-weight:700;color:#d97706;border-bottom:2px solid #e8eef5;white-space:nowrap;">🛡 Admin</th>
+                                        <th style="padding:10px 8px;text-align:center;font-weight:700;color:#0080C7;border-bottom:2px solid #e8eef5;white-space:nowrap;">👔 Gerente</th>
+                                        <th style="padding:10px 8px;text-align:center;font-weight:700;color:#10b981;border-bottom:2px solid #e8eef5;white-space:nowrap;">👷 Operador</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tbodyPermissoes">
+                                </tbody>
+                            </table>
+                        </div>
+                        <p style="font-size:.74rem;color:#9ca3af;margin-top:10px;"><i class="fas fa-info-circle"></i> Estas regras são fixas no sistema e não podem ser alteradas pelo painel.</p>
+                    </div>
+
+                    <div class="card config-section" id="cardSupa" style="margin-bottom:20px;">
                         <h2><i class="fas fa-database" style="color:#0e8a3e;"></i> Conexão Supabase</h2>
                         <div class="supa-field-group">
                             <div class="grid-2">
@@ -5225,7 +5338,7 @@
                     </div>
 
                     <!-- Integração IA -->
-                    <div class="card config-section" style="margin-bottom:20px;">
+                    <div class="card config-section" id="cardIA" style="margin-bottom:20px;">
                         <h2><i class="fas fa-robot" style="color:#7c3aed;"></i> Integração com IA (Groq)</h2>
                         <div class="info-box"
                             style="margin-bottom:16px;background:#f5f3ff;border-color:#ddd6fe;color:#4c1d95;">
@@ -5965,15 +6078,14 @@
         }
 
         async function irParaAba(aba) {
-            // Verificar permissão antes de entrar (exceto superadmin)
-            if (aba && estado.nivel && estado.nivel !== 'superadmin') {
-                const ABAS_SEMPRE_LIVRES = ['config','usuarios','perfil'];
-                if (!ABAS_SEMPRE_LIVRES.includes(aba)) {
-                    const perms = estado.permissoes[estado.nivel] || [];
-                    if (perms.length > 0 && !perms.includes(aba)) {
-                        notif('⛔ Sem permissão para acessar esta aba', 'warning');
-                        return;
-                    }
+            if (!aba) return;
+            const nivel = estado.nivel || 'operador';
+            // SuperAdmin: acesso total
+            if (nivel !== 'superadmin') {
+                const regra = getNivelRegra();
+                if (regra.abasOcultas.includes(aba)) {
+                    notif('⛔ Sem permissão para esta aba', 'warning');
+                    return;
                 }
             }
             document.querySelectorAll('.nav-item').forEach(el => {
@@ -5982,13 +6094,8 @@
             document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
             const tab = document.getElementById(aba + 'Tab');
             if (tab) tab.classList.add('active');
-            // Repopular selects ao entrar em abas que têm dropdowns dependentes
-            if (['etiquetas', 'consultas', 'empresas', 'os'].includes(aba)) {
-                popularSelects();
-            }
-            // Ao entrar em IDs de etiquetas, renderizar tabela
+            if (['etiquetas', 'consultas', 'empresas', 'os'].includes(aba)) popularSelects();
             if (aba === 'idsetiquetas') renderizarIdsEtiquetas();
-            // Ao entrar em etiquetas, garantir que o select de extintores está atualizado
             if (aba === 'etiquetas') {
                 const extSel = document.getElementById('extintorEtiqueta');
                 if (extSel && estado.extintores.length > 0) {
@@ -5998,14 +6105,9 @@
                         ).join('');
                 }
             }
-            // Ao entrar em lotes, atualizar dados INMETRO
-            if (aba === 'lotes' && estado.versao === 'premium') {
-                carregarTodosSelosInm();
-            }
-            // Ao entrar em OS, renderizar lista
+            if (aba === 'lotes' && estado.versao === 'premium') carregarTodosSelosInm();
             if (aba === 'os') renderizarOS();
-            // Ao entrar em config, renderizar permissões, tipos e controle de menu
-            if (aba === 'config') { renderTiposLista(); menuRenderPainel().then(() => atualizarContadorMenu()); }
+            if (aba === 'config') { renderTiposLista(); menuRenderPainel().then(() => atualizarContadorMenu()); renderTabelaPermissoes(); }
         }
 
         function fecharModal() { document.getElementById('editModal').classList.add('hidden'); }
@@ -6217,10 +6319,11 @@
             const isPremium = estado.versao === 'premium';
             document.querySelectorAll('[data-tab="lotes"],[data-tab="logistica"]').forEach(el => el.style.display = isPremium ? 'flex' : 'none');
             document.getElementById('navGroupPremium').style.display = isPremium ? 'block' : 'none';
-            document.getElementById('navGroupAdmin').style.display = ['superadmin', 'admin'].includes(estado.nivel) ? 'block' : 'none';
-            document.getElementById('navItemUsuarios').style.display = ['superadmin', 'admin'].includes(estado.nivel) ? 'flex' : 'none';
-            document.getElementById('navItemPerfil').style.display = ['superadmin', 'admin', 'gerente'].includes(estado.nivel) ? 'flex' : 'none';
-            document.getElementById('navItemConfig').style.display = ['superadmin', 'admin'].includes(estado.nivel) ? 'flex' : 'none';
+            // Visibilidade inicial das abas admin (refinada por aplicarRestricoesNivel)
+            document.getElementById('navGroupAdmin').style.display = 'block';
+            document.getElementById('navItemUsuarios').style.display = 'flex';
+            document.getElementById('navItemPerfil').style.display = 'flex';
+            document.getElementById('navItemConfig').style.display = 'flex';
             document.getElementById('dashboard').style.display = isPremium ? 'grid' : 'none';
             // Clock
             atualizarRelogio();
@@ -6232,6 +6335,10 @@
                     if (el.dataset.tab) irParaAba(el.dataset.tab);
                 });
             });
+            // Aplicar restrições de nível de acesso
+            aplicarRestricoesNivel();
+            // Bloquear formulários para operadores (sem permissão de editar)
+            setTimeout(bloquearFormsOperador, 500);
             // Setup forms
             setupForms();
             // Carregar medida padrão salva pelo usuário
@@ -6409,10 +6516,7 @@
       <td>${e.validade ? new Date(e.validade).toLocaleDateString('pt-BR') : '-'}</td>
       <td>${e.recarga ? new Date(e.recarga).toLocaleDateString('pt-BR') : '-'}</td>
       <td><span class="badge-status ${statusCls}">${statusTxt}</span></td>
-      <td><div class="action-buttons">
-        <button class="small secondary" data-action="edit-ext" data-id="${e.id}"><i class="fas fa-pen"></i></button>
-        <button class="small danger" data-action="del-ext" data-id="${e.id}"><i class="fas fa-trash"></i></button>
-      </div></td>
+      <td>${botoesAcao("edit-ext",e.id,"del-ext",e.id)}</td>
     </tr>`;
             }).join('');
         }
@@ -6425,10 +6529,7 @@
     <tr><td><input type="checkbox" class="cli-chk etiqueta-checkbox" data-idx="${i}" onchange="atualizarContCli()"></td>
     <td>${escHtml(c.nome)}</td><td>${escHtml(c.documento)}</td><td>${escHtml(c.cidade)}</td>
     <td>${escHtml(c.telefone)}</td>
-    <td><div class="action-buttons">
-      <button class="small secondary" data-action="edit-cli" data-id="${c.id}"><i class="fas fa-pen"></i></button>
-      <button class="small danger" data-action="del-cli" data-id="${c.id}"><i class="fas fa-trash"></i></button>
-    </div></td>
+    <td>${botoesAcao("edit-cli",c.id,"del-cli",c.id)}</td>
   　`).join('');
         }
 
@@ -6441,10 +6542,7 @@
                 return `<tr><td><input type="checkbox" class="emp-chk etiqueta-checkbox" data-idx="${i}" onchange="atualizarContEmp()"></td>
     <td>${escHtml(e.nome)}</td><td>${escHtml(e.responsavel)}</td><td>${escHtml(e.telefone)}</td>
     <td>${vend ? escHtml(vend.nome) : '-'}</td>
-    <td><div class="action-buttons">
-      <button class="small secondary" data-action="edit-emp" data-id="${e.id}"><i class="fas fa-pen"></i></button>
-      <button class="small danger" data-action="del-emp" data-id="${e.id}"><i class="fas fa-trash"></i></button>
-    </div></td>
+    <td>${botoesAcao("edit-emp",e.id,"del-emp",e.id)}</td>
    </tr>`;
             }).join('');
         }
@@ -6455,10 +6553,7 @@
             if (!estado.vendedores.length) { tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;padding:24px;color:#9ca3af;">Nenhum vendedor cadastrado</td></tr>'; return; }
             tbody.innerHTML = estado.vendedores.map(v => `<tr>
     <td><span class="lote-tag">${escHtml(v.codigo)}</span></td><td>${escHtml(v.nome)}</td><td>${escHtml(v.whatsapp)}</td>
-    <td><div class="action-buttons">
-      <button class="small secondary" data-action="edit-vend" data-id="${v.id}"><i class="fas fa-pen"></i></button>
-      <button class="small danger" data-action="del-vend" data-id="${v.id}"><i class="fas fa-trash"></i></button>
-    </div></td>
+    <td>${botoesAcao("edit-vend",v.id,"del-vend",v.id)}</td>
    </tr>`).join('');
         }
 
@@ -6475,11 +6570,8 @@
     <td>${escHtml(e.nome_cliente)}</td><td>${escHtml(e.local_instalacao)}</td>
     <td><span style="background:#e0f2fe;color:#0369a1;padding:2px 7px;border-radius:20px;font-size:.72rem;font-weight:700;">${escHtml(e.origem || 'manual')}</span></td>
     <td style="font-size:.76rem;">${e.data_hora ? new Date(e.data_hora).toLocaleString('pt-BR') : '-'}</td>
-    <td><div class="action-buttons">
-      <button class="small" data-action="print-etq" data-id="${e.id}"><i class="fas fa-print"></i></button>
-      <button class="small secondary" data-action="edit-etq" data-id="${e.id}"><i class="fas fa-pen"></i></button>
-      <button class="small danger" data-action="del-etq" data-id="${e.id}"><i class="fas fa-trash"></i></button>
-    </div></td>
+    <td>${botoesAcao("edit-etq",e.id,"del-etq",e.id,
+        `<button class="small" data-action="print-etq" data-id="${e.id}"><i class="fas fa-print"></i></button>`)}</td>
    `).join('');
         }
 
@@ -6579,7 +6671,7 @@
       </div>
       <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;">
         <button class="small secondary" data-action="ver-selos-lote" data-id="${l.id}"><i class="fas fa-eye"></i> Ver Selos</button>
-        <button class="small danger" data-action="del-lote" data-id="${l.id}"><i class="fas fa-trash"></i></button>
+        ${podeExcluir() ? `<button class="small danger" data-action="del-lote" data-id="${l.id}"><i class="fas fa-trash"></i></button>` : ''}
       </div>
     </div>`;
             }).join('');
@@ -6628,10 +6720,7 @@
     <td><span style="background:${cores[u.nivel] || '#6b7280'};color:#fff;padding:3px 10px;border-radius:20px;font-size:.72rem;font-weight:800;">${u.nivel}</span></td>
     <td>${u.versao || '-'}</td>
     <td><span class="badge ${u.status === 'ativo' ? 'success' : 'danger'}">${u.status}</span></td>
-    <td><div class="action-buttons">
-      <button class="small secondary" data-action="edit-usr" data-id="${u.id}"><i class="fas fa-pen"></i></button>
-      <button class="small danger" data-action="del-usr" data-id="${u.id}"><i class="fas fa-trash"></i></button>
-    </div></td>
+    <td>${botoesAcao("edit-usr",u.id,"del-usr",u.id)}</td>
    </table>`).join('');
         }
 
@@ -6646,10 +6735,7 @@
     <td style="color:#9ca3af;font-size:.76rem;">${i + 1}</td>
     <td style="font-weight:500;">${item.nome || '-'}</td>
     <td>${item.unidade || '-'}</td>
-    <td><div class="action-buttons">
-      <button class="small secondary" data-action="edit-cat" data-id="${item.id}"><i class="fas fa-pen"></i></button>
-      <button class="small danger" data-action="del-cat" data-id="${item.id}"><i class="fas fa-trash"></i></button>
-    </div></td>
+    <td>${botoesAcao("edit-cat",item.id,"del-cat",item.id)}</td>
    </tr>`).join('');
         }
 
@@ -8610,12 +8696,20 @@ Responda APENAS com JSON: {"c1":"CODIGO1","c2":"CODIGO2","codU":"CODIGO1-CODIGO2
             if (!abasVisiveis) abasVisiveis = await menuCarregar();
             const visSet = new Set(abasVisiveis);
             const isPremium = estado.versao === 'premium';
+            // Pegar abas proibidas pelo nível
+            const regra = (typeof getNivelRegra === 'function') ? getNivelRegra() : { abasOcultas: [] };
+            const proibidas = new Set(regra.abasOcultas || []);
             document.querySelectorAll('.sidebar-nav .nav-item[data-tab]').forEach(el => {
                 const id = el.dataset.tab;
                 if (!id) return;
-                if (MENU_ABAS_PROTEGIDAS.includes(id)) return; // nunca esconde protegidas
+                if (MENU_ABAS_PROTEGIDAS.includes(id)) {
+                    // Protegidas: visibilidade controlada só pelo nível
+                    el.style.display = proibidas.has(id) ? 'none' : 'flex';
+                    return;
+                }
                 if ((id === 'lotes' || id === 'logistica') && !isPremium) { el.style.display = 'none'; return; }
-                el.style.display = visSet.has(id) ? 'flex' : 'none';
+                // Ocultar se proibido pelo nível OU desabilitado pelo controle de menu
+                el.style.display = (proibidas.has(id) || !visSet.has(id)) ? 'none' : 'flex';
             });
         }
 
@@ -8725,6 +8819,168 @@ Responda APENAS com JSON: {"c1":"CODIGO1","c2":"CODIGO2","codU":"CODIGO1-CODIGO2
                 card.classList.toggle('mc-on', sel);
                 card.classList.toggle('mc-off', !sel);
             });
+        }
+
+
+        // ══════════════════════════════════════════════════════════════
+        // REGRAS DE NÍVEL — Controle de Acesso por Papel
+        // ══════════════════════════════════════════════════════════════
+        const NIVEL_REGRAS = {
+            superadmin: {
+                abasOcultas:       [],                                   // nada oculto
+                configCardsOcultos:['cardSupa','cardIA','cardMenuCtrl'], // só vê Permissões e Tipos Extintor
+                podeEditar:        true,
+                podeExcluir:       true,
+            },
+            admin: {
+                abasOcultas:       [],                                   // vê todas as abas
+                configCardsOcultos:['cardSupa','cardIA','cardMenuCtrl'], // só vê Tipos Extintor
+                podeEditar:        true,
+                podeExcluir:       true,
+            },
+            gerente: {
+                abasOcultas:       ['config','perfil','usuarios'],        // não vê essas abas
+                configCardsOcultos:['cardSupa','cardIA','cardMenuCtrl'],  // n/a (não entra em config)
+                podeEditar:        true,
+                podeExcluir:       true,
+            },
+            operador: {
+                abasOcultas:       ['config','perfil','usuarios','vendedores'], // não vê essas
+                configCardsOcultos:['cardSupa','cardIA','cardMenuCtrl'],         // n/a
+                podeEditar:        false,
+                podeExcluir:       false,
+            },
+        };
+
+        // Retorna a regra do nível atual (fallback: operador)
+        function getNivelRegra() {
+            return NIVEL_REGRAS[estado.nivel] || NIVEL_REGRAS.operador;
+        }
+
+        // Aplica todas as restrições de nível logo após o login
+        function aplicarRestricoesNivel() {
+            const nivel = estado.nivel || 'operador';
+            if (nivel === 'superadmin') return; // sem restrições
+
+            const regra = getNivelRegra();
+
+            // 1. Ocultar abas proibidas no sidebar
+            regra.abasOcultas.forEach(tabId => {
+                const el = document.querySelector(`.nav-item[data-tab="${tabId}"]`);
+                if (el) el.style.display = 'none';
+                // Também ocultar grupos admin se nenhuma aba admin estiver visível
+            });
+
+            // 2. Ocultar cards proibidos dentro de Configuração
+            regra.configCardsOcultos.forEach(cardId => {
+                const el = document.getElementById(cardId);
+                if (el) el.style.display = 'none';
+            });
+
+            // 3. Ocultar grupo Admin no sidebar se nenhuma aba admin for visível
+            const adminAbas = ['usuarios','perfil','config'];
+            const algumAdminVisivel = adminAbas.some(id => !regra.abasOcultas.includes(id));
+            if (!algumAdminVisivel) {
+                const grpAdmin = document.getElementById('navGroupAdmin');
+                if (grpAdmin) grpAdmin.style.display = 'none';
+            }
+
+            console.log(`[Acesso] Nível: ${nivel} | Editar: ${regra.podeEditar} | Excluir: ${regra.podeExcluir}`);
+        }
+
+        // Verifica se o usuário atual pode editar registros
+        function podeEditar() {
+            return getNivelRegra().podeEditar;
+        }
+
+        // Verifica se o usuário atual pode excluir registros
+        function podeExcluir() {
+            return getNivelRegra().podeExcluir;
+        }
+
+        // Gera os botões de ação respeitando o nível
+        function botoesAcao(editAction, editId, delAction, delId, extraBtns) {
+            const edit = podeEditar()
+                ? `<button class="small secondary" data-action="${editAction}" data-id="${editId}"><i class="fas fa-pen"></i></button>`
+                : '';
+            const del = podeExcluir()
+                ? `<button class="small danger" data-action="${delAction}" data-id="${delId}"><i class="fas fa-trash"></i></button>`
+                : '';
+            const extra = extraBtns || '';
+            if (!edit && !del && !extra) return '<span style="font-size:.72rem;color:#d1d5db;">—</span>';
+            return `<div class="action-buttons">${extra}${edit}${del}</div>`;
+        }
+
+
+        // Desabilita botões de cadastro/save nos formulários para operadores
+        function bloquearFormsOperador() {
+            if (podeEditar()) return; // não precisa bloquear
+            // Botões submit/save nos forms principais
+            const FORMS_BLOQUEADOS = ['formExtintor','formCliente','formEmpresa','formVendedor',
+                                      'formLote','formAgendarVistoria','formVistoriaParaFazer',
+                                      'formUsuario','formPerfil'];
+            FORMS_BLOQUEADOS.forEach(formId => {
+                const form = document.getElementById(formId);
+                if (!form) return;
+                form.querySelectorAll('button[type="submit"], button[onclick*="salvar"]').forEach(btn => {
+                    btn.disabled = true;
+                    btn.title = 'Sem permissão para salvar';
+                    btn.style.opacity = '.4';
+                    btn.style.cursor = 'not-allowed';
+                });
+            });
+            // Desabilitar campos de entrada em lotes
+            const btnCriarLote = document.getElementById('btnCriarLoteFila');
+            if (btnCriarLote) { btnCriarLote.disabled = true; btnCriarLote.style.opacity = '.4'; }
+        }
+
+
+        // Preencher tabela de permissões quando o card estiver visível
+        function renderTabelaPermissoes() {
+            const tbody = document.getElementById('tbodyPermissoes');
+            if (!tbody) return;
+            const OK   = '<span style="color:#15803d;font-size:1rem;">✅</span>';
+            const NAO  = '<span style="color:#dc2626;font-size:1rem;">❌</span>';
+            const OCU  = '<span style="color:#f59e0b;font-size:.85rem;font-weight:700;">👁‍🗨 oculto</span>';
+            const DASH = '<span style="color:#d1d5db;">—</span>';
+            const rows = [
+                ['Extintores (ver)',           OK, OK,  OK,  OK ],
+                ['Clientes (ver)',              OK, OK,  OK,  OK ],
+                ['Empresas / Executoras (ver)', OK, OK,  OK,  OK ],
+                ['Vendedores (ver)',            OK, OK,  OK,  NAO],
+                ['Etiquetas (ver/gerar)',       OK, OK,  OK,  OK ],
+                ['Vistoria',                   OK, OK,  OK,  OK ],
+                ['Ordens de Serviço',          OK, OK,  OK,  OK ],
+                ['Catálogo / IDs / Consultas', OK, OK,  OK,  OK ],
+                ['Relatórios INMETRO',         OK, OK,  OK,  OK ],
+                ['Lotes de Selos (premium)',   OK, OK,  OK,  OK ],
+                ['─────────────────────','','','',''],
+                ['Editar registros',           OK, OK,  OK,  NAO],
+                ['Excluir registros',          OK, OK,  OK,  NAO],
+                ['Criar / Cadastrar',          OK, OK,  OK,  NAO],
+                ['─────────────────────','','','',''],
+                ['Aba Configuração',           OK, OK,  NAO, NAO],
+                ['Aba Perfil',                 OK, OK,  NAO, NAO],
+                ['Aba Usuários',               OK, OK,  NAO, NAO],
+                ['─────────────────────','','','',''],
+                ['Config: Conexão Supabase',   OK, OCU, DASH,DASH],
+                ['Config: Integração IA',      OK, OCU, DASH,DASH],
+                ['Config: Tipos de Extintor',  OK, OK,  DASH,DASH],
+                ['Config: Controle de Menu',   OK, OCU, DASH,DASH],
+            ];
+            tbody.innerHTML = rows.map((r,i) => {
+                if (r[0].startsWith('─')) {
+                    return '<tr><td colspan="5" style="padding:3px 0;border-bottom:1px solid #f0f4f8;"></td></tr>';
+                }
+                const bg = i % 2 === 0 ? '' : 'background:#f8fafd;';
+                return `<tr style="${bg}">
+                    <td style="padding:8px 14px;color:#374151;border-bottom:1px solid #f0f4f8;">${r[0]}</td>
+                    <td style="padding:8px;text-align:center;border-bottom:1px solid #f0f4f8;">${r[1]}</td>
+                    <td style="padding:8px;text-align:center;border-bottom:1px solid #f0f4f8;">${r[2]}</td>
+                    <td style="padding:8px;text-align:center;border-bottom:1px solid #f0f4f8;">${r[3]}</td>
+                    <td style="padding:8px;text-align:center;border-bottom:1px solid #f0f4f8;">${r[4]}</td>
+                </tr>`;
+            }).join('');
         }
 
         // ══════════════════════════════════════════════════════════════
@@ -8848,9 +9104,7 @@ Responda APENAS com JSON: {"c1":"CODIGO1","c2":"CODIGO2","codU":"CODIGO1-CODIGO2
       <div style="font-size:.82rem;font-weight:600;color:#374151;margin-bottom:4px;">${escHtml(o.cidade)}</div>
       <div style="font-size:.82rem;color:#6b7280;margin-bottom:10px;">${itens.length} itens &nbsp;·&nbsp; <strong style="color:#0d2137;">R$ ${total.toFixed(2).replace('.', ',')}</strong></div>
       <div style="display:flex;gap:7px;">
-        <button class="small secondary" data-action="edit-os" data-id="${o.id}"><i class="fas fa-pen"></i></button>
-        <button class="small" data-action="pdf-os" data-id="${o.id}"><i class="fas fa-file-pdf" style="color:#dc2626;"></i></button>
-        <button class="small danger" data-action="del-os" data-id="${o.id}"><i class="fas fa-trash"></i></button>
+        ${botoesAcao("edit-os",o.id,"del-os",o.id,`<button class="small" data-action="pdf-os" data-id="${o.id}"><i class="fas fa-file-pdf" style="color:#dc2626;"></i></button>`)}
       </div>
     </div>`;
             }).join('');
@@ -9176,12 +9430,12 @@ Responda APENAS com JSON: {"c1":"CODIGO1","c2":"CODIGO2","codU":"CODIGO1-CODIGO2
             const id = btn.dataset.id;
 
             // ── Extintores ──
-            if (action === 'edit-ext') { editarExtintor(id); return; }
-            if (action === 'del-ext') { excluirExtintor(id); return; }
+            if (action === 'edit-ext') { if (!podeEditar()) { notif('⛔ Sem permissão para editar', 'warning'); return; } editarExtintor(id); return; }
+            if (action === 'del-ext')  { if (!podeExcluir()) { notif('⛔ Sem permissão para excluir', 'warning'); return; } excluirExtintor(id); return; }
 
             // ── Clientes ──
-            if (action === 'edit-cli') { editarCliente(id); return; }
-            if (action === 'del-cli') { excluirCliente(id); return; }
+            if (action === 'edit-cli') { if (!podeEditar()) { notif('⛔ Sem permissão para editar', 'warning'); return; } editarCliente(id); return; }
+            if (action === 'del-cli')  { if (!podeExcluir()) { notif('⛔ Sem permissão para excluir', 'warning'); return; } excluirCliente(id); return; }
             if (action === 'sel-cli-etq') {
                 const nome = btn.dataset.nome;
                 selecionarClienteEtiqueta(id, nome);
@@ -9189,17 +9443,17 @@ Responda APENAS com JSON: {"c1":"CODIGO1","c2":"CODIGO2","codU":"CODIGO1-CODIGO2
             }
 
             // ── Empresas ──
-            if (action === 'edit-emp') { editarEmpresa(id); return; }
-            if (action === 'del-emp') { excluirEmpresa(id); return; }
+            if (action === 'edit-emp') { if (!podeEditar()) { notif('⛔ Sem permissão para editar', 'warning'); return; } editarEmpresa(id); return; }
+            if (action === 'del-emp')  { if (!podeExcluir()) { notif('⛔ Sem permissão para excluir', 'warning'); return; } excluirEmpresa(id); return; }
 
             // ── Vendedores ──
-            if (action === 'edit-vend') { editarVendedor(id); return; }
-            if (action === 'del-vend') { excluirVendedor(id); return; }
+            if (action === 'edit-vend') { if (!podeEditar()) { notif('⛔ Sem permissão para editar', 'warning'); return; } editarVendedor(id); return; }
+            if (action === 'del-vend')  { if (!podeExcluir()) { notif('⛔ Sem permissão para excluir', 'warning'); return; } excluirVendedor(id); return; }
 
             // ── Etiquetas ──
             if (action === 'print-etq') { imprimirUmaEtiqueta(id); return; }
-            if (action === 'edit-etq') { editarEtiquetaReg(id); return; }
-            if (action === 'del-etq') { excluirEtiquetaReg(id); return; }
+            if (action === 'edit-etq') { if (!podeEditar()) { notif('⛔ Sem permissão para editar', 'warning'); return; } editarEtiquetaReg(id); return; }
+            if (action === 'del-etq')  { if (!podeExcluir()) { notif('⛔ Sem permissão para excluir', 'warning'); return; } excluirEtiquetaReg(id); return; }
             if (action === 'qr-etq') {
                 const etqId = btn.dataset.etqid || id;
                 // Buscar dados da etiqueta para montar o layout completo
@@ -9234,12 +9488,12 @@ Responda APENAS com JSON: {"c1":"CODIGO1","c2":"CODIGO2","codU":"CODIGO1-CODIGO2
 
             // ── Lotes Selos ──
             if (action === 'ver-selos-lote') { verSelosLote(id); return; }
-            if (action === 'del-lote') { excluirLote(id); return; }
+            if (action === 'del-lote') { if (!podeExcluir()) { notif('⛔ Sem permissão para excluir', 'warning'); return; } excluirLote(id); return; }
 
             // ── Lotes INMETRO ──
             if (action === 'ver-selos-inm') { verSelosInmLote(id, btn.dataset.nome || ''); return; }
-            if (action === 'edit-lote-inm') { abrirEditLoteInm(id); return; }
-            if (action === 'del-lote-inm') { excluirLoteInm(id); return; }
+            if (action === 'edit-lote-inm') { if (!podeEditar()) { notif('⛔ Sem permissão para editar', 'warning'); return; } abrirEditLoteInm(id); return; }
+            if (action === 'del-lote-inm')  { if (!podeExcluir()) { notif('⛔ Sem permissão para excluir', 'warning'); return; } excluirLoteInm(id); return; }
 
             // ── Selos INMETRO ──
             if (action === 'edit-selo-inm') {
@@ -9248,17 +9502,17 @@ Responda APENAS com JSON: {"c1":"CODIGO1","c2":"CODIGO2","codU":"CODIGO1-CODIGO2
             }
 
             // ── Catálogo ──
-            if (action === 'edit-cat') { editarItemCat(id); return; }
-            if (action === 'del-cat') { excluirItemCat(id); return; }
+            if (action === 'edit-cat') { if (!podeEditar()) { notif('⛔ Sem permissão para editar', 'warning'); return; } editarItemCat(id); return; }
+            if (action === 'del-cat')  { if (!podeExcluir()) { notif('⛔ Sem permissão para excluir', 'warning'); return; } excluirItemCat(id); return; }
 
             // ── Usuários ──
-            if (action === 'edit-usr') { editarUsuario(id); return; }
-            if (action === 'del-usr') { excluirUsuario(id); return; }
+            if (action === 'edit-usr') { if (!podeEditar()) { notif('⛔ Sem permissão para editar', 'warning'); return; } editarUsuario(id); return; }
+            if (action === 'del-usr')  { if (!podeExcluir()) { notif('⛔ Sem permissão para excluir', 'warning'); return; } excluirUsuario(id); return; }
 
             // ── OS ──
-            if (action === 'edit-os') { editarOS(id); return; }
+            if (action === 'edit-os') { if (!podeEditar()) { notif('⛔ Sem permissão para editar', 'warning'); return; } editarOS(id); return; }
             if (action === 'pdf-os') { gerarPDFOSById(id); return; }
-            if (action === 'del-os') { excluirOS(id); return; }
+            if (action === 'del-os')  { if (!podeExcluir()) { notif('⛔ Sem permissão para excluir', 'warning'); return; } excluirOS(id); return; }
             if (action === 'del-os-item') {
                 const idx = parseInt(btn.dataset.idx);
                 if (!isNaN(idx)) { osItens.splice(idx, 1); renderizarItensOS(); }
@@ -9290,11 +9544,13 @@ Responda APENAS com JSON: {"c1":"CODIGO1","c2":"CODIGO2","codU":"CODIGO1-CODIGO2
 
             // ── Tipos de extintor ──
             if (action === 'edit-tipo') {
+                if (!podeEditar()) { notif('⛔ Sem permissão para editar', 'warning'); return; }
                 const idx = parseInt(btn.dataset.idx);
                 if (!isNaN(idx)) editarTipo(idx);
                 return;
             }
             if (action === 'del-tipo') {
+                if (!podeExcluir()) { notif('⛔ Sem permissão para excluir', 'warning'); return; }
                 const idx = parseInt(btn.dataset.idx);
                 if (!isNaN(idx)) excluirTipo(idx);
                 return;
