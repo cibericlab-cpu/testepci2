@@ -1890,133 +1890,6 @@
             font-family: monospace;
         }
 
-        .nivel-card {
-            border-radius: 16px;
-            padding: 20px 22px;
-            border: 1.5px solid #e8eef5;
-            margin-bottom: 14px;
-            background: #fff;
-            transition: .2s;
-        }
-
-        .nivel-card.superadmin {
-            border-color: #dc2626;
-            background: linear-gradient(135deg, #fff5f5, #fef2f2);
-        }
-
-        .nivel-card.admin {
-            border-color: #f59e0b;
-            background: linear-gradient(135deg, #fffbeb, #fef9c3);
-        }
-
-        .nivel-card.gerente {
-            border-color: #0080C7;
-            background: linear-gradient(135deg, #eff6ff, #dbeafe);
-        }
-
-        .nivel-card.operador {
-            border-color: #10b981;
-            background: linear-gradient(135deg, #ecfdf5, #d1fae5);
-        }
-
-        .nivel-card-header {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 14px;
-        }
-
-        .nivel-badge {
-            padding: 4px 14px;
-            border-radius: 50px;
-            font-size: .72rem;
-            font-weight: 800;
-            letter-spacing: .5px;
-            text-transform: uppercase;
-        }
-
-        .nb-superadmin {
-            background: #dc2626;
-            color: #fff;
-        }
-
-        .nb-admin {
-            background: #f59e0b;
-            color: #fff;
-        }
-
-        .nb-gerente {
-            background: #0080C7;
-            color: #fff;
-        }
-
-        .nb-operador {
-            background: #10b981;
-            color: #fff;
-        }
-
-        .nivel-desc {
-            font-size: .82rem;
-            color: #6b7280;
-            flex: 1;
-            line-height: 1.5;
-        }
-
-        .nivel-abas-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-            gap: 8px;
-        }
-
-        .aba-toggle {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 8px 12px;
-            border-radius: 10px;
-            background: #f8fafd;
-            border: 1px solid #e8eef5;
-            cursor: pointer;
-            transition: .15s;
-            user-select: none;
-        }
-
-        .aba-toggle:hover {
-            background: #f0f4f8;
-        }
-
-        .aba-toggle.ativa {
-            background: #e8f0fb;
-            border-color: #2a5c9a;
-        }
-
-        .aba-toggle.bloqueada {
-            background: #fee2e2;
-            border-color: #fca5a5;
-            opacity: .7;
-            cursor: not-allowed;
-        }
-
-        .aba-toggle input[type=checkbox] {
-            width: 15px;
-            height: 15px;
-            accent-color: #1e3b5a;
-            flex-shrink: 0;
-        }
-
-        .aba-toggle span {
-            font-size: .8rem;
-            font-weight: 600;
-            color: #374151;
-        }
-
-        .aba-toggle.ativa span {
-            color: #1e3b5a;
-        }
-
-        .aba-toggle.bloqueada span {
-            color: #b91c1c;
-        }
 
         .nivel-info-box {
             background: #f0fdf4;
@@ -2280,286 +2153,6 @@
                 opacity: 1
             }
         }
-
-        /* --- CSS para Controle de Abas do Menu --- */
-        .menu-ctrl-row{display:flex;align-items:center;gap:12px;padding:13px 16px;border-radius:12px;border:1px solid #e8eef5;background:#fff;margin-bottom:7px;transition:border-color .15s,box-shadow .15s;}
-        .menu-ctrl-row:hover{border-color:#c5d8ee;box-shadow:0 2px 8px rgba(0,0,0,.04);}
-        .menu-ctrl-icon{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:.85rem;}
-        .menu-ctrl-info{flex:1;}.menu-ctrl-nome{font-size:.84rem;font-weight:600;color:#0d2137;margin:0 0 2px;}.menu-ctrl-desc{font-size:.72rem;color:#6b7280;margin:0;}
-        .menu-ctrl-locked{opacity:.5;pointer-events:none;}
-        .sw-wrap{position:relative;display:inline-block;width:44px;height:24px;flex-shrink:0;}.sw-wrap input{opacity:0;width:0;height:0;position:absolute;}
-        .sw-slider{position:absolute;inset:0;border-radius:24px;background:#d1d5db;cursor:pointer;transition:background .2s;}
-        .sw-slider::after{content:'';position:absolute;width:18px;height:18px;border-radius:50%;background:#fff;top:3px;left:3px;transition:left .2s;box-shadow:0 1px 3px rgba(0,0,0,.25);}
-        .sw-wrap input:checked + .sw-slider{background:#1D9E75;}.sw-wrap input:checked + .sw-slider::after{left:23px;}
-        .menu-grupo-titulo{font-size:.68rem;font-weight:700;color:#9ca3af;text-transform:uppercase;letter-spacing:.6px;margin:14px 0 7px 2px;}
-    
-/* ═══════════════════════════════════════════════════════════════════
-   PCI MANAGER PRO — MELHORIAS VISUAIS v2026-04
-═══════════════════════════════════════════════════════════════════ */
-:root {
-  --shadow-sm: 0 1px 3px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04);
-  --shadow-md: 0 4px 12px rgba(0,20,60,.07), 0 2px 4px rgba(0,20,60,.04);
-  --shadow-lg: 0 8px 24px rgba(0,20,60,.10), 0 4px 8px rgba(0,20,60,.05);
-  --border: #e2eaf2;
-  --border-hover: #c5d8ee;
-  --bg-page: #eef2f7;
-  --bg-card: #ffffff;
-  --bg-subtle: #f8fafd;
-  --text-primary: #0d2137;
-  --text-secondary: #4a5b6e;
-  --text-muted: #94a3b8;
-  --blue-glow: rgba(42,92,154,0.15);
-  --transition: all 0.18s cubic-bezier(0.4,0,0.2,1);
-}
-
-body { background: var(--bg-page) !important; }
-
-/* Sidebar refinada */
-.sidebar {
-  width: 234px !important; min-width: 234px !important;
-  background: linear-gradient(180deg,#0a1628 0%,#0d2137 55%,#112844 100%) !important;
-  box-shadow: 4px 0 32px rgba(0,0,0,.22) !important;
-}
-.sidebar-logo { padding: 20px 16px 16px !important; }
-.sidebar-logo-icon {
-  width: 38px !important; height: 38px !important;
-  background: linear-gradient(135deg,rgba(255,255,255,.15),rgba(255,255,255,.06)) !important;
-  border: 1px solid rgba(255,255,255,.12) !important; border-radius: 11px !important;
-}
-.sidebar-logo-text { font-size: .86rem !important; font-weight: 800 !important; letter-spacing: -.3px !important; }
-.sidebar-logo-sub { font-size: .62rem !important; color: rgba(255,255,255,.32) !important; letter-spacing: 1px !important; text-transform: uppercase !important; }
-.sidebar-nav { padding: 10px 8px !important; }
-.sidebar-nav .nav-group-label {
-  font-size: .58rem !important; font-weight: 800 !important; letter-spacing: 1.2px !important;
-  color: rgba(255,255,255,.2) !important; padding: 14px 12px 5px !important;
-}
-.sidebar-nav .nav-item {
-  padding: 9px 12px !important; border-radius: 10px !important;
-  font-size: .8rem !important; font-weight: 500 !important;
-  color: rgba(255,255,255,.52) !important; margin-bottom: 1px !important;
-  transition: var(--transition) !important; gap: 10px !important;
-}
-.sidebar-nav .nav-item:hover {
-  background: rgba(255,255,255,.08) !important;
-  color: rgba(255,255,255,.88) !important; transform: translateX(2px);
-}
-.sidebar-nav .nav-item.active {
-  background: linear-gradient(135deg,rgba(42,92,154,.38),rgba(42,92,154,.18)) !important;
-  color: #fff !important; font-weight: 600 !important;
-  border-left: 2.5px solid #7dd3f8 !important; padding-left: 10px !important;
-}
-.sidebar-nav .nav-item.active i { color: #7dd3f8 !important; }
-
-/* Main content */
-.main-content { padding: 20px 28px 40px !important; background: var(--bg-page) !important; }
-
-/* Status bar */
-.status-bar { margin-bottom: 18px !important; padding-bottom: 14px !important; border-bottom: 1px solid var(--border) !important; }
-.connection-card, .datetime-card, .user-info {
-  border-radius: 50px !important; font-size: .78rem !important;
-  padding: 7px 14px !important; box-shadow: var(--shadow-sm) !important;
-  transition: var(--transition) !important; border: 1px solid var(--border) !important;
-  background: var(--bg-card) !important;
-}
-.version-indicator {
-  border-radius: 50px !important; font-weight: 700 !important;
-  font-size: .75rem !important; padding: 7px 14px !important;
-  cursor: pointer !important; transition: var(--transition) !important;
-}
-.user-info { color: var(--text-primary) !important; font-weight: 600 !important; }
-
-/* Dashboard cards */
-.dashboard-grid { gap: 12px !important; margin-bottom: 22px !important; }
-.dashboard-card {
-  border-radius: 14px !important; padding: 16px 12px 14px !important;
-  border: 1px solid var(--border) !important; box-shadow: var(--shadow-sm) !important;
-  transition: var(--transition) !important; background: var(--bg-card) !important;
-  position: relative; overflow: hidden;
-}
-.dashboard-card::after {
-  content:''; position:absolute; top:0; left:0; right:0; height:3px;
-  background: linear-gradient(90deg,#2a5c9a,#60a5fa); opacity:0; transition: var(--transition);
-}
-.dashboard-card:hover { box-shadow: var(--shadow-md) !important; transform: translateY(-2px); border-color: var(--border-hover) !important; }
-.dashboard-card:hover::after { opacity: 1; }
-.dashboard-card i { font-size: 1.05rem !important; margin-bottom: 6px !important; display: block !important; }
-.dashboard-card h3 { font-size: .62rem !important; font-weight: 700 !important; letter-spacing: .5px !important; color: var(--text-muted) !important; margin-bottom: 4px !important; }
-.dashboard-card .number { font-size: 1.7rem !important; font-weight: 800 !important; color: var(--text-primary) !important; letter-spacing: -1.5px !important; line-height: 1 !important; }
-
-/* Cards */
-.card {
-  border-radius: 18px !important; border: 1px solid var(--border) !important;
-  box-shadow: var(--shadow-sm) !important; padding: 22px 24px !important;
-  background: var(--bg-card) !important; margin-bottom: 16px !important;
-  transition: var(--transition) !important;
-}
-.card:hover { box-shadow: var(--shadow-md) !important; }
-.card h2 {
-  font-size: .92rem !important; font-weight: 700 !important; color: var(--text-primary) !important;
-  margin-bottom: 16px !important; padding-bottom: 12px !important;
-  border-bottom: 1px solid #f0f4f8 !important; gap: 8px !important;
-}
-.card h2 i { font-size: .88rem !important; color: #2a5c9a !important; }
-
-/* Inputs */
-input, select, textarea {
-  border-radius: 10px !important; border: 1.5px solid var(--border) !important;
-  padding: 10px 14px !important; font-size: .84rem !important;
-  color: var(--text-primary) !important; background: var(--bg-subtle) !important;
-  transition: var(--transition) !important; margin-bottom: 10px !important;
-}
-input:hover, select:hover { border-color: var(--border-hover) !important; background: var(--bg-card) !important; }
-input:focus, select:focus, textarea:focus {
-  border-color: #2a5c9a !important; box-shadow: 0 0 0 3px var(--blue-glow) !important;
-  background: var(--bg-card) !important; outline: none !important;
-}
-label { font-size: .74rem !important; font-weight: 600 !important; color: var(--text-secondary) !important; margin-bottom: 5px !important; letter-spacing: .1px !important; }
-
-/* Botões */
-button {
-  border-radius: 10px !important; font-size: .84rem !important;
-  font-weight: 600 !important; transition: var(--transition) !important; letter-spacing: -.1px !important;
-}
-button:not(.secondary):not(.danger):not(.success):not(.btn-export):not(.btn-primary):not(.sub-tab-btn):not(.logout-btn):not(.alerta-btn):not([style*="background:none"]) {
-  box-shadow: 0 2px 8px rgba(13,33,55,.22), 0 1px 3px rgba(13,33,55,.12) !important;
-}
-button.secondary {
-  background: var(--bg-card) !important; border: 1.5px solid var(--border) !important;
-  color: var(--text-secondary) !important; box-shadow: var(--shadow-sm) !important;
-}
-button.secondary:hover { background: var(--bg-subtle) !important; border-color: var(--border-hover) !important; color: var(--text-primary) !important; }
-button.small { padding: 7px 12px !important; font-size: .76rem !important; border-radius: 7px !important; }
-
-/* Tabelas */
-.table-responsive {
-  border-radius: 12px !important; border: 1px solid var(--border) !important;
-  overflow: hidden !important; box-shadow: var(--shadow-sm) !important;
-}
-thead tr { background: linear-gradient(135deg,#f8fafd,#f0f4f8) !important; border-bottom: 1.5px solid var(--border) !important; }
-th {
-  padding: 11px 14px !important; font-size: .68rem !important; font-weight: 700 !important;
-  color: var(--text-secondary) !important; text-transform: uppercase !important; letter-spacing: .5px !important;
-}
-td {
-  padding: 10px 14px !important; border-bottom: 1px solid #f0f4f8 !important;
-  font-size: .83rem !important; vertical-align: middle !important;
-}
-tbody tr { transition: background .12s !important; }
-tbody tr:hover td { background: #f5f9ff !important; }
-tbody tr:last-child td { border-bottom: none !important; }
-
-.action-buttons { display: flex !important; gap: 5px !important; flex-wrap: nowrap !important; }
-.action-buttons button {
-  padding: 0 !important; font-size: .72rem !important;
-  border-radius: 7px !important; width: 30px !important; height: 30px !important;
-  display: inline-flex !important; align-items: center !important; justify-content: center !important; margin: 0 !important;
-}
-
-/* Badges */
-.badge-status { padding: 4px 10px !important; border-radius: 20px !important; font-size: .7rem !important; font-weight: 700 !important; letter-spacing: .2px !important; }
-.badge-operacional { background: #dcfce7 !important; color: #15803d !important; }
-.badge-atencao { background: #fef9c3 !important; color: #854d0e !important; }
-.badge-irregular { background: #fee2e2 !important; color: #b91c1c !important; }
-
-/* Export toolbar */
-.export-toolbar {
-  background: linear-gradient(135deg,#f8fafd,#f0f4f8) !important; border: 1px solid var(--border) !important;
-  border-radius: 8px !important; padding: 8px 14px !important; margin-bottom: 12px !important; gap: 8px !important;
-}
-.btn-export {
-  padding: 5px 12px !important; border-radius: 6px !important; font-size: .72rem !important;
-  font-weight: 700 !important; letter-spacing: .3px !important;
-  box-shadow: 0 1px 3px rgba(0,0,0,.1) !important; transition: var(--transition) !important; margin: 0 !important;
-}
-.btn-export:hover { transform: translateY(-1px) !important; box-shadow: 0 3px 8px rgba(0,0,0,.15) !important; }
-.select-count { font-size: .7rem !important; padding: 3px 9px !important; border-radius: 20px !important; background: #e8eef5 !important; color: var(--text-secondary) !important; font-weight: 600 !important; }
-
-/* Sub-tabs */
-.sub-tabs-bar {
-  background: var(--bg-card) !important; border: 1px solid var(--border) !important;
-  border-radius: 14px !important; padding: 5px !important; margin-bottom: 20px !important;
-  box-shadow: var(--shadow-sm) !important; gap: 3px !important;
-}
-.sub-tab-btn {
-  border-radius: 10px !important; font-size: .8rem !important; font-weight: 600 !important;
-  padding: 9px 16px !important; transition: var(--transition) !important; color: var(--text-muted) !important;
-}
-.sub-tab-btn:hover { background: var(--bg-subtle) !important; color: var(--text-primary) !important; }
-.sub-tab-btn.active { background: linear-gradient(135deg,#1e3b5a,#0d2137) !important; color: #fff !important; box-shadow: 0 2px 8px rgba(13,33,55,.25) !important; }
-
-/* Notificações */
-.notification { border-radius: 12px !important; box-shadow: var(--shadow-lg) !important; border-left: 3px solid #2a5c9a !important; font-size: .82rem !important; }
-
-/* Lote cards */
-.lote-card { border-radius: 14px !important; border: 1px solid var(--border) !important; padding: 16px !important; transition: var(--transition) !important; }
-.lote-card:hover { border-color: #93c5fd !important; box-shadow: var(--shadow-md) !important; transform: translateY(-1px); }
-
-/* INMETRO cards */
-.inm-lote-card { border-radius: 12px !important; border: 1px solid var(--border) !important; border-left: 3px solid #0080C7 !important; padding: 16px 18px !important; box-shadow: var(--shadow-sm) !important; transition: var(--transition) !important; }
-.inm-lote-card:hover { box-shadow: var(--shadow-md) !important; border-left-color: #38bdf8 !important; }
-
-/* Config */
-.config-section { border-radius: 20px !important; border: 1px solid var(--border) !important; padding: 24px !important; margin-bottom: 20px !important; box-shadow: var(--shadow-sm) !important; transition: var(--transition) !important; }
-.config-section:hover { box-shadow: var(--shadow-md) !important; }
-
-/* ── CONTROLE DE ABAS DO MENU ── */
-.menu-grupo-titulo {
-  font-size: .62rem !important; font-weight: 800 !important; color: var(--text-muted) !important;
-  text-transform: uppercase !important; letter-spacing: 1px !important; margin: 16px 0 8px 2px !important;
-  display: flex !important; align-items: center !important; gap: 8px !important;
-}
-.menu-grupo-titulo::after { content:''; flex:1; height:1px; background:var(--border); margin-left:4px; }
-.menu-ctrl-row {
-  display: flex !important; align-items: center !important; gap: 14px !important;
-  padding: 13px 16px !important; border-radius: 12px !important;
-  border: 1px solid var(--border) !important; background: var(--bg-card) !important;
-  margin-bottom: 6px !important; transition: var(--transition) !important;
-}
-.menu-ctrl-row:hover { border-color: var(--border-hover) !important; box-shadow: var(--shadow-sm) !important; background: var(--bg-subtle) !important; }
-.menu-ctrl-icon {
-  width: 38px !important; height: 38px !important; border-radius: 10px !important;
-  background: #eef2fa !important; color: #1e3b5a !important; transition: var(--transition) !important;
-}
-.menu-ctrl-nome { font-size: .84rem !important; font-weight: 600 !important; color: var(--text-primary) !important; margin: 0 0 2px !important; }
-.menu-ctrl-desc { font-size: .72rem !important; color: var(--text-muted) !important; margin: 0 !important; }
-.sw-wrap { position:relative !important; display:inline-block !important; width:48px !important; height:26px !important; flex-shrink:0 !important; }
-.sw-wrap input { opacity:0 !important; width:0 !important; height:0 !important; position:absolute !important; margin:0 !important; padding:0 !important; border:none !important; }
-.sw-slider { position:absolute !important; inset:0 !important; border-radius:26px !important; background:#d1d5db !important; cursor:pointer !important; transition:background .2s !important; box-shadow:inset 0 1px 3px rgba(0,0,0,.1) !important; }
-.sw-slider::after { content:'' !important; position:absolute !important; width:20px !important; height:20px !important; border-radius:50% !important; background:#fff !important; top:3px !important; left:3px !important; transition:left .2s cubic-bezier(.4,0,.2,1) !important; box-shadow:0 1px 4px rgba(0,0,0,.2) !important; }
-.sw-wrap input:checked + .sw-slider { background:#1D9E75 !important; }
-.sw-wrap input:checked + .sw-slider::after { left:25px !important; }
-
-/* Row layout */
-.row { gap: 18px !important; }
-.etiqueta-field-group { border-radius: 12px !important; border: 1px solid var(--border) !important; background: var(--bg-subtle) !important; padding: 16px !important; margin-bottom: 14px !important; }
-.etiqueta-field-group h4 { font-size: .82rem !important; font-weight: 700 !important; margin-bottom: 12px !important; padding-bottom: 8px !important; border-bottom: 1px solid var(--border) !important; }
-.nivel-card { border-radius: 16px !important; padding: 20px !important; margin-bottom: 14px !important; }
-.consulta-filters { border-radius: 14px !important; padding: 18px !important; gap: 12px !important; margin-bottom: 16px !important; }
-.supa-field-group { border-radius: 14px !important; padding: 18px !important; margin-bottom: 18px !important; }
-.modal-small-content { border-radius: 22px !important; padding: 28px !important; box-shadow: 0 25px 60px rgba(0,0,0,.2) !important; }
-#pciProgressBox { border-radius: 22px !important; padding: 28px 32px !important; }
-.version-card { border-radius: 22px !important; }
-.modal-content { border-radius: 28px !important; }
-.logout-btn { border-radius: 10px !important; font-size: .78rem !important; font-weight: 600 !important; transition: var(--transition) !important; }
-.info-box { border-radius: 10px !important; padding: 12px 16px !important; font-size: .8rem !important; line-height: 1.6 !important; }
-
-/* Animação de entrada */
-@keyframes slideInUp { from{opacity:0;transform:translateY(10px);} to{opacity:1;transform:translateY(0);} }
-.tab-content.active .card { animation: slideInUp .2s cubic-bezier(0.4,0,0.2,1) both; }
-.tab-content.active .card:nth-child(2) { animation-delay:.04s; }
-.tab-content.active .card:nth-child(3) { animation-delay:.08s; }
-.tab-content.active .dashboard-grid { animation: slideInUp .18s ease both; }
-
-/* Scrollbar */
-::-webkit-scrollbar { width: 5px; height: 5px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: rgba(0,0,0,.12); border-radius: 10px; }
-::-webkit-scrollbar-thumb:hover { background: rgba(0,0,0,.2); }
-
-@media (max-width:1024px) {
-  .sidebar { width: 58px !important; min-width: 58px !important; }
-  .main-content { padding: 14px 16px 32px !important; }
-}
 
         </style>
 </head>
@@ -5682,66 +5275,7 @@ tbody tr:last-child td { border-bottom: none !important; }
                         </div>
                     </div>
 
-                    <!-- Níveis de Usuários -->
-                    <div class="card config-section" style="margin-bottom:20px;">
-                        <h2><i class="fas fa-users-cog" style="color:#7c3aed;"></i> Níveis de Usuários e Permissões</h2>
-                        <div class="info-box" style="margin-bottom:20px;"><i class="fas fa-info-circle"></i> Define
-                            quais abas cada nível pode acessar.</div>
-                        <div class="nivel-card superadmin">
-                            <div class="nivel-card-header"><span class="nivel-badge nb-superadmin"><i
-                                        class="fas fa-crown"></i> SuperAdmin</span>
-                                <div class="nivel-desc">Acesso total e irrestrito. Não é configurável.</div>
-                            </div>
-                            <div class="nivel-info-box" style="background:#fef2f2;border-color:#fca5a5;color:#dc2626;">
-                                <i class="fas fa-infinity"></i> <strong>SuperAdmin tem acesso irrestrito a TODAS as
-                                    abas.</strong>
-                            </div>
-                        </div>
-                        <div class="nivel-card admin">
-                            <div class="nivel-card-header"><span class="nivel-badge nb-admin"><i
-                                        class="fas fa-user-shield"></i> Admin</span>
-                                <div class="nivel-desc">Acesso a todas as abas exceto Configuração.</div>
-                            </div>
-                            <div id="nivelAbas-admin" class="nivel-abas-grid"></div>
-                            <div style="margin-top:10px;"><button class="secondary small"
-                                    onclick="salvarPermissoesNivel('admin')"><i class="fas fa-save"></i> Salvar
-                                    Permissões Admin</button></div>
-                        </div>
-                        <div class="nivel-card gerente">
-                            <div class="nivel-card-header"><span class="nivel-badge nb-gerente"><i
-                                        class="fas fa-user-tie"></i> Gerente</span>
-                                <div class="nivel-desc">Acesso a todas as abas exceto Configuração e Usuários.</div>
-                            </div>
-                            <div id="nivelAbas-gerente" class="nivel-abas-grid"></div>
-                            <div style="margin-top:10px;"><button class="secondary small"
-                                    onclick="salvarPermissoesNivel('gerente')"><i class="fas fa-save"></i> Salvar
-                                    Permissões Gerente</button></div>
-                        </div>
-                        <div class="nivel-card operador">
-                            <div class="nivel-card-header"><span class="nivel-badge nb-operador"><i
-                                        class="fas fa-user"></i> Operador</span>
-                                <div class="nivel-desc">Acesso às operações do dia a dia.</div>
-                            </div>
-                            <div id="nivelAbas-operador" class="nivel-abas-grid"></div>
-                            <div style="margin-top:10px;"><button class="secondary small"
-                                    onclick="salvarPermissoesNivel('operador')"><i class="fas fa-save"></i> Salvar
-                                    Permissões Operador</button></div>
-                        </div>
-                    </div>
-
-                    <!-- Card de Controle de Abas do Menu -->
-                    <div class="card config-section" style="margin-bottom:20px;">
-                        <h2><i class="fas fa-eye-slash" style="color:#1D9E75;"></i> Controle de Abas do Menu</h2>
-                        <p style="font-size:.82rem;color:#6b7280;margin-bottom:16px;line-height:1.6;">
-                            Ative ou desative abas no menu lateral. Abas desativadas ficam ocultas para todos (exceto SuperAdmin).
-                        </p>
-                        <div id="menuCtrlLista"></div>
-                        <div style="display:flex;gap:10px;margin-top:16px;">
-                            <button onclick="salvarMenuConfigSistema()" class="success"><i class="fas fa-save"></i> Salvar configurações de menu</button>
-                            <button onclick="resetarMenuConfig()" class="secondary small"><i class="fas fa-redo"></i> Restaurar padrão</button>
-                        </div>
-                    </div>
-
+                    
                     <div class="app-footer">
                         <p><i class="fas fa-copyright"></i> 2026 &nbsp;·&nbsp; <strong>ciberic.lab</strong>
                             &nbsp;·&nbsp; PCI Manager Pro</p>
@@ -6031,25 +5565,13 @@ tbody tr:last-child td { border-bottom: none !important; }
             renderTiposSelect();
         }
 
-        async function carregarPermissoes() {
-            try {
-                const r = await supa.getAll('permissoes_nivel', '');
-                if (r && r.length > 0) {
-                    for (const row of r) {
-                        const abas = typeof row.abas === 'string' ? JSON.parse(row.abas) : (row.abas || []);
-                        estado.permissoes[row.nivel] = abas;
-                    }
-                }
-            } catch (e) { console.warn('Permissões não carregadas:', e.message); }
-        }
-
         async function carregarTudo() {
             if (!supa._url || !supa._key) { atualizarConexaoUI(false); return; }
             try {
                 await Promise.all([
                     carregarExtintores(), carregarClientes(), carregarEmpresas(),
                     carregarVendedores(), carregarEtiquetas(), carregarCatalogo(),
-                    carregarPerfil(), carregarTiposExtintor(), carregarPermissoes(),
+                    carregarPerfil(), carregarTiposExtintor(),
                     carregarVistoriasAgendadas(), carregarVistoriasRealizadas(), carregarVistoriasParaFazer()
                 ]);
                 if (estado.versao === 'premium') {
@@ -6346,6 +5868,17 @@ tbody tr:last-child td { border-bottom: none !important; }
         }
 
         async function irParaAba(aba) {
+            // Verificar permissão antes de entrar (exceto superadmin)
+            if (aba && estado.nivel && estado.nivel !== 'superadmin') {
+                const ABAS_SEMPRE_LIVRES = ['config','usuarios','perfil'];
+                if (!ABAS_SEMPRE_LIVRES.includes(aba)) {
+                    const perms = estado.permissoes[estado.nivel] || [];
+                    if (perms.length > 0 && !perms.includes(aba)) {
+                        notif('⛔ Sem permissão para acessar esta aba', 'warning');
+                        return;
+                    }
+                }
+            }
             document.querySelectorAll('.nav-item').forEach(el => {
                 el.classList.toggle('active', el.dataset.tab === aba);
             });
@@ -6375,7 +5908,7 @@ tbody tr:last-child td { border-bottom: none !important; }
             // Ao entrar em OS, renderizar lista
             if (aba === 'os') renderizarOS();
             // Ao entrar em config, renderizar permissões, tipos e controle de menu
-            if (aba === 'config') { renderNiveisPermissoes(); renderTiposLista(); await renderMenuControle(); }
+            if (aba === 'config') { renderTiposLista(); }
         }
 
         function fecharModal() { document.getElementById('editModal').classList.add('hidden'); }
@@ -6561,7 +6094,6 @@ tbody tr:last-child td { border-bottom: none !important; }
         // ══════════════════════════════════════════════════════════════
         function iniciarApp() {
             document.getElementById('appContainer').style.display = 'block';
-            aplicarPermissoes();
             document.getElementById('userName').textContent = estado.usuario?.nome || estado.usuario?.login || 'Usuário';
             const nbTop = document.getElementById('nivelBadgeTopbar');
             const nivel = estado.nivel || 'operador';
@@ -6596,9 +6128,12 @@ tbody tr:last-child td { border-bottom: none !important; }
             // Clock
             atualizarRelogio();
             setInterval(atualizarRelogio, 1000);
-            // Sidebar nav
+            // Sidebar nav — addEventListener é mais robusto que onclick
             document.querySelectorAll('.nav-item').forEach(el => {
-                el.onclick = () => irParaAba(el.dataset.tab);
+                el.onclick = null; // limpar handler anterior
+                el.addEventListener('click', () => {
+                    if (el.dataset.tab) irParaAba(el.dataset.tab);
+                });
             });
             // Setup forms
             setupForms();
@@ -6608,26 +6143,10 @@ tbody tr:last-child td { border-bottom: none !important; }
             carregarTudo();
             // Carregar config campos
             carregarConfigCampos();
-            // NOVAS LINHAS: Renderizar controle de menu e aplicar config
-            setTimeout(async () => {
-                await renderMenuControle();
-                await aplicarMenuConfig();
-            }, 800);
+            // Menu: sem controle central de abas
         }
 
-        function aplicarPermissoes() {
-            if (!estado.permissoes || !estado.nivel) return;
-            const nivel = estado.nivel;
-            if (nivel === 'superadmin') return; // acesso total
-            const abas = estado.permissoes[nivel] || [];
-            if (abas.length > 0) {
-                document.querySelectorAll('.nav-item[data-tab]').forEach(el => {
-                    const tab = el.dataset.tab;
-                    if (!['etiquetas'].includes(tab) && !abas.includes(tab)) el.style.display = 'none';
-                });
-            }
-        }
-
+        // Verifica se nível atual tem permissão para uma aba
         function atualizarRelogio() {
             const now = new Date();
             const d = String(now.getDate()).padStart(2, '0');
@@ -8907,71 +8426,6 @@ Responda APENAS com JSON: {"c1":"CODIGO1","c2":"CODIGO2","codU":"CODIGO1-CODIGO2
         async function confirmarNovoTipo() { const v = (document.getElementById('novoTipoInput')?.value || '').toUpperCase().trim(); if (!v) return; if (!estado.tiposExtintor.includes(v)) { estado.tiposExtintor.push(v); await supa.upsert('config_sistema', { chave: 'tipos_extintor', valor: JSON.stringify(estado.tiposExtintor) }, 'chave'); renderTiposSelect(); } document.getElementById('tipo').value = v; document.getElementById('addTipoInlineWrap').style.display = 'none'; notif('Tipo adicionado!', 'success'); }
 
         // ══════════════════════════════════════════════════════════════
-        // PERMISSÕES
-        // ══════════════════════════════════════════════════════════════
-        const ABA_DEFS = [
-            { id: 'extintores',   label: 'Extintores',       icon: 'fire-extinguisher' },
-            { id: 'clientes',     label: 'Clientes',          icon: 'user-tie' },
-            { id: 'empresas',     label: 'Executoras',        icon: 'building' },
-            { id: 'vendedores',   label: 'Vendedores',        icon: 'handshake' },
-            { id: 'etiquetas',    label: 'Etiquetas',         icon: 'tag' },
-            { id: 'vistoria',     label: 'Vistoria',          icon: 'clipboard-list' },
-            { id: 'os',           label: 'Ordens de Serviço', icon: 'file-invoice' },
-            { id: 'catalogo',     label: 'Catálogo',          icon: 'book-open' },
-            { id: 'idsetiquetas', label: 'IDs Etiquetas',     icon: 'fingerprint' },
-            { id: 'consultas',    label: 'Consultas',         icon: 'search' },
-            { id: 'relatorios',   label: 'Relatórios',        icon: 'chart-bar' },
-            { id: 'lotes',        label: 'Lotes de Selos',    icon: 'tags' },
-            { id: 'logistica',    label: 'Logística',         icon: 'truck' },
-            { id: 'usuarios',     label: 'Usuários',          icon: 'users-cog' },
-            { id: 'perfil',       label: 'Perfil',            icon: 'id-card' },
-            { id: 'config',       label: 'Configuração',      icon: 'cog' }
-        ];
-        const LOCK_ADMIN = ['usuarios', 'perfil', 'config'];
-        const LOCK_GERENTE = ['usuarios', 'config'];
-
-        function renderNiveisPermissoes() {
-            ['admin', 'gerente', 'operador'].forEach(nivel => {
-                const cont = document.getElementById(`nivelAbas-${nivel}`);
-                if (!cont) return;
-                const abas = estado.permissoes[nivel] || [];
-                cont.innerHTML = ABA_DEFS.map(a => {
-                    const bloq = (nivel === 'admin' && LOCK_ADMIN.includes(a.id)) || (nivel === 'gerente' && LOCK_GERENTE.includes(a.id));
-                    const on = !bloq && abas.includes(a.id);
-                    return `<label class="aba-toggle ${bloq ? 'bloqueada' : (on ? 'ativa' : '')}">
-        <input type="checkbox" ${on ? 'checked' : ''} ${bloq ? 'disabled' : ''} data-aba="${a.id}" onchange="atualizarTogglesNivel('${nivel}')">
-        <span><i class="fas fa-${a.icon}" style="margin-right:5px;font-size:.8rem;"></i>${a.label}</span>
-      </label>`;
-                }).join('');
-            });
-        }
-
-        function atualizarTogglesNivel(nivel) {
-            const cont = document.getElementById(`nivelAbas-${nivel}`);
-            if (!cont) return;
-            const checks = cont.querySelectorAll('input[type=checkbox]:not(:disabled)');
-            const abas = Array.from(checks).filter(c => c.checked).map(c => c.dataset.aba);
-            estado.permissoes[nivel] = abas;
-            checks.forEach(c => { const lbl = c.closest('.aba-toggle'); if (lbl) { lbl.className = 'aba-toggle' + (c.checked ? ' ativa' : ''); } });
-        }
-
-        async function salvarPermissoesNivel(nivel) {
-            const abas = estado.permissoes[nivel] || [];
-            try {
-                const base = supa._url.replace(/\/+$/, '');
-                const h = {'Content-Type':'application/json','apikey':supa._key,'Authorization':'Bearer '+supa._key,'Prefer':'return=representation'};
-                const patch = await fetch(base+'/rest/v1/permissoes_nivel?nivel=eq.'+nivel,
-                    {method:'PATCH',headers:h,body:JSON.stringify({abas:abas})});
-                const patched = patch.ok ? await patch.json() : [];
-                if (!Array.isArray(patched)||!patched.length) {
-                    await fetch(base+'/rest/v1/permissoes_nivel',
-                        {method:'POST',headers:h,body:JSON.stringify({nivel:nivel,abas:abas})});
-                }
-                notif('✅ Permissões salvas para ' + nivel + '!', 'success');
-            } catch (e) { notif('Erro ao salvar permissões: ' + e.message, 'danger'); }
-        }
-
-        // ══════════════════════════════════════════════════════════════
         // PERFIL - LOGO
         // ══════════════════════════════════════════════════════════════
         function carregarLogo(input) {
@@ -9387,163 +8841,8 @@ Responda APENAS com JSON: {"c1":"CODIGO1","c2":"CODIGO2","codU":"CODIGO1-CODIGO2
         // CONTROLE DE ABAS DO MENU (GLOBAL)
         // ══════════════════════════════════════════════════════════════
         // Definição de todas as abas do sistema
-        const ABAS_MENU_CTRL = [
-            { id: 'extintores', label: 'Extintores', icon: 'fa-fire-extinguisher', grupo: 'Cadastros', desc: 'Gerenciar todos os extintores' },
-            { id: 'clientes', label: 'Clientes', icon: 'fa-user-tie', grupo: 'Cadastros', desc: 'Base de clientes e importação' },
-            { id: 'empresas', label: 'Executoras', icon: 'fa-building', grupo: 'Cadastros', desc: 'Empresas executoras de serviços' },
-            { id: 'vendedores', label: 'Vendedores', icon: 'fa-handshake', grupo: 'Cadastros', desc: 'Equipe de vendas e comissões' },
-            { id: 'lotes', label: 'Lotes de Selos', icon: 'fa-tags', grupo: 'Premium', desc: 'Gerenciar lotes de selos (Sistema)' },
-            { id: 'logistica', label: 'Logística', icon: 'fa-truck', grupo: 'Premium', desc: 'Rotas e entregas' },
-            { id: 'etiquetas', label: 'Etiquetas', icon: 'fa-tag', grupo: 'Operações', desc: 'Gerar e gerenciar etiquetas' },
-            { id: 'vistoria', label: 'Vistoria', icon: 'fa-clipboard-list', grupo: 'Operações', desc: 'Agendar e realizar vistorias' },
-            { id: 'os', label: 'Ordens de Serviço', icon: 'fa-file-invoice', grupo: 'Operações', desc: 'Gerenciar OS' },
-            { id: 'catalogo', label: 'Catálogo de Itens', icon: 'fa-book-open', grupo: 'Operações', desc: 'Itens para OS' },
-            { id: 'idsetiquetas', label: 'IDs Etiquetas', icon: 'fa-fingerprint', grupo: 'Operações', desc: 'Consultar IDs gerados' },
-            { id: 'consultas', label: 'Consultas', icon: 'fa-search', grupo: 'Operações', desc: 'Consultar extintores' },
-            { id: 'relatorios', label: 'Relatórios', icon: 'fa-chart-bar', grupo: 'Operações', desc: 'Relatórios INMETRO' },
-            { id: 'usuarios', label: 'Usuários', icon: 'fa-users-cog', grupo: 'Admin', desc: 'Gerenciar usuários' },
-            { id: 'perfil', label: 'Perfil', icon: 'fa-id-card', grupo: 'Admin', desc: 'Dados da empresa' },
-            { id: 'config', label: 'Configuração', icon: 'fa-cog', grupo: 'Admin', desc: 'Configurações do sistema' }
-        ];
-
         // Abas que são bloqueadas para não-superadmin (não devem aparecer na lista de controle)
-        const ABAS_BLOQUEADAS_CTRL = ['usuarios', 'perfil', 'config'];
-
         // Carregar configuração do menu do Supabase
-        async function carregarMenuConfig(forceReload = false) {
-            if (!forceReload && window._menuConfigCache) return window._menuConfigCache;
-            const LS = 'pci_menu_abas_ativas';
-            try {
-                if (supa._url && supa._key) {
-                    const res = await supa.getAll('config_sistema', 'chave=eq.menu_abas_ativas&limit=1');
-                    if (res && res[0] && res[0].valor) {
-                        let v = res[0].valor;
-                        if (typeof v === 'string') { try { v = JSON.parse(v); } catch(e) {} }
-                        if (Array.isArray(v) && v.length > 0) {
-                            window._menuConfigCache = v;
-                            try { localStorage.setItem(LS, JSON.stringify(v)); } catch(e) {}
-                            return v;
-                        }
-                    }
-                }
-            } catch(e) { console.warn('[Menu] carregar:', e.message); }
-            try {
-                const c = localStorage.getItem(LS);
-                if (c) { const a = JSON.parse(c); if (Array.isArray(a) && a.length) { window._menuConfigCache = a; return a; } }
-            } catch(e) {}
-            const padrao = ABAS_MENU_CTRL.filter(a => !ABAS_BLOQUEADAS_CTRL.includes(a.id)).map(a => a.id);
-            window._menuConfigCache = padrao;
-            return padrao;
-        }
-
-        async function salvarMenuConfigSistema() {
-            const container = document.getElementById('menuCtrlLista');
-            if (!container) { notif('⚠️ Elemento não encontrado.','warning'); return; }
-            const checks = container.querySelectorAll('.sw-wrap input[type="checkbox"]');
-            if (!checks || !checks.length) { notif('⚠️ Nenhuma aba encontrada.','warning'); return; }
-            const abasAtivas = Array.from(checks).filter(c => c.checked).map(c => c.value);
-            window._menuConfigCache = abasAtivas;
-            try { localStorage.setItem('pci_menu_abas_ativas', JSON.stringify(abasAtivas)); } catch(e) {}
-            let supaOk = false;
-            try {
-                if (supa._url && supa._key) {
-                    const base = supa._url.replace(/\/+$/, '');
-                    const h = {'Content-Type':'application/json','apikey':supa._key,'Authorization':'Bearer '+supa._key,'Prefer':'return=representation'};
-                    const patch = await fetch(base+'/rest/v1/config_sistema?chave=eq.menu_abas_ativas',
-                        {method:'PATCH',headers:h,body:JSON.stringify({valor:abasAtivas})});
-                    const patched = patch.ok ? await patch.json() : [];
-                    if (Array.isArray(patched) && patched.length > 0) { supaOk = true; }
-                    else {
-                        const post = await fetch(base+'/rest/v1/config_sistema',
-                            {method:'POST',headers:h,body:JSON.stringify({chave:'menu_abas_ativas',valor:abasAtivas})});
-                        supaOk = post.ok;
-                    }
-                }
-            } catch(e) { console.warn('[Menu] salvar:', e.message); }
-            _aplicarVisibilidadeMenu(abasAtivas);
-            await renderMenuControle();
-            notif((supaOk?'✅ ':'💾 ')+abasAtivas.length+' abas '+(supaOk?'salvas!':'salvas localmente!'),'success');
-        }
-
-        async function resetarMenuConfig() {
-            const abasPadrao = ABAS_MENU_CTRL.filter(a => !ABAS_BLOQUEADAS_CTRL.includes(a.id)).map(a => a.id);
-            window._menuConfigCache = abasPadrao;
-            try { localStorage.setItem('pci_menu_abas_ativas', JSON.stringify(abasPadrao)); } catch(e) {}
-            try {
-                if (supa._url && supa._key) {
-                    const base = supa._url.replace(/\/+$/, '');
-                    const h = {'Content-Type':'application/json','apikey':supa._key,'Authorization':'Bearer '+supa._key,'Prefer':'return=representation'};
-                    const patch = await fetch(base+'/rest/v1/config_sistema?chave=eq.menu_abas_ativas',
-                        {method:'PATCH',headers:h,body:JSON.stringify({valor:abasPadrao})});
-                    const patched = patch.ok ? await patch.json() : [];
-                    if (!Array.isArray(patched)||!patched.length) {
-                        await fetch(base+'/rest/v1/config_sistema',
-                            {method:'POST',headers:h,body:JSON.stringify({chave:'menu_abas_ativas',valor:abasPadrao})});
-                    }
-                }
-            } catch(e) { console.warn('[Menu] reset:', e.message); }
-            _aplicarVisibilidadeMenu(abasPadrao);
-            await renderMenuControle();
-            notif('✅ Menu restaurado para o padrão!','success');
-        }
-
-        function _aplicarVisibilidadeMenu(abasAtivas) {
-            const ABAS_ADMIN = ['usuarios','perfil','config'];
-            const ABAS_PREMIUM = ['lotes','logistica'];
-            const isPremium = estado.versao === 'premium';
-            const ativasSet = new Set(abasAtivas);
-            document.querySelectorAll('.sidebar-nav .nav-item[data-tab]').forEach(el => {
-                const tabId = el.dataset.tab;
-                if (!tabId) return;
-                if (ABAS_ADMIN.includes(tabId)) return;
-                if (ABAS_PREMIUM.includes(tabId) && !isPremium) { el.style.display='none'; return; }
-                el.style.display = ativasSet.has(tabId) ? 'flex' : 'none';
-            });
-        }
-
-        async function aplicarMenuConfig() {
-            const abas = await carregarMenuConfig();
-            _aplicarVisibilidadeMenu(abas);
-        }
-
-        async function renderMenuControle() {
-            const container = document.getElementById('menuCtrlLista');
-            if (!container) { console.warn('[Menu] #menuCtrlLista não encontrado'); return; }
-            const abasAtivas = await carregarMenuConfig(true);
-            const abasAtivasSet = new Set(abasAtivas);
-            const grupos = {};
-            ABAS_MENU_CTRL.forEach(aba => {
-                if (ABAS_BLOQUEADAS_CTRL.includes(aba.id)) return;
-                if (!grupos[aba.grupo]) grupos[aba.grupo] = [];
-                grupos[aba.grupo].push(aba);
-            });
-            let html = '';
-            for (const [grupo, abas] of Object.entries(grupos)) {
-                html += `<div class="menu-grupo-titulo">${grupo.toUpperCase()}</div>`;
-                abas.forEach(aba => {
-                    const isActive = abasAtivasSet.has(aba.id);
-                    html += `<div class="menu-ctrl-row" style="opacity:${isActive?'1':'0.5'}">
-                        <div class="menu-ctrl-icon" style="background:#eef2fa;color:#1e3b5a;"><i class="fas ${aba.icon}"></i></div>
-                        <div class="menu-ctrl-info">
-                            <div class="menu-ctrl-nome">${aba.label}</div>
-                            <div class="menu-ctrl-desc">${aba.desc}</div>
-                        </div>
-                        <div class="sw-wrap">
-                            <input type="checkbox" id="menu_chk_${aba.id}" value="${aba.id}" ${isActive?'checked':''}>
-                            <span class="sw-slider"></span>
-                        </div>
-                    </div>`;
-                });
-            }
-            container.innerHTML = html;
-            container.querySelectorAll('.sw-wrap input[type="checkbox"]').forEach(chk => {
-                chk.addEventListener('change', function() {
-                    const row = this.closest('.menu-ctrl-row');
-                    if (row) { row.style.opacity=this.checked?'1':'0.5'; row.style.transition='opacity 0.2s'; }
-                });
-            });
-        }
-
         // ══════════════════════════════════════════════════════════════
         // HELPERS DE SEGURANÇA - escapa HTML e atributos
         // ══════════════════════════════════════════════════════════════
