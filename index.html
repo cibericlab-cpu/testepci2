@@ -1,6 +1,3 @@
-
-
-
 <!DOCTYPE html>
 <html lang="pt-br">
 
@@ -6107,7 +6104,18 @@
             }
             if (aba === 'lotes' && estado.versao === 'premium') carregarTodosSelosInm();
             if (aba === 'os') renderizarOS();
-            if (aba === 'config') { renderTiposLista(); menuRenderPainel().then(() => atualizarContadorMenu()); renderTabelaPermissoes(); }
+            if (aba === 'config') {
+                    // Garantir que todos os cards de config sejam visíveis para superadmin
+                    if (estado.nivel === 'superadmin') {
+                        ['cardSupa','cardIA','cardMenuCtrl','cardPermissoes'].forEach(id => {
+                            const el = document.getElementById(id);
+                            if (el) el.style.display = '';
+                        });
+                    }
+                    renderTiposLista();
+                    menuRenderPainel().then(() => atualizarContadorMenu());
+                    renderTabelaPermissoes();
+                }
         }
 
         function fecharModal() { document.getElementById('editModal').classList.add('hidden'); }
@@ -8511,6 +8519,29 @@ Responda APENAS com JSON: {"c1":"CODIGO1","c2":"CODIGO2","codU":"CODIGO1-CODIGO2
                     await carregarEtiquetas();
                     renderizarEtiquetas();
                     renderizarIdsEtiquetas();
+                } else if (ctx.tipo === 'usuario') {
+                    const nome   = document.getElementById('edt_usrNome')?.value?.trim();
+                    const login  = document.getElementById('edt_usrLogin')?.value?.trim();
+                    const senha  = document.getElementById('edt_usrSenha')?.value || '';
+                    const nivel  = document.getElementById('edt_usrNivel')?.value;
+                    const versao = document.getElementById('edt_usrVersao')?.value;
+                    const status = document.getElementById('edt_usrStatus')?.value;
+                    if (!nome || !login || !nivel || !versao) {
+                        notif('Preencha os campos obrigatórios', 'warning'); return;
+                    }
+                    if (senha && senha.length > 0 && senha.length < 6) {
+                        notif('Senha deve ter no mínimo 6 caracteres', 'warning'); return;
+                    }
+                    dados = { nome, login, nivel, versao, status };
+                    if (senha && senha.length >= 6) {
+                        const hashRes = await supa.rpc('hash_senha', { senha });
+                        const senhaHash = typeof hashRes === 'string' ? hashRes
+                            : (Array.isArray(hashRes) ? hashRes[0] : null);
+                        if (senhaHash) dados.senha_hash = senhaHash;
+                    }
+                    await supa.update('usuarios', ctx.id, dados);
+                    await carregarUsuarios();
+                    renderizarUsuarios();
                 }
 
                 fecharModal();
@@ -8557,7 +8588,67 @@ Responda APENAS com JSON: {"c1":"CODIGO1","c2":"CODIGO2","codU":"CODIGO1-CODIGO2
                 pw.document.close();
             });
         }
-        async function editarUsuario(id) { notif('Edição em breve', 'info'); }
+        async function editarUsuario(id) {
+            const u = estado.usuarios.find(x => x.id === id);
+            if (!u) { notif('Usuário não encontrado', 'warning'); return; }
+            const htmlModal = `
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
+                    <div>
+                        <label style="font-size:.76rem;font-weight:600;color:#4a5b6e;display:block;margin-bottom:3px;">Nome completo *</label>
+                        <input type="text" id="edt_usrNome" value="${escAttr(u.nome||'')}" style="margin:0;">
+                    </div>
+                    <div>
+                        <label style="font-size:.76rem;font-weight:600;color:#4a5b6e;display:block;margin-bottom:3px;">Login *</label>
+                        <input type="text" id="edt_usrLogin" value="${escAttr(u.login||'')}" style="margin:0;">
+                    </div>
+                </div>
+                <div style="margin-bottom:10px;">
+                    <label style="font-size:.76rem;font-weight:600;color:#4a5b6e;display:block;margin-bottom:3px;">
+                        Nova senha <span style="font-weight:400;color:#9ca3af;">(deixe em branco para não alterar)</span>
+                    </label>
+                    <div style="position:relative;">
+                        <input type="password" id="edt_usrSenha" placeholder="Nova senha (mín. 6 caracteres)" style="margin:0;padding-right:42px;">
+                        <button type="button" onclick="(function(){var i=document.getElementById('edt_usrSenha');i.type=i.type==='password'?'text':'password';})()"
+                            style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;color:#9ca3af;cursor:pointer;padding:4px;box-shadow:none;width:auto;">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+                <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:12px;">
+                    <div>
+                        <label style="font-size:.76rem;font-weight:600;color:#4a5b6e;display:block;margin-bottom:3px;">Nível *</label>
+                        <select id="edt_usrNivel" style="margin:0;">
+                            <option value="operador"   ${u.nivel==='operador'   ?'selected':''}>Operador</option>
+                            <option value="gerente"    ${u.nivel==='gerente'    ?'selected':''}>Gerente</option>
+                            <option value="admin"      ${u.nivel==='admin'      ?'selected':''}>Admin</option>
+                            <option value="superadmin" ${u.nivel==='superadmin' ?'selected':''}>SuperAdmin</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label style="font-size:.76rem;font-weight:600;color:#4a5b6e;display:block;margin-bottom:3px;">Versão *</label>
+                        <select id="edt_usrVersao" style="margin:0;">
+                            <option value="small"   ${(u.versao||'small')==='small'   ?'selected':''}>Small</option>
+                            <option value="premium" ${(u.versao||'small')==='premium' ?'selected':''}>Premium</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label style="font-size:.76rem;font-weight:600;color:#4a5b6e;display:block;margin-bottom:3px;">Status</label>
+                        <select id="edt_usrStatus" style="margin:0;">
+                            <option value="ativo"   ${(u.status||'ativo')==='ativo'   ?'selected':''}>✅ Ativo</option>
+                            <option value="inativo" ${(u.status||'ativo')==='inativo' ?'selected':''}>❌ Inativo</option>
+                        </select>
+                    </div>
+                </div>
+                <div style="background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:9px 12px;font-size:.78rem;color:#92400e;">
+                    <i class="fas fa-info-circle"></i>
+                    Login atual: <strong>${escHtml(u.login)}</strong>
+                    &nbsp;·&nbsp; Nível atual: <strong>${escHtml(u.nivel)}</strong>
+                </div>`;
+            document.getElementById('editModalTitle').textContent = 'Editar Usuário: ' + (u.nome || u.login);
+            document.getElementById('editModalContent').innerHTML = htmlModal;
+            document.getElementById('editModal').classList.remove('hidden');
+            window._editContext = { tipo: 'usuario', id: id };
+        }
         async function excluirUsuario(id) { if (!confirm('Excluir usuário?')) return; try { await supa.delete('usuarios', id); await carregarUsuarios(); renderizarUsuarios(); notif('Usuário excluído', 'success'); } catch (e) { notif('Erro: ' + e.message, 'danger'); } }
         function abrirEditSeloInm(rowId, codU, c1, c2, val, status) { document.getElementById('editSeloInmId').value = rowId; document.getElementById('editSeloInmCodU').value = codU; document.getElementById('editSeloInmC1').value = c1; document.getElementById('editSeloInmC2').value = c2; document.getElementById('editSeloInmVal').value = val; document.getElementById('editSeloInmStatus').value = status; document.getElementById('editSeloInmModal').classList.remove('hidden'); }
         async function salvarEditSeloInm() { const id = document.getElementById('editSeloInmId').value; if (!id) { notif('ID inválido', 'warning'); return; } try { await supa.update('selos_inmetro', id, { codigo_unificado: document.getElementById('editSeloInmCodU').value, codigo_1: document.getElementById('editSeloInmC1').value, codigo_2: document.getElementById('editSeloInmC2').value, status: document.getElementById('editSeloInmStatus').value }); document.getElementById('editSeloInmModal').classList.add('hidden'); await carregarTodosSelosInm(); notif('Selo atualizado', 'success'); } catch (e) { notif('Erro: ' + e.message, 'danger'); } }
@@ -8827,26 +8918,26 @@ Responda APENAS com JSON: {"c1":"CODIGO1","c2":"CODIGO2","codU":"CODIGO1-CODIGO2
         // ══════════════════════════════════════════════════════════════
         const NIVEL_REGRAS = {
             superadmin: {
-                abasOcultas:       [],                                   // nada oculto
-                configCardsOcultos:['cardSupa','cardIA','cardMenuCtrl'], // só vê Permissões e Tipos Extintor
+                abasOcultas:       [],  // nada oculto
+                configCardsOcultos:[],  // vê TUDO
                 podeEditar:        true,
                 podeExcluir:       true,
             },
             admin: {
-                abasOcultas:       [],                                   // vê todas as abas
-                configCardsOcultos:['cardSupa','cardIA','cardMenuCtrl'], // só vê Tipos Extintor
+                abasOcultas:       [],                      // vê todas as abas
+                configCardsOcultos:['cardSupa','cardIA'],   // vê Tipos Extintor + Controle de Menu
                 podeEditar:        true,
                 podeExcluir:       true,
             },
             gerente: {
                 abasOcultas:       ['config','perfil','usuarios'],        // não vê essas abas
-                configCardsOcultos:['cardSupa','cardIA','cardMenuCtrl'],  // n/a (não entra em config)
+                configCardsOcultos:['cardSupa','cardIA'],                 // n/a (não entra em config)
                 podeEditar:        true,
                 podeExcluir:       true,
             },
             operador: {
                 abasOcultas:       ['config','perfil','usuarios','vendedores'], // não vê essas
-                configCardsOcultos:['cardSupa','cardIA','cardMenuCtrl'],         // n/a
+                configCardsOcultos:['cardSupa','cardIA'],                        // n/a
                 podeEditar:        false,
                 podeExcluir:       false,
             },
