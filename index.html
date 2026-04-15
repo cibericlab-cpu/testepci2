@@ -6052,10 +6052,8 @@ tbody tr:last-child td { border-bottom: none !important; }
                     carregarPerfil(), carregarTiposExtintor(), carregarPermissoes(),
                     carregarVistoriasAgendadas(), carregarVistoriasRealizadas(), carregarVistoriasParaFazer()
                 ]);
-                // OS e Usuários disponíveis para todos os planos
-                await Promise.all([carregarUsuarios(), carregarOS()]);
                 if (estado.versao === 'premium') {
-                    await Promise.all([carregarLotes(), carregarLotesInmetro()]);
+                    await Promise.all([carregarLotes(), carregarLotesInmetro(), carregarUsuarios(), carregarOS()]);
                 }
                 atualizarConexaoUI(true);
                 renderizarTudo();
@@ -8912,22 +8910,22 @@ Responda APENAS com JSON: {"c1":"CODIGO1","c2":"CODIGO2","codU":"CODIGO1-CODIGO2
         // PERMISSÕES
         // ══════════════════════════════════════════════════════════════
         const ABA_DEFS = [
-            { id: 'extintores',  label: 'Extintores',       icon: 'fire-extinguisher' },
-            { id: 'clientes',    label: 'Clientes',          icon: 'user-tie' },
-            { id: 'empresas',    label: 'Executoras',        icon: 'building' },
-            { id: 'vendedores',  label: 'Vendedores',        icon: 'handshake' },
-            { id: 'etiquetas',   label: 'Etiquetas',         icon: 'tag' },
-            { id: 'vistoria',    label: 'Vistoria',          icon: 'clipboard-list' },
-            { id: 'os',          label: 'Ordens de Serviço', icon: 'file-invoice' },
-            { id: 'catalogo',    label: 'Catálogo',          icon: 'book-open' },
-            { id: 'idsetiquetas',label: 'IDs Etiquetas',     icon: 'fingerprint' },
-            { id: 'consultas',   label: 'Consultas',         icon: 'search' },
-            { id: 'relatorios',  label: 'Relatórios',        icon: 'chart-bar' },
-            { id: 'lotes',       label: 'Lotes de Selos',    icon: 'tags' },
-            { id: 'logistica',   label: 'Logística',         icon: 'truck' },
-            { id: 'usuarios',    label: 'Usuários',          icon: 'users-cog' },
-            { id: 'perfil',      label: 'Perfil',            icon: 'id-card' },
-            { id: 'config',      label: 'Configuração',      icon: 'cog' }
+            { id: 'extintores',   label: 'Extintores',       icon: 'fire-extinguisher' },
+            { id: 'clientes',     label: 'Clientes',          icon: 'user-tie' },
+            { id: 'empresas',     label: 'Executoras',        icon: 'building' },
+            { id: 'vendedores',   label: 'Vendedores',        icon: 'handshake' },
+            { id: 'etiquetas',    label: 'Etiquetas',         icon: 'tag' },
+            { id: 'vistoria',     label: 'Vistoria',          icon: 'clipboard-list' },
+            { id: 'os',           label: 'Ordens de Serviço', icon: 'file-invoice' },
+            { id: 'catalogo',     label: 'Catálogo',          icon: 'book-open' },
+            { id: 'idsetiquetas', label: 'IDs Etiquetas',     icon: 'fingerprint' },
+            { id: 'consultas',    label: 'Consultas',         icon: 'search' },
+            { id: 'relatorios',   label: 'Relatórios',        icon: 'chart-bar' },
+            { id: 'lotes',        label: 'Lotes de Selos',    icon: 'tags' },
+            { id: 'logistica',    label: 'Logística',         icon: 'truck' },
+            { id: 'usuarios',     label: 'Usuários',          icon: 'users-cog' },
+            { id: 'perfil',       label: 'Perfil',            icon: 'id-card' },
+            { id: 'config',       label: 'Configuração',      icon: 'cog' }
         ];
         const LOCK_ADMIN = ['usuarios', 'perfil', 'config'];
         const LOCK_GERENTE = ['usuarios', 'config'];
@@ -8962,7 +8960,6 @@ Responda APENAS com JSON: {"c1":"CODIGO1","c2":"CODIGO2","codU":"CODIGO1-CODIGO2
             try {
                 const base = supa._url.replace(/\/+$/, '');
                 const h = {'Content-Type':'application/json','apikey':supa._key,'Authorization':'Bearer '+supa._key,'Prefer':'return=representation'};
-                // PATCH por nivel (sem buscar id — evita problema de tipo)
                 const patch = await fetch(base+'/rest/v1/permissoes_nivel?nivel=eq.'+nivel,
                     {method:'PATCH',headers:h,body:JSON.stringify({abas:abas})});
                 const patched = patch.ok ? await patch.json() : [];
@@ -9512,7 +9509,7 @@ Responda APENAS com JSON: {"c1":"CODIGO1","c2":"CODIGO2","codU":"CODIGO1-CODIGO2
         async function renderMenuControle() {
             const container = document.getElementById('menuCtrlLista');
             if (!container) { console.warn('[Menu] #menuCtrlLista não encontrado'); return; }
-            const abasAtivas = await carregarMenuConfig(true); // sempre recarrega ao abrir painel
+            const abasAtivas = await carregarMenuConfig(true);
             const abasAtivasSet = new Set(abasAtivas);
             const grupos = {};
             ABAS_MENU_CTRL.forEach(aba => {
