@@ -2561,275 +2561,6 @@ tbody tr:last-child td { border-bottom: none !important; }
   .main-content { padding: 14px 16px 32px !important; }
 }
 
-        
-/* ═══════════════════════════════════════════════════════════════════
-   PCI MANAGER PRO — MELHORIAS VISUAIS v2026-04
-═══════════════════════════════════════════════════════════════════ */
-:root {
-  --shadow-sm: 0 1px 3px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04);
-  --shadow-md: 0 4px 12px rgba(0,20,60,.07), 0 2px 4px rgba(0,20,60,.04);
-  --shadow-lg: 0 8px 24px rgba(0,20,60,.10), 0 4px 8px rgba(0,20,60,.05);
-  --border: #e2eaf2;
-  --border-hover: #c5d8ee;
-  --bg-page: #eef2f7;
-  --bg-card: #ffffff;
-  --bg-subtle: #f8fafd;
-  --text-primary: #0d2137;
-  --text-secondary: #4a5b6e;
-  --text-muted: #94a3b8;
-  --blue-glow: rgba(42,92,154,0.15);
-  --transition: all 0.18s cubic-bezier(0.4,0,0.2,1);
-}
-
-body { background: var(--bg-page) !important; }
-
-/* Sidebar refinada */
-.sidebar {
-  width: 234px !important; min-width: 234px !important;
-  background: linear-gradient(180deg,#0a1628 0%,#0d2137 55%,#112844 100%) !important;
-  box-shadow: 4px 0 32px rgba(0,0,0,.22) !important;
-}
-.sidebar-logo { padding: 20px 16px 16px !important; }
-.sidebar-logo-icon {
-  width: 38px !important; height: 38px !important;
-  background: linear-gradient(135deg,rgba(255,255,255,.15),rgba(255,255,255,.06)) !important;
-  border: 1px solid rgba(255,255,255,.12) !important; border-radius: 11px !important;
-}
-.sidebar-logo-text { font-size: .86rem !important; font-weight: 800 !important; letter-spacing: -.3px !important; }
-.sidebar-logo-sub { font-size: .62rem !important; color: rgba(255,255,255,.32) !important; letter-spacing: 1px !important; text-transform: uppercase !important; }
-.sidebar-nav { padding: 10px 8px !important; }
-.sidebar-nav .nav-group-label {
-  font-size: .58rem !important; font-weight: 800 !important; letter-spacing: 1.2px !important;
-  color: rgba(255,255,255,.2) !important; padding: 14px 12px 5px !important;
-}
-.sidebar-nav .nav-item {
-  padding: 9px 12px !important; border-radius: 10px !important;
-  font-size: .8rem !important; font-weight: 500 !important;
-  color: rgba(255,255,255,.52) !important; margin-bottom: 1px !important;
-  transition: var(--transition) !important; gap: 10px !important;
-}
-.sidebar-nav .nav-item:hover {
-  background: rgba(255,255,255,.08) !important;
-  color: rgba(255,255,255,.88) !important; transform: translateX(2px);
-}
-.sidebar-nav .nav-item.active {
-  background: linear-gradient(135deg,rgba(42,92,154,.38),rgba(42,92,154,.18)) !important;
-  color: #fff !important; font-weight: 600 !important;
-  border-left: 2.5px solid #7dd3f8 !important; padding-left: 10px !important;
-}
-.sidebar-nav .nav-item.active i { color: #7dd3f8 !important; }
-
-/* Main content */
-.main-content { padding: 20px 28px 40px !important; background: var(--bg-page) !important; }
-
-/* Status bar */
-.status-bar { margin-bottom: 18px !important; padding-bottom: 14px !important; border-bottom: 1px solid var(--border) !important; }
-.connection-card, .datetime-card, .user-info {
-  border-radius: 50px !important; font-size: .78rem !important;
-  padding: 7px 14px !important; box-shadow: var(--shadow-sm) !important;
-  transition: var(--transition) !important; border: 1px solid var(--border) !important;
-  background: var(--bg-card) !important;
-}
-.version-indicator {
-  border-radius: 50px !important; font-weight: 700 !important;
-  font-size: .75rem !important; padding: 7px 14px !important;
-  cursor: pointer !important; transition: var(--transition) !important;
-}
-.user-info { color: var(--text-primary) !important; font-weight: 600 !important; }
-
-/* Dashboard cards */
-.dashboard-grid { gap: 12px !important; margin-bottom: 22px !important; }
-.dashboard-card {
-  border-radius: 14px !important; padding: 16px 12px 14px !important;
-  border: 1px solid var(--border) !important; box-shadow: var(--shadow-sm) !important;
-  transition: var(--transition) !important; background: var(--bg-card) !important;
-  position: relative; overflow: hidden;
-}
-.dashboard-card::after {
-  content:''; position:absolute; top:0; left:0; right:0; height:3px;
-  background: linear-gradient(90deg,#2a5c9a,#60a5fa); opacity:0; transition: var(--transition);
-}
-.dashboard-card:hover { box-shadow: var(--shadow-md) !important; transform: translateY(-2px); border-color: var(--border-hover) !important; }
-.dashboard-card:hover::after { opacity: 1; }
-.dashboard-card i { font-size: 1.05rem !important; margin-bottom: 6px !important; display: block !important; }
-.dashboard-card h3 { font-size: .62rem !important; font-weight: 700 !important; letter-spacing: .5px !important; color: var(--text-muted) !important; margin-bottom: 4px !important; }
-.dashboard-card .number { font-size: 1.7rem !important; font-weight: 800 !important; color: var(--text-primary) !important; letter-spacing: -1.5px !important; line-height: 1 !important; }
-
-/* Cards */
-.card {
-  border-radius: 18px !important; border: 1px solid var(--border) !important;
-  box-shadow: var(--shadow-sm) !important; padding: 22px 24px !important;
-  background: var(--bg-card) !important; margin-bottom: 16px !important;
-  transition: var(--transition) !important;
-}
-.card:hover { box-shadow: var(--shadow-md) !important; }
-.card h2 {
-  font-size: .92rem !important; font-weight: 700 !important; color: var(--text-primary) !important;
-  margin-bottom: 16px !important; padding-bottom: 12px !important;
-  border-bottom: 1px solid #f0f4f8 !important; gap: 8px !important;
-}
-.card h2 i { font-size: .88rem !important; color: #2a5c9a !important; }
-
-/* Inputs */
-input, select, textarea {
-  border-radius: 10px !important; border: 1.5px solid var(--border) !important;
-  padding: 10px 14px !important; font-size: .84rem !important;
-  color: var(--text-primary) !important; background: var(--bg-subtle) !important;
-  transition: var(--transition) !important; margin-bottom: 10px !important;
-}
-input:hover, select:hover { border-color: var(--border-hover) !important; background: var(--bg-card) !important; }
-input:focus, select:focus, textarea:focus {
-  border-color: #2a5c9a !important; box-shadow: 0 0 0 3px var(--blue-glow) !important;
-  background: var(--bg-card) !important; outline: none !important;
-}
-label { font-size: .74rem !important; font-weight: 600 !important; color: var(--text-secondary) !important; margin-bottom: 5px !important; letter-spacing: .1px !important; }
-
-/* Botões */
-button {
-  border-radius: 10px !important; font-size: .84rem !important;
-  font-weight: 600 !important; transition: var(--transition) !important; letter-spacing: -.1px !important;
-}
-button:not(.secondary):not(.danger):not(.success):not(.btn-export):not(.btn-primary):not(.sub-tab-btn):not(.logout-btn):not(.alerta-btn):not([style*="background:none"]) {
-  box-shadow: 0 2px 8px rgba(13,33,55,.22), 0 1px 3px rgba(13,33,55,.12) !important;
-}
-button.secondary {
-  background: var(--bg-card) !important; border: 1.5px solid var(--border) !important;
-  color: var(--text-secondary) !important; box-shadow: var(--shadow-sm) !important;
-}
-button.secondary:hover { background: var(--bg-subtle) !important; border-color: var(--border-hover) !important; color: var(--text-primary) !important; }
-button.small { padding: 7px 12px !important; font-size: .76rem !important; border-radius: 7px !important; }
-
-/* Tabelas */
-.table-responsive {
-  border-radius: 12px !important; border: 1px solid var(--border) !important;
-  overflow: hidden !important; box-shadow: var(--shadow-sm) !important;
-}
-thead tr { background: linear-gradient(135deg,#f8fafd,#f0f4f8) !important; border-bottom: 1.5px solid var(--border) !important; }
-th {
-  padding: 11px 14px !important; font-size: .68rem !important; font-weight: 700 !important;
-  color: var(--text-secondary) !important; text-transform: uppercase !important; letter-spacing: .5px !important;
-}
-td {
-  padding: 10px 14px !important; border-bottom: 1px solid #f0f4f8 !important;
-  font-size: .83rem !important; vertical-align: middle !important;
-}
-tbody tr { transition: background .12s !important; }
-tbody tr:hover td { background: #f5f9ff !important; }
-tbody tr:last-child td { border-bottom: none !important; }
-
-.action-buttons { display: flex !important; gap: 5px !important; flex-wrap: nowrap !important; }
-.action-buttons button {
-  padding: 0 !important; font-size: .72rem !important;
-  border-radius: 7px !important; width: 30px !important; height: 30px !important;
-  display: inline-flex !important; align-items: center !important; justify-content: center !important; margin: 0 !important;
-}
-
-/* Badges */
-.badge-status { padding: 4px 10px !important; border-radius: 20px !important; font-size: .7rem !important; font-weight: 700 !important; letter-spacing: .2px !important; }
-.badge-operacional { background: #dcfce7 !important; color: #15803d !important; }
-.badge-atencao { background: #fef9c3 !important; color: #854d0e !important; }
-.badge-irregular { background: #fee2e2 !important; color: #b91c1c !important; }
-
-/* Export toolbar */
-.export-toolbar {
-  background: linear-gradient(135deg,#f8fafd,#f0f4f8) !important; border: 1px solid var(--border) !important;
-  border-radius: 8px !important; padding: 8px 14px !important; margin-bottom: 12px !important; gap: 8px !important;
-}
-.btn-export {
-  padding: 5px 12px !important; border-radius: 6px !important; font-size: .72rem !important;
-  font-weight: 700 !important; letter-spacing: .3px !important;
-  box-shadow: 0 1px 3px rgba(0,0,0,.1) !important; transition: var(--transition) !important; margin: 0 !important;
-}
-.btn-export:hover { transform: translateY(-1px) !important; box-shadow: 0 3px 8px rgba(0,0,0,.15) !important; }
-.select-count { font-size: .7rem !important; padding: 3px 9px !important; border-radius: 20px !important; background: #e8eef5 !important; color: var(--text-secondary) !important; font-weight: 600 !important; }
-
-/* Sub-tabs */
-.sub-tabs-bar {
-  background: var(--bg-card) !important; border: 1px solid var(--border) !important;
-  border-radius: 14px !important; padding: 5px !important; margin-bottom: 20px !important;
-  box-shadow: var(--shadow-sm) !important; gap: 3px !important;
-}
-.sub-tab-btn {
-  border-radius: 10px !important; font-size: .8rem !important; font-weight: 600 !important;
-  padding: 9px 16px !important; transition: var(--transition) !important; color: var(--text-muted) !important;
-}
-.sub-tab-btn:hover { background: var(--bg-subtle) !important; color: var(--text-primary) !important; }
-.sub-tab-btn.active { background: linear-gradient(135deg,#1e3b5a,#0d2137) !important; color: #fff !important; box-shadow: 0 2px 8px rgba(13,33,55,.25) !important; }
-
-/* Notificações */
-.notification { border-radius: 12px !important; box-shadow: var(--shadow-lg) !important; border-left: 3px solid #2a5c9a !important; font-size: .82rem !important; }
-
-/* Lote cards */
-.lote-card { border-radius: 14px !important; border: 1px solid var(--border) !important; padding: 16px !important; transition: var(--transition) !important; }
-.lote-card:hover { border-color: #93c5fd !important; box-shadow: var(--shadow-md) !important; transform: translateY(-1px); }
-
-/* INMETRO cards */
-.inm-lote-card { border-radius: 12px !important; border: 1px solid var(--border) !important; border-left: 3px solid #0080C7 !important; padding: 16px 18px !important; box-shadow: var(--shadow-sm) !important; transition: var(--transition) !important; }
-.inm-lote-card:hover { box-shadow: var(--shadow-md) !important; border-left-color: #38bdf8 !important; }
-
-/* Config */
-.config-section { border-radius: 20px !important; border: 1px solid var(--border) !important; padding: 24px !important; margin-bottom: 20px !important; box-shadow: var(--shadow-sm) !important; transition: var(--transition) !important; }
-.config-section:hover { box-shadow: var(--shadow-md) !important; }
-
-/* ── CONTROLE DE ABAS DO MENU ── */
-.menu-grupo-titulo {
-  font-size: .62rem !important; font-weight: 800 !important; color: var(--text-muted) !important;
-  text-transform: uppercase !important; letter-spacing: 1px !important; margin: 16px 0 8px 2px !important;
-  display: flex !important; align-items: center !important; gap: 8px !important;
-}
-.menu-grupo-titulo::after { content:''; flex:1; height:1px; background:var(--border); margin-left:4px; }
-.menu-ctrl-row {
-  display: flex !important; align-items: center !important; gap: 14px !important;
-  padding: 13px 16px !important; border-radius: 12px !important;
-  border: 1px solid var(--border) !important; background: var(--bg-card) !important;
-  margin-bottom: 6px !important; transition: var(--transition) !important;
-}
-.menu-ctrl-row:hover { border-color: var(--border-hover) !important; box-shadow: var(--shadow-sm) !important; background: var(--bg-subtle) !important; }
-.menu-ctrl-icon {
-  width: 38px !important; height: 38px !important; border-radius: 10px !important;
-  background: #eef2fa !important; color: #1e3b5a !important; transition: var(--transition) !important;
-}
-.menu-ctrl-nome { font-size: .84rem !important; font-weight: 600 !important; color: var(--text-primary) !important; margin: 0 0 2px !important; }
-.menu-ctrl-desc { font-size: .72rem !important; color: var(--text-muted) !important; margin: 0 !important; }
-.sw-wrap { position:relative !important; display:inline-block !important; width:48px !important; height:26px !important; flex-shrink:0 !important; }
-.sw-wrap input { opacity:0 !important; width:0 !important; height:0 !important; position:absolute !important; margin:0 !important; padding:0 !important; border:none !important; }
-.sw-slider { position:absolute !important; inset:0 !important; border-radius:26px !important; background:#d1d5db !important; cursor:pointer !important; transition:background .2s !important; box-shadow:inset 0 1px 3px rgba(0,0,0,.1) !important; }
-.sw-slider::after { content:'' !important; position:absolute !important; width:20px !important; height:20px !important; border-radius:50% !important; background:#fff !important; top:3px !important; left:3px !important; transition:left .2s cubic-bezier(.4,0,.2,1) !important; box-shadow:0 1px 4px rgba(0,0,0,.2) !important; }
-.sw-wrap input:checked + .sw-slider { background:#1D9E75 !important; }
-.sw-wrap input:checked + .sw-slider::after { left:25px !important; }
-
-/* Row layout */
-.row { gap: 18px !important; }
-.etiqueta-field-group { border-radius: 12px !important; border: 1px solid var(--border) !important; background: var(--bg-subtle) !important; padding: 16px !important; margin-bottom: 14px !important; }
-.etiqueta-field-group h4 { font-size: .82rem !important; font-weight: 700 !important; margin-bottom: 12px !important; padding-bottom: 8px !important; border-bottom: 1px solid var(--border) !important; }
-.nivel-card { border-radius: 16px !important; padding: 20px !important; margin-bottom: 14px !important; }
-.consulta-filters { border-radius: 14px !important; padding: 18px !important; gap: 12px !important; margin-bottom: 16px !important; }
-.supa-field-group { border-radius: 14px !important; padding: 18px !important; margin-bottom: 18px !important; }
-.modal-small-content { border-radius: 22px !important; padding: 28px !important; box-shadow: 0 25px 60px rgba(0,0,0,.2) !important; }
-#pciProgressBox { border-radius: 22px !important; padding: 28px 32px !important; }
-.version-card { border-radius: 22px !important; }
-.modal-content { border-radius: 28px !important; }
-.logout-btn { border-radius: 10px !important; font-size: .78rem !important; font-weight: 600 !important; transition: var(--transition) !important; }
-.info-box { border-radius: 10px !important; padding: 12px 16px !important; font-size: .8rem !important; line-height: 1.6 !important; }
-
-/* Animação de entrada */
-@keyframes slideInUp { from{opacity:0;transform:translateY(10px);} to{opacity:1;transform:translateY(0);} }
-.tab-content.active .card { animation: slideInUp .2s cubic-bezier(0.4,0,0.2,1) both; }
-.tab-content.active .card:nth-child(2) { animation-delay:.04s; }
-.tab-content.active .card:nth-child(3) { animation-delay:.08s; }
-.tab-content.active .dashboard-grid { animation: slideInUp .18s ease both; }
-
-/* Scrollbar */
-::-webkit-scrollbar { width: 5px; height: 5px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: rgba(0,0,0,.12); border-radius: 10px; }
-::-webkit-scrollbar-thumb:hover { background: rgba(0,0,0,.2); }
-
-@media (max-width:1024px) {
-  .sidebar { width: 58px !important; min-width: 58px !important; }
-  .main-content { padding: 14px 16px 32px !important; }
-}
-
         </style>
 </head>
 
@@ -6879,7 +6610,7 @@ tbody tr:last-child td { border-bottom: none !important; }
             carregarConfigCampos();
             // NOVAS LINHAS: Renderizar controle de menu e aplicar config
             renderMenuControle();
-            aplicarMenuConfig();
+            setTimeout(() => aplicarMenuConfig(), 600);
         }
 
         function aplicarPermissoes() {
@@ -9691,35 +9422,26 @@ Responda APENAS com JSON: {"c1":"CODIGO1","c2":"CODIGO2","codU":"CODIGO1-CODIGO2
 
         async function salvarMenuConfigSistema() {
             const checks = document.querySelectorAll('#menuCtrlLista .menu-ctrl-row input[type="checkbox"]');
-            if (!checks || !checks.length) {
-                notif('Abra Configuração → Controle de Abas primeiro.', 'warning'); return;
-            }
+            if (!checks || !checks.length) { notif('Abra Configuração → Controle de Abas primeiro.','warning'); return; }
             const abasAtivas = Array.from(checks).filter(c => c.checked).map(c => c.value);
-
-            // localStorage (try/catch pois file:// pode bloquear)
             try { localStorage.setItem('pci_menu_abas_ativas', JSON.stringify(abasAtivas)); } catch(e) {}
-
-            // Supabase via supa._url/_key (sempre válidos após login)
             let supaOk = false;
             try {
                 const base = supa._url.replace(/\/+$/, '');
-                const h = { 'Content-Type': 'application/json', 'apikey': supa._key, 'Authorization': 'Bearer ' + supa._key, 'Prefer': 'return=representation' };
-                const patch = await fetch(base + '/rest/v1/config_sistema?chave=eq.menu_abas_ativas',
-                    { method: 'PATCH', headers: h, body: JSON.stringify({ valor: abasAtivas }) });
+                const h = { 'Content-Type':'application/json','apikey':supa._key,'Authorization':'Bearer '+supa._key,'Prefer':'return=representation' };
+                const patch = await fetch(base+'/rest/v1/config_sistema?chave=eq.menu_abas_ativas',
+                    { method:'PATCH', headers:h, body:JSON.stringify({ valor: abasAtivas }) });
                 const patched = patch.ok ? await patch.json() : [];
-                if (Array.isArray(patched) && patched.length > 0) {
-                    supaOk = true;
-                } else {
-                    const post = await fetch(base + '/rest/v1/config_sistema',
-                        { method: 'POST', headers: h, body: JSON.stringify({ chave: 'menu_abas_ativas', valor: abasAtivas }) });
+                if (Array.isArray(patched) && patched.length > 0) { supaOk = true; }
+                else {
+                    const post = await fetch(base+'/rest/v1/config_sistema',
+                        { method:'POST', headers:h, body:JSON.stringify({ chave:'menu_abas_ativas', valor: abasAtivas }) });
                     supaOk = post.ok;
                 }
             } catch(e) { console.warn('[Menu] salvar:', e.message); }
-
-            // Aplicar imediatamente com os dados locais (sem ir ao banco de novo)
             _aplicarVisibilidadeMenu(abasAtivas);
             await renderMenuControle();
-            notif((supaOk ? '✅ ' : '💾 ') + abasAtivas.length + ' abas ' + (supaOk ? 'salvas!' : 'salvas localmente!'), 'success');
+            notif((supaOk?'✅ ':'💾 ')+abasAtivas.length+' abas '+(supaOk?'salvas!':'salvas localmente!'),'success');
         }
 
         async function resetarMenuConfig() {
@@ -9727,24 +9449,22 @@ Responda APENAS com JSON: {"c1":"CODIGO1","c2":"CODIGO2","codU":"CODIGO1-CODIGO2
             try { localStorage.setItem('pci_menu_abas_ativas', JSON.stringify(abasPadrao)); } catch(e) {}
             try {
                 const base = supa._url.replace(/\/+$/, '');
-                const h = { 'Content-Type': 'application/json', 'apikey': supa._key, 'Authorization': 'Bearer ' + supa._key, 'Prefer': 'return=representation' };
-                const patch = await fetch(base + '/rest/v1/config_sistema?chave=eq.menu_abas_ativas',
-                    { method: 'PATCH', headers: h, body: JSON.stringify({ valor: abasPadrao }) });
+                const h = { 'Content-Type':'application/json','apikey':supa._key,'Authorization':'Bearer '+supa._key,'Prefer':'return=representation' };
+                const patch = await fetch(base+'/rest/v1/config_sistema?chave=eq.menu_abas_ativas',
+                    { method:'PATCH', headers:h, body:JSON.stringify({ valor: abasPadrao }) });
                 const patched = patch.ok ? await patch.json() : [];
-                if (!Array.isArray(patched) || !patched.length) {
-                    await fetch(base + '/rest/v1/config_sistema',
-                        { method: 'POST', headers: h, body: JSON.stringify({ chave: 'menu_abas_ativas', valor: abasPadrao }) });
+                if (!Array.isArray(patched)||!patched.length) {
+                    await fetch(base+'/rest/v1/config_sistema', { method:'POST', headers:h, body:JSON.stringify({ chave:'menu_abas_ativas', valor: abasPadrao }) });
                 }
             } catch(e) { console.warn('[Menu] reset:', e.message); }
             _aplicarVisibilidadeMenu(abasPadrao);
             await renderMenuControle();
-            notif('✅ Menu restaurado para o padrão!', 'success');
+            notif('✅ Menu restaurado para o padrão!','success');
         }
 
-        // Aplica visibilidade direto com array — sem ir ao banco
         function _aplicarVisibilidadeMenu(abasAtivas) {
-            const ABAS_ADMIN   = ['usuarios', 'perfil', 'config'];
-            const ABAS_PREMIUM = ['lotes', 'logistica'];
+            const ABAS_ADMIN = ['usuarios','perfil','config'];
+            const ABAS_PREMIUM = ['lotes','logistica'];
             const isPremium = estado.versao === 'premium';
             const ativasSet = new Set(abasAtivas);
             document.querySelectorAll('.sidebar-nav .nav-item[data-tab]').forEach(el => {
@@ -9798,7 +9518,6 @@ Responda APENAS com JSON: {"c1":"CODIGO1","c2":"CODIGO2","codU":"CODIGO1-CODIGO2
                 });
             }
             container.innerHTML = html;
-            // Feedback visual ao clicar (sem salvar — só visual)
             container.querySelectorAll('.sw-wrap input[type="checkbox"]').forEach(chk => {
                 chk.addEventListener('change', function() {
                     const row = this.closest('.menu-ctrl-row');
