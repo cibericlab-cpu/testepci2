@@ -6609,8 +6609,11 @@ tbody tr:last-child td { border-bottom: none !important; }
             // Carregar config campos
             carregarConfigCampos();
             // NOVAS LINHAS: Renderizar controle de menu e aplicar config
-            renderMenuControle();
-            setTimeout(() => aplicarMenuConfig(), 600);
+            // Renderizar controle de menu e aplicar configuração salva
+            setTimeout(async () => {
+                await renderMenuControle();
+                await aplicarMenuConfig();
+            }, 500);
         }
 
         function aplicarPermissoes() {
@@ -9406,7 +9409,7 @@ Responda APENAS com JSON: {"c1":"CODIGO1","c2":"CODIGO2","codU":"CODIGO1-CODIGO2
                 const res = await supa.getAll('config_sistema', 'chave=eq.menu_abas_ativas&limit=1');
                 if (res && res[0]) {
                     let v = res[0].valor;
-                    if (typeof v === 'string') { try { v = JSON.parse(v); } catch(e) {} }
+                    if (typeof v === 'string') { try { v = JSON.parse(v); } catch(e) { console.warn('[Menu] parse:', e); } }
                     if (Array.isArray(v) && v.length > 0) {
                         try { localStorage.setItem(LS, JSON.stringify(v)); } catch(e) {}
                         return v;
@@ -9417,44 +9420,44 @@ Responda APENAS com JSON: {"c1":"CODIGO1","c2":"CODIGO2","codU":"CODIGO1-CODIGO2
                 const c = localStorage.getItem(LS);
                 if (c) { const a = JSON.parse(c); if (Array.isArray(a) && a.length) return a; }
             } catch(e) {}
-            return ABAS_MENU_CTRL.map(a => a.id);
+            return ABAS_MENU_CTRL.filter(a => !ABAS_BLOQUEADAS_CTRL.includes(a.id)).map(a => a.id);
         }
 
         async function salvarMenuConfigSistema() {
             const checks = document.querySelectorAll('#menuCtrlLista .menu-ctrl-row input[type="checkbox"]');
-            if (!checks || !checks.length) { notif('Abra Configuração → Controle de Abas primeiro.','warning'); return; }
+            if (!checks || !checks.length) { notif('⚠️ Abra Configuração → Controle de Abas primeiro.','warning'); return; }
             const abasAtivas = Array.from(checks).filter(c => c.checked).map(c => c.value);
             try { localStorage.setItem('pci_menu_abas_ativas', JSON.stringify(abasAtivas)); } catch(e) {}
             let supaOk = false;
             try {
                 const base = supa._url.replace(/\/+$/, '');
-                const h = { 'Content-Type':'application/json','apikey':supa._key,'Authorization':'Bearer '+supa._key,'Prefer':'return=representation' };
-                const patch = await fetch(base+'/rest/v1/config_sistema?chave=eq.menu_abas_ativas',
-                    { method:'PATCH', headers:h, body:JSON.stringify({ valor: abasAtivas }) });
+                const h = {'Content-Type':'application/json','apikey':supa._key,'Authorization':'Bearer '+supa._key,'Prefer':'return=representation'};
+                const patch = await fetch(base+'/rest/v1/config_sistema?chave=eq.menu_abas_ativas',{method:'PATCH',headers:h,body:JSON.stringify({valor:abasAtivas})});
                 const patched = patch.ok ? await patch.json() : [];
                 if (Array.isArray(patched) && patched.length > 0) { supaOk = true; }
                 else {
-                    const post = await fetch(base+'/rest/v1/config_sistema',
-                        { method:'POST', headers:h, body:JSON.stringify({ chave:'menu_abas_ativas', valor: abasAtivas }) });
+                    const post = await fetch(base+'/rest/v1/config_sistema',{method:'POST',headers:h,body:JSON.stringify({chave:'menu_abas_ativas',valor:abasAtivas})});
                     supaOk = post.ok;
                 }
-            } catch(e) { console.warn('[Menu] salvar:', e.message); }
+            } catch(e) {
+                console.warn('[Menu] salvar:', e.message);
+                notif('⚠️ Não foi possível salvar no Supabase, mas a configuração foi salva localmente.','warning');
+            }
             _aplicarVisibilidadeMenu(abasAtivas);
             await renderMenuControle();
             notif((supaOk?'✅ ':'💾 ')+abasAtivas.length+' abas '+(supaOk?'salvas!':'salvas localmente!'),'success');
         }
 
         async function resetarMenuConfig() {
-            const abasPadrao = ABAS_MENU_CTRL.map(a => a.id);
+            const abasPadrao = ABAS_MENU_CTRL.filter(a => !ABAS_BLOQUEADAS_CTRL.includes(a.id)).map(a => a.id);
             try { localStorage.setItem('pci_menu_abas_ativas', JSON.stringify(abasPadrao)); } catch(e) {}
             try {
                 const base = supa._url.replace(/\/+$/, '');
-                const h = { 'Content-Type':'application/json','apikey':supa._key,'Authorization':'Bearer '+supa._key,'Prefer':'return=representation' };
-                const patch = await fetch(base+'/rest/v1/config_sistema?chave=eq.menu_abas_ativas',
-                    { method:'PATCH', headers:h, body:JSON.stringify({ valor: abasPadrao }) });
+                const h = {'Content-Type':'application/json','apikey':supa._key,'Authorization':'Bearer '+supa._key,'Prefer':'return=representation'};
+                const patch = await fetch(base+'/rest/v1/config_sistema?chave=eq.menu_abas_ativas',{method:'PATCH',headers:h,body:JSON.stringify({valor:abasPadrao})});
                 const patched = patch.ok ? await patch.json() : [];
                 if (!Array.isArray(patched)||!patched.length) {
-                    await fetch(base+'/rest/v1/config_sistema', { method:'POST', headers:h, body:JSON.stringify({ chave:'menu_abas_ativas', valor: abasPadrao }) });
+                    await fetch(base+'/rest/v1/config_sistema',{method:'POST',headers:h,body:JSON.stringify({chave:'menu_abas_ativas',valor:abasPadrao})});
                 }
             } catch(e) { console.warn('[Menu] reset:', e.message); }
             _aplicarVisibilidadeMenu(abasPadrao);
@@ -9471,7 +9474,7 @@ Responda APENAS com JSON: {"c1":"CODIGO1","c2":"CODIGO2","codU":"CODIGO1-CODIGO2
                 const tabId = el.dataset.tab;
                 if (!tabId) return;
                 if (ABAS_ADMIN.includes(tabId)) return;
-                if (ABAS_PREMIUM.includes(tabId) && !isPremium) return;
+                if (ABAS_PREMIUM.includes(tabId) && !isPremium) { el.style.display='none'; return; }
                 el.style.display = ativasSet.has(tabId) ? '' : 'none';
             });
         }
@@ -9479,6 +9482,44 @@ Responda APENAS com JSON: {"c1":"CODIGO1","c2":"CODIGO2","codU":"CODIGO1-CODIGO2
         async function aplicarMenuConfig() {
             const abas = await carregarMenuConfig();
             _aplicarVisibilidadeMenu(abas);
+        }
+
+        async function renderMenuControle() {
+            const container = document.getElementById('menuCtrlLista');
+            if (!container) { console.warn('[Menu] #menuCtrlLista não encontrado'); return; }
+            const abasAtivas = await carregarMenuConfig();
+            const abasAtivasSet = new Set(abasAtivas);
+            const grupos = {};
+            ABAS_MENU_CTRL.forEach(aba => {
+                if (ABAS_BLOQUEADAS_CTRL.includes(aba.id)) return;
+                if (!grupos[aba.grupo]) grupos[aba.grupo] = [];
+                grupos[aba.grupo].push(aba);
+            });
+            let html = '';
+            for (const [grupo, abas] of Object.entries(grupos)) {
+                html += `<div class="menu-grupo-titulo">${grupo.toUpperCase()}</div>`;
+                abas.forEach(aba => {
+                    const isActive = abasAtivasSet.has(aba.id);
+                    html += `<div class="menu-ctrl-row" style="opacity:${isActive?'1':'0.5'}">
+                        <div class="menu-ctrl-icon" style="background:#eef2fa;color:#1e3b5a;"><i class="fas ${aba.icon}"></i></div>
+                        <div class="menu-ctrl-info">
+                            <div class="menu-ctrl-nome">${aba.label}</div>
+                            <div class="menu-ctrl-desc">${aba.desc}</div>
+                        </div>
+                        <div class="sw-wrap">
+                            <input type="checkbox" id="menu_chk_${aba.id}" value="${aba.id}" ${isActive?'checked':''}>
+                            <span class="sw-slider"></span>
+                        </div>
+                    </div>`;
+                });
+            }
+            container.innerHTML = html;
+            container.querySelectorAll('.sw-wrap input[type="checkbox"]').forEach(chk => {
+                chk.addEventListener('change', function() {
+                    const row = this.closest('.menu-ctrl-row');
+                    if (row) { row.style.opacity = this.checked ? '1' : '0.5'; row.style.transition = 'opacity 0.2s'; }
+                });
+            });
         }
 
         // Renderizar o painel de controle no Config
@@ -9518,12 +9559,6 @@ Responda APENAS com JSON: {"c1":"CODIGO1","c2":"CODIGO2","codU":"CODIGO1-CODIGO2
                 });
             }
             container.innerHTML = html;
-            container.querySelectorAll('.sw-wrap input[type="checkbox"]').forEach(chk => {
-                chk.addEventListener('change', function() {
-                    const row = this.closest('.menu-ctrl-row');
-                    if (row) { row.style.opacity = this.checked ? '1' : '0.5'; row.style.transition = 'opacity 0.2s'; }
-                });
-            });
         }
 
         // ══════════════════════════════════════════════════════════════
