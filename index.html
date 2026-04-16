@@ -1,3 +1,6 @@
+
+
+
 <!DOCTYPE html>
 <html lang="pt-br">
 
@@ -6110,7 +6113,13 @@
         }
 
         async function carregarTudo() {
-            if (!supa._url || !supa._key) { atualizarConexaoUI(false); return; }
+            // Garantir que supa está inicializado antes de continuar
+            if (!supa._url || !supa._key) {
+                const url = localStorage.getItem('pci_supa_url') || _SUPA_URL_DEFAULT;
+                const key = localStorage.getItem('pci_supa_key') || _SUPA_KEY_DEFAULT;
+                if (url && key) { supa.init(url, key); }
+                else { atualizarConexaoUI(false); return; }
+            }
             try {
                 await Promise.all([
                     carregarExtintores(), carregarClientes(), carregarEmpresas(),
@@ -6706,10 +6715,10 @@
             setupForms();
             // Carregar medida padrão salva pelo usuário
             setTimeout(carregarMedidaPadrao, 200);
-            // Carregar dados
-            carregarTudo();
-            // Carregar config campos
+            // Carregar config campos PRIMEIRO (inicializa supa com URL+Key)
             carregarConfigCampos();
+            // Carregar dados — usa window.carregarTudo para garantir versão patchada
+            (window.carregarTudo || carregarTudo)();
             // Aplicar visibilidade do menu (carrega do Supabase/localStorage)
             setTimeout(async () => {
                 await menuAplicar();
