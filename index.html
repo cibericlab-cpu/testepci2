@@ -1,3 +1,6 @@
+
+
+
 <!DOCTYPE html>
 <html lang="pt-br">
 
@@ -7248,7 +7251,10 @@
                         return;
                     }
                     const hoje = new Date();
-                    const valStr = document.getElementById('validade').value;
+                    const valEl = document.getElementById('validade');
+                    const recEl = document.getElementById('recarga');
+                    const valStr = valEl ? valEl.value : '';
+                    const recStr = recEl ? recEl.value : '';
                     const val = valStr ? new Date(valStr) : null;
                     const dias = val ? Math.floor((val - hoje) / (1000 * 60 * 60 * 24)) : 999;
                     let statusOp = 'operacional';
@@ -7257,9 +7263,8 @@
                     const dados = {
                         id: idGerado,
                         tipo: document.getElementById('tipo').value,
-
                         validade: valStr || null,
-                        recarga: document.getElementById('recarga').value || null,
+                        recarga: recStr || null,
                         num_cilindro: document.getElementById('numCilindro').value || '',
                         norma_fab: document.getElementById('normaFab').value || '',
                         fabricante: document.getElementById('fabricante').value || '',
