@@ -1,5 +1,6 @@
 
 
+
 <!DOCTYPE html>
 <html lang="pt-br">
 
@@ -5952,8 +5953,8 @@
         // ═══════════════════════════════════════════════════════
         // VERSÃO DO SISTEMA — incrementada a cada atualização
         // ═══════════════════════════════════════════════════════
-        const PCI_VERSION    = '2.5.0';
-        const PCI_BUILD_DATE = '2026-04-16';
+        const PCI_VERSION    = '2.5.1';
+        const PCI_BUILD_DATE = '2026-04-16b';
         const PCI_CHANGELOG  = 'Aba Ajuda+Bot, Histórico Relatórios, Segurança, Backup Supabase';
 
         let estado = {
@@ -11807,9 +11808,8 @@ ${JSON.stringify(_botHistorico.slice(-6))}`;
                         Promise.all(keys.map(k => caches.delete(k)))
                     );
                 }).then(() => {
-                    navigator.serviceWorker.register('./sw.js')
-                        .then(r  => console.log('[SW] registrado:', r.scope))
-                        .catch(e => console.warn('[SW] falhou:', e.message));
+                    // SW desativado temporariamente para garantir arquivo fresco
+                    console.log('[SW] Caches limpos, SW não registrado (v2.5.1)');
                 });
             });
         }
