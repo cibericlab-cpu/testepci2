@@ -1,79 +1,76 @@
-// ═══════════════════════════════════════════════════════════════════════
-// PCI Manager Pro — Service Worker  (sw.js)
-// Coloque este arquivo na RAIZ do repositório GitHub Pages
-// ═══════════════════════════════════════════════════════════════════════
+/* PCI Manager Pro — Service Worker v1.1
+   Fix: Response body lido apenas uma vez (evita "clone" error)
+*/
 
-const CACHE = 'pci-v1';
+const CACHE_NAME = 'pci-manager-v1';
 
-// Assets que nunca são cacheados (sempre rede direta)
-const NO_CACHE = [
-    'supabase.co',
-    'api.groq.com',
-    'api.anthropic.com',
-    'brasilapi.com.br',
+// Recursos para cachear na instalação
+const PRE_CACHE = [
+  './',
+  './index.html',
 ];
 
-// ── Instalação ──────────────────────────────────────────────────────────
-self.addEventListener('install', e => {
-    console.log('[SW] Instalado');
-    e.waitUntil(
-        caches.open(CACHE).then(c => c.addAll(['/', '/index.html']).catch(() => {}))
-    );
-    self.skipWaiting();
+// ── Instalação ──────────────────────────────────────────────
+self.addEventListener('install', event => {
+  self.skipWaiting();
+  event.waitUntil(
+    caches.open(CACHE_NAME).then(cache => {
+      return cache.addAll(PRE_CACHE).catch(() => {
+        // Falha silenciosa se algum recurso não existir ainda
+      });
+    })
+  );
 });
 
-// ── Ativação — limpar caches antigos ────────────────────────────────────
-self.addEventListener('activate', e => {
-    e.waitUntil(
-        caches.keys()
-            .then(keys => Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k))))
-            .then(() => self.clients.claim())
-    );
+// ── Ativação ─────────────────────────────────────────────────
+self.addEventListener('activate', event => {
+  event.waitUntil(
+    caches.keys().then(keys =>
+      Promise.all(
+        keys
+          .filter(k => k !== CACHE_NAME)
+          .map(k => caches.delete(k))
+      )
+    ).then(() => self.clients.claim())
+  );
 });
 
-// ── Fetch ────────────────────────────────────────────────────────────────
-self.addEventListener('fetch', e => {
-    const url = new URL(e.request.url);
+// ── Fetch ────────────────────────────────────────────────────
+self.addEventListener('fetch', event => {
+  const url = new URL(event.request.url);
 
-    // Ignorar não-HTTP e métodos que modificam dados
-    if (!e.request.url.startsWith('http')) return;
-    if (e.request.method !== 'GET') return;
+  // Requisições ao Supabase: NUNCA interceptar — deixa passar direto
+  // (evita o erro "Failed to execute 'clone' on 'Response': body already used")
+  if (url.hostname.includes('supabase.co')) {
+    return; // passa direto para a rede sem qualquer interceptação
+  }
 
-    // APIs externas → sempre rede, sem cache
-    if (NO_CACHE.some(h => url.hostname.includes(h))) return;
+  // Para requisições POST/PUT/DELETE: nunca cachear
+  if (event.request.method !== 'GET') {
+    return;
+  }
 
-    // CDNs (fontes, ícones, libs) → Cache-First
-    const isCDN = ['googleapis.com','cdnjs.cloudflare.com','jsdelivr.net','unpkg.com']
-        .some(h => url.hostname.includes(h));
+  // Estratégia: Cache First para recursos estáticos, Network First para o resto
+  event.respondWith(
+    caches.match(event.request).then(cached => {
+      if (cached) return cached;
 
-    if (isCDN) {
-        e.respondWith(
-            caches.match(e.request).then(cached => {
-                if (cached) return cached;
-                return fetch(e.request).then(res => {
-                    if (res && res.status === 200)
-                        caches.open(CACHE).then(c => c.put(e.request, res.clone()));
-                    return res;
-                });
-            })
-        );
-        return;
-    }
+      return fetch(event.request).then(response => {
+        // Só cacheia respostas válidas de mesma origem
+        if (
+          !response ||
+          response.status !== 200 ||
+          response.type === 'opaque' ||
+          url.origin !== location.origin
+        ) {
+          return response;
+        }
 
-    // index.html e assets locais → Network-First, fallback cache
-    e.respondWith(
-        fetch(e.request)
-            .then(res => {
-                if (res && res.status === 200)
-                    caches.open(CACHE).then(c => c.put(e.request, res.clone()));
-                return res;
-            })
-            .catch(() => caches.match(e.request).then(c => c || caches.match('/index.html')))
-    );
-});
-
-// ── Mensagens ────────────────────────────────────────────────────────────
-self.addEventListener('message', e => {
-    if (e.data?.type === 'SKIP_WAITING') self.skipWaiting();
-    if (e.data?.type === 'CLEAR_CACHE')  caches.keys().then(k => k.forEach(n => caches.delete(n)));
+        // Clonar ANTES de qualquer leitura do body
+        const toCache = response.clone();
+        caches.open(CACHE_NAME).then(cache => cache.put(event.request, toCache));
+        return response;
+      }).catch(() => cached || new Response('Offline', { status: 503 }));
+    })
+  );
 });
