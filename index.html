@@ -1,3 +1,6 @@
+
+
+
 <!DOCTYPE html>
 <html lang="pt-br">
 
@@ -2291,6 +2294,13 @@
         }
         .relcad-ext-header { font-size:.8rem; font-weight:700; color:#4a5b6e; margin-bottom:10px; display:flex; align-items:center; gap:6px; }
 
+        
+        /* ── Bot assistente ── */
+        @keyframes typingDot {
+            0%, 60%, 100% { transform: translateY(0); opacity:.4; }
+            30%            { transform: translateY(-6px); opacity:1; }
+        }
+
         </style>
 </head>
 
@@ -2944,6 +2954,7 @@
                             class="fas fa-id-card"></i><span> Perfil</span></div>
                     <div class="nav-item" id="navItemConfig" data-tab="config" style="display:none;"><i
                             class="fas fa-cog"></i><span> Configuração</span></div>
+                    <div class="nav-item" id="navItemAjuda" data-tab="ajuda"><i class="fas fa-life-ring" style="color:#7c3aed;"></i><span> Ajuda</span></div>
                 </nav>
                 <div class="sidebar-bottom">
                     <button class="logout-btn" onclick="logout()">
@@ -3021,25 +3032,9 @@
                 <div id="extintoresTab" class="tab-content">
                     <div style="display:flex;flex-direction:column;gap:16px;">
 
-                        <!-- ════ FORMULÁRIO NOVO EXTINTOR (acima, colapsável) ════ -->
-                        <div style="background:#fff;border:1px solid #e8eef5;border-radius:16px;box-shadow:0 2px 8px rgba(0,0,0,.04);overflow:hidden;">
-                            <!-- Header clicável -->
-                            <div id="headerFormExt" onclick="toggleFormExtintor()"
-                                style="display:flex;align-items:center;justify-content:space-between;padding:14px 20px;cursor:pointer;user-select:none;">
-                                <div style="display:flex;align-items:center;gap:12px;">
-                                    <div style="width:34px;height:34px;background:linear-gradient(135deg,#1e3b5a,#0d2137);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-                                        <i class="fas fa-plus" style="color:#fff;font-size:.85rem;"></i>
-                                    </div>
-                                    <div>
-                                        <div style="font-size:.9rem;font-weight:800;color:#0d2137;">Novo Extintor</div>
-                                    </div>
-                                </div>
-                                <i class="fas fa-chevron-down" id="iconFormExt"
-                                    style="color:#9ca3af;font-size:.85rem;transition:transform .25s ease;"></i>
-                            </div>
-                            <!-- Corpo do formulário (expansível) -->
-                            <div id="corpoFormExt" style="display:none;border-top:1px solid #f0f4f8;padding:18px 20px 16px;">
-                                
+                        <!-- ════ FORMULÁRIO NOVO EXTINTOR ════ -->
+                        <div class="card" style="margin-bottom:16px;">
+                            <h2><i class="fas fa-plus-circle"></i> Novo Extintor</h2>
                             <h2><i class="fas fa-plus-circle"></i> Novo Extintor</h2>
                             <form id="formExtintor">
                                 <!-- Linha 1: ID + Tipo -->
@@ -3063,106 +3058,6 @@
                                             </button>
                                         </div>
                                     </div>
-                                </div>
-
-                                <!-- Inline add tipo -->
-                                <div id="addTipoInlineWrap"
-                                    style="display:none;background:#eff6ff;border:1.5px solid #bfdbfe;border-radius:10px;padding:10px;margin-top:-4px;">
-                                    <div style="font-size:.78rem;font-weight:700;color:#1d4ed8;margin-bottom:6px;">
-                                        <i class="fas fa-plus-circle"></i> Novo tipo de extintor
-                                    </div>
-                                    <div style="display:flex;gap:6px;">
-                                        <input type="text" id="novoTipoInput"
-                                            placeholder="Ex: Pó Químico ABC Especial"
-                                            style="flex:1;margin:0;font-size:.84rem;"
-                                            oninput="this.value=this.value.toUpperCase().replace(/[^A-Z0-9\s\-\.\/]/g,'')">
-                                        <button type="button" onclick="confirmarNovoTipo()"
-                                            style="background:#1d4ed8;color:#fff;border:none;border-radius:8px;padding:8px 12px;cursor:pointer;font-size:.8rem;font-weight:700;white-space:nowrap;margin:0;width:auto;">Adicionar</button>
-                                        <button type="button"
-                                            onclick="document.getElementById('addTipoInlineWrap').style.display='none'"
-                                            style="background:#f0f4f8;border:1px solid #e2e8f0;border-radius:8px;padding:8px 10px;cursor:pointer;margin:0;width:auto;font-size:.8rem;">✕</button>
-                                    </div>
-                                </div>
-
-                                <!-- Nível de Manutenção -->
-                                <div>
-                                    <label style="font-size:.75rem;font-weight:700;color:#4a5b6e;display:block;margin-bottom:4px;">Nível de Manutenção</label>
-                                    <select id="nivelManutencao" style="margin:0;">
-                                        <option value="">Selecione...</option>
-                                        <option value="1">Nível 1 — Inspeção</option>
-                                        <option value="2">Nível 2 — Manutenção</option>
-                                        <option value="3">Nível 3 — Recarga</option>
-                                        <option value="4">Nível 4 — Teste Hidráulico</option>
-                                    </select>
-                                </div>
-
-                                <!-- Nº do Cilindro -->
-                                <div>
-                                    <label style="font-size:.75rem;font-weight:700;color:#4a5b6e;display:block;margin-bottom:4px;">Nº do Cilindro</label>
-                                    <input type="text" id="numCilindro" placeholder="Número do cilindro" style="margin:0;">
-                                </div>
-
-                                <!-- Divider Dados Técnicos -->
-                                <div style="margin:4px 0 2px;padding:6px 10px;background:#f0f4f8;border-radius:8px;font-size:.72rem;font-weight:800;color:#4a5b6e;letter-spacing:.5px;display:flex;align-items:center;gap:6px;">
-                                    <i class="fas fa-tools" style="color:#0080C7;"></i> DADOS TÉCNICOS
-                                </div>
-
-                                <!-- Linha 3: Norma + Fabricante -->
-                                <div class="grid-2">
-                                    <div>
-                                        <label style="font-size:.75rem;font-weight:700;color:#4a5b6e;display:block;margin-bottom:4px;">Norma de Fabricação</label>
-                                        <input type="text" id="normaFab" placeholder="Ex: 15808, 15809" style="margin:0;">
-                                    </div>
-                                    <div>
-                                        <label style="font-size:.75rem;font-weight:700;color:#4a5b6e;display:block;margin-bottom:4px;">Fabricante</label>
-                                        <input type="text" id="fabricante" placeholder="Nome do fabricante" style="margin:0;">
-                                    </div>
-                                </div>
-
-                                <!-- Linha 4: Fab/Teste + Apro/Repro -->
-                                <div class="grid-2">
-                                    <div>
-                                        <label style="font-size:.75rem;font-weight:700;color:#4a5b6e;display:block;margin-bottom:4px;">Fab/Teste</label>
-                                        <input type="text" id="fabTeste" placeholder="Ex: 01/26, 14/26" style="margin:0;">
-                                    </div>
-                                    <div>
-                                        <label style="font-size:.75rem;font-weight:700;color:#4a5b6e;display:block;margin-bottom:4px;">Aprovado / Reprovado</label>
-                                        <select id="aproRepro" style="margin:0;">
-                                            <option value="">— Selecione</option>
-                                            <option value="Aprovado">✅ Aprovado</option>
-                                            <option value="Reprovado">❌ Reprovado</option>
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <!-- Linha 5: Nº Selo -->
-                                <div>
-                                    <label style="font-size:.75rem;font-weight:700;color:#4a5b6e;display:block;margin-bottom:4px;">Nº do Selo INMETRO</label>
-                                    <input type="text" id="codSelo" placeholder="Ex: D1277, D1278..." style="margin:0;max-width:200px;">
-                                </div>
-
-                                <!-- Linha 6: Validade + Recarga -->
-                                <div class="grid-2">
-                                    <div>
-                                        <label style="font-size:.75rem;font-weight:700;color:#4a5b6e;display:block;margin-bottom:4px;">Validade</label>
-                                        <input type="date" id="validade" style="margin:0;">
-                                    </div>
-                                    <div>
-                                        <label style="font-size:.75rem;font-weight:700;color:#4a5b6e;display:block;margin-bottom:4px;">Última Recarga</label>
-                                        <input type="date" id="recarga" style="margin:0;">
-                                    </div>
-                                </div>
-
-                                <!-- Botões -->
-                                <div style="display:flex;gap:10px;margin-top:4px;">
-                                    <button type="submit" style="flex:1;"><i class="fas fa-save"></i> Salvar</button>
-                                    <button type="button" class="secondary" id="limparFormExtintor" style="width:auto;padding:10px 18px;">
-                                        <i class="fas fa-times"></i> Limpar
-                                    </button>
-                                </div>
-                            </form>
-                        
-                            </div>
                         </div>
 
                         <!-- ════ TABELA DE EXTINTORES (abaixo, sempre visível) ════ -->
@@ -5044,6 +4939,9 @@
                                                 class="fas fa-file-excel"></i> Excel</button>
                                         <button onclick="exportarAnexoP('pdf')" class="btn-export pdf"><i
                                                 class="fas fa-file-pdf"></i> PDF</button>
+                                        <button onclick="salvarHistoricoRelatorio('anexo_p', {mes: document.getElementById('anexoPMes')?.value, ano: document.getElementById('anexoPAno')?.value, total: document.getElementById('anexoPBody')?.children?.length})" style="background:linear-gradient(135deg,#7c3aed,#5b21b6);border:none;border-radius:8px;padding:8px 14px;color:#fff;font-size:.82rem;font-weight:700;cursor:pointer;margin:0;width:auto;display:inline-flex;align-items:center;gap:6px;">
+                                            <i class="fas fa-save"></i> Salvar no Histórico
+                                        </button>
                                     </div>
                                 </div>
                                 <div class="table-responsive">
@@ -5342,6 +5240,130 @@
                 </div><!-- /relcadTab -->
 <!-- /relcadTab -->
 
+
+                <!-- ══ ABA: AJUDA ══ -->
+                <div id="ajudaTab" class="tab-content">
+                    <div style="max-width:900px;">
+
+                        <!-- Sub-abas -->
+                        <div style="display:flex;gap:0;margin-bottom:22px;background:#f0f4f8;border-radius:14px;padding:4px;">
+                            <button id="btnAjudaBot" onclick="ajudaSubAba('bot')"
+                                style="flex:1;background:#fff;border:none;border-radius:10px;color:#7c3aed;font-weight:800;font-size:.85rem;padding:10px 16px;cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,.08);margin:0;display:flex;align-items:center;justify-content:center;gap:7px;">
+                                <i class="fas fa-robot"></i> Assistente IA
+                            </button>
+                            <button id="btnAjudaReport" onclick="ajudaSubAba('report')"
+                                style="flex:1;background:none;border:none;border-radius:10px;color:#9ca3af;font-weight:600;font-size:.85rem;padding:10px 16px;cursor:pointer;margin:0;display:flex;align-items:center;justify-content:center;gap:7px;">
+                                <i class="fas fa-envelope"></i> Mensagens / Report
+                            </button>
+                        </div>
+
+                        <!-- ── BOT IA ── -->
+                        <div id="ajudaBotView">
+                            <div style="background:#fff;border-radius:18px;border:1px solid #e8eef5;overflow:hidden;box-shadow:0 4px 16px rgba(0,0,0,.05);">
+                                <!-- Header do bot -->
+                                <div style="background:linear-gradient(135deg,#7c3aed,#5b21b6);padding:16px 20px;display:flex;align-items:center;gap:12px;">
+                                    <div style="width:42px;height:42px;background:rgba(255,255,255,.15);border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                                        <i class="fas fa-robot" style="color:#fff;font-size:1.1rem;"></i>
+                                    </div>
+                                    <div>
+                                        <div style="font-size:.92rem;font-weight:800;color:#fff;">PCI Assistente</div>
+                                        <div style="font-size:.74rem;color:rgba(255,255,255,.75);display:flex;align-items:center;gap:5px;">
+                                            <span style="width:7px;height:7px;background:#4ade80;border-radius:50%;display:inline-block;"></span>
+                                            Powered by Groq AI
+                                        </div>
+                                    </div>
+                                    <div style="margin-left:auto;">
+                                        <button onclick="botLimparConversa()" title="Limpar conversa"
+                                            style="background:rgba(255,255,255,.15);border:none;border-radius:8px;padding:6px 10px;color:#fff;cursor:pointer;font-size:.78rem;margin:0;width:auto;">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Mensagens -->
+                                <div id="botMensagens"
+                                    style="height:420px;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:14px;background:#f8f9ff;">
+                                    <!-- Mensagem de boas vindas será inserida por JS -->
+                                </div>
+
+                                <!-- Input -->
+                                <div style="padding:14px 16px;background:#fff;border-top:1px solid #f0f4f8;">
+                                    <!-- Sugestões rápidas -->
+                                    <div id="botSugestoes" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;">
+                                        <button onclick="botEnviarSugestao(this)" style="background:#ede9fe;border:none;border-radius:20px;padding:5px 12px;font-size:.76rem;color:#7c3aed;cursor:pointer;margin:0;width:auto;font-weight:600;">Como cadastrar extintor?</button>
+                                        <button onclick="botEnviarSugestao(this)" style="background:#ede9fe;border:none;border-radius:20px;padding:5px 12px;font-size:.76rem;color:#7c3aed;cursor:pointer;margin:0;width:auto;font-weight:600;">Como gerar etiqueta?</button>
+                                        <button onclick="botEnviarSugestao(this)" style="background:#ede9fe;border:none;border-radius:20px;padding:5px 12px;font-size:.76rem;color:#7c3aed;cursor:pointer;margin:0;width:auto;font-weight:600;">Como criar relatório?</button>
+                                        <button onclick="botEnviarSugestao(this)" style="background:#ede9fe;border:none;border-radius:20px;padding:5px 12px;font-size:.76rem;color:#7c3aed;cursor:pointer;margin:0;width:auto;font-weight:600;">Níveis de acesso</button>
+                                    </div>
+                                    <div style="display:flex;gap:8px;">
+                                        <input type="text" id="botInputMsg"
+                                            placeholder="Digite sua dúvida..."
+                                            onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();botEnviar();}"
+                                            style="flex:1;margin:0;border-radius:12px;font-size:.86rem;">
+                                        <button onclick="botEnviar()" id="btnBotEnviar"
+                                            style="background:linear-gradient(135deg,#7c3aed,#5b21b6);border:none;border-radius:12px;padding:10px 16px;color:#fff;cursor:pointer;font-weight:700;font-size:.86rem;margin:0;width:auto;display:flex;align-items:center;gap:6px;">
+                                            <i class="fas fa-paper-plane"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div><!-- /botView -->
+
+                        <!-- ── REPORT / MENSAGENS ── -->
+                        <div id="ajudaReportView" style="display:none;">
+                            <!-- Formulário envio -->
+                            <div class="card" style="margin-bottom:16px;">
+                                <h3 style="font-size:.9rem;font-weight:800;color:#0d2137;margin-bottom:14px;">
+                                    <i class="fas fa-paper-plane" style="color:#7c3aed;"></i> Enviar Mensagem ao Admin
+                                </h3>
+                                <select id="reportTipo" style="margin-bottom:10px;">
+                                    <option value="duvida">❓ Dúvida</option>
+                                    <option value="sugestao">💡 Sugestão</option>
+                                    <option value="problema">🚨 Problema / Bug</option>
+                                    <option value="outro">📝 Outro</option>
+                                </select>
+                                <input type="text" id="reportAssunto" placeholder="Assunto (resumo da mensagem)" style="margin-bottom:10px;">
+                                <textarea id="reportMensagem" placeholder="Descreva sua dúvida, sugestão ou problema em detalhes..."
+                                    style="width:100%;min-height:100px;resize:vertical;padding:10px 14px;border:1.5px solid #d1dae4;border-radius:10px;font-size:.86rem;font-family:inherit;outline:none;"></textarea>
+                                <button onclick="reportEnviar()" style="margin-top:10px;background:linear-gradient(135deg,#7c3aed,#5b21b6);border:none;border-radius:10px;padding:11px 20px;color:#fff;font-weight:700;cursor:pointer;font-size:.86rem;width:100%;">
+                                    <i class="fas fa-paper-plane"></i> Enviar Mensagem
+                                </button>
+                            </div>
+
+                            <!-- Lista de mensagens -->
+                            <div class="card">
+                                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+                                    <h3 style="font-size:.9rem;font-weight:800;color:#0d2137;margin:0;">
+                                        <i class="fas fa-inbox" style="color:#7c3aed;"></i> Minhas Mensagens
+                                    </h3>
+                                    <button onclick="reportCarregar()" style="background:#f0f4f8;border:none;border-radius:8px;padding:6px 12px;font-size:.78rem;font-weight:700;cursor:pointer;color:#374151;margin:0;width:auto;">
+                                        <i class="fas fa-sync-alt"></i> Atualizar
+                                    </button>
+                                </div>
+                                <div id="reportLista">
+                                    <div style="text-align:center;padding:28px;color:#9ca3af;font-size:.84rem;">
+                                        <i class="fas fa-inbox" style="display:block;font-size:1.8rem;margin-bottom:8px;opacity:.3;"></i>
+                                        Nenhuma mensagem ainda.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Painel admin: ver TODAS as mensagens (superadmin/admin) -->
+                            <div id="reportAdminPanel" style="display:none;margin-top:16px;">
+                                <div class="card">
+                                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+                                        <h3 style="font-size:.9rem;font-weight:800;color:#dc2626;margin:0;">
+                                            <i class="fas fa-user-shield"></i> Admin — Todas as Mensagens
+                                        </h3>
+                                        <span id="reportAdminBadge" style="background:#fee2e2;color:#dc2626;border-radius:20px;padding:2px 10px;font-size:.76rem;font-weight:700;"></span>
+                                    </div>
+                                    <div id="reportAdminLista"></div>
+                                </div>
+                            </div>
+                        </div><!-- /reportView -->
+
+                    </div>
+                </div><!-- /ajudaTab -->
 
                 <!-- ══ PERFIL ══ -->
                 <div id="perfilTab" class="tab-content">
@@ -5740,7 +5762,7 @@
                     <div class="app-footer">
                         <p><i class="fas fa-copyright"></i> 2026 &nbsp;·&nbsp; <strong>ciberic.lab</strong>
                             &nbsp;·&nbsp; PCI Manager Pro</p>
-                    </div>
+                    <span style="display:block;margin-top:4px;font-size:.68rem;color:#b0b8c4;">v<span id="sysVersion"></span> · PCI Manager Pro</span></div>
                 </div>
 
             </div><!-- /main-content -->
@@ -5857,6 +5879,13 @@
         // ══════════════════════════════════════════════════════════════
         // ESTADO GLOBAL
         // ══════════════════════════════════════════════════════════════
+        // ═══════════════════════════════════════════════════════
+        // VERSÃO DO SISTEMA — incrementada a cada atualização
+        // ═══════════════════════════════════════════════════════
+        const PCI_VERSION    = '2.5.0';
+        const PCI_BUILD_DATE = '2026-04-16';
+        const PCI_CHANGELOG  = 'Aba Ajuda+Bot, Histórico Relatórios, Segurança, Backup Supabase';
+
         let estado = {
             versao: 'small', usuario: null, nivel: null,
             extintores: [], clientes: [], empresas: [], vendedores: [],
@@ -6052,18 +6081,21 @@
         // ══════════════════════════════════════════════════════════════
         // SALVADORES
         // ══════════════════════════════════════════════════════════════
-        async function marcarSeloComoUsado(codSelo) {
-            if (!codSelo) return;
-            try {
-                const rows = await supa.getAll('selos_inmetro', `codigo_unificado=eq.${codSelo}&status=eq.disponivel`);
-                if (rows && rows.length > 0) {
-                    await supa.update('selos_inmetro', rows[0].id, { status: 'usado' });
-                }
-            } catch (e) { console.warn('Aviso: não foi possível marcar selo como usado:', e.message); }
-        }
-
         async function salvarExtintor(dados) { return supa.insert('extintores', dados); }
-        async function salvarCliente(dados) { return supa.insert('clientes', dados); }
+        async function salvarCliente(dados) {
+            // Verificar duplicata por documento (se informado)
+            if (dados.documento) {
+                const docLimpo = dados.documento.replace(/[.\-\/]/g,'');
+                const dup = estado.clientes.find(c =>
+                    c.documento && c.documento.replace(/[.\-\/]/g,'') === docLimpo
+                );
+                if (dup) {
+                    notif('⚠️ Cliente com este CPF/CNPJ já cadastrado: ' + dup.nome, 'warning');
+                    return null;
+                }
+            }
+            return supa.insert('clientes', dados);
+        }
         async function salvarEmpresa(dados) { return supa.insert('empresas', dados); }
         async function salvarVendedor(dados) { return supa.insert('vendedores', dados); }
         async function salvarEtiquetaBanco(dados) { return supa.insert('etiquetas', dados); }
@@ -6369,6 +6401,7 @@
             }
             if (aba === 'lotes' && estado.versao === 'premium') carregarTodosSelosInm();
             if (aba === 'os') renderizarOS();
+            if (aba === 'ajuda') { if (!_botIniciado) setTimeout(botIniciar, 100); ajudaSubAba('bot'); if (['superadmin','admin'].includes(estado.nivel)) setTimeout(reportAdminCarregar, 200); }
             if (aba === 'relcad') { relcadFiltrar('aberto'); }
             if (aba === 'config') {
                     // Garantir que todos os cards de config sejam visíveis para superadmin
@@ -6566,6 +6599,9 @@
         // INICIALIZAÇÃO DO APP
         // ══════════════════════════════════════════════════════════════
         function iniciarApp() {
+            // Exibir versão
+            const vEl = document.getElementById('sysVersion');
+            if (vEl) vEl.textContent = PCI_VERSION + ' (' + PCI_BUILD_DATE + ')';
             document.getElementById('appContainer').style.display = 'block';
             document.getElementById('userName').textContent = estado.usuario?.nome || estado.usuario?.login || 'Usuário';
             const nbTop = document.getElementById('nivelBadgeTopbar');
@@ -7282,10 +7318,7 @@
                         return;
                     }
                     const hoje = new Date();
-                    const valEl = document.getElementById('validade');
-                    const recEl = document.getElementById('recarga');
-                    const valStr = valEl ? valEl.value : '';
-                    const recStr = recEl ? recEl.value : '';
+                    const valStr = document.getElementById('validade').value;
                     const val = valStr ? new Date(valStr) : null;
                     const dias = val ? Math.floor((val - hoje) / (1000 * 60 * 60 * 24)) : 999;
                     let statusOp = 'operacional';
@@ -7293,11 +7326,10 @@
                     else if (dias <= 30) statusOp = 'atencao';
                     const dados = {
                         id: idGerado,
-                        classe: 'N/A',
                         tipo: document.getElementById('tipo').value,
-                        nivel_manutencao: parseInt(document.getElementById('nivelManutencao')?.value) || null,
+
                         validade: valStr || null,
-                        recarga: recStr || null,
+                        recarga: document.getElementById('recarga').value || null,
                         num_cilindro: document.getElementById('numCilindro').value || '',
                         norma_fab: document.getElementById('normaFab').value || '',
                         fabricante: document.getElementById('fabricante').value || '',
@@ -7307,7 +7339,6 @@
                         status_op: statusOp
                     };
                     await salvarExtintor(dados);
-                    await marcarSeloComoUsado(dados.cod_selo);
                     this.reset();
                     // Pré-preencher próximo ID sugerido
                     const proxId = 'EXT' + String(estado.extintores.length + 2).padStart(3, '0');
@@ -8675,9 +8706,6 @@ Responda APENAS com JSON: {"c1":"CODIGO1","c2":"CODIGO2","codU":"CODIGO1-CODIGO2
             const extintor = estado.extintores.find(e => e.id === id);
             if (!extintor) { notif('Extintor não encontrado', 'warning'); return; }
 
-            const valDate = extintor.validade ? extintor.validade.split('T')[0] : '';
-            const recDate = extintor.recarga  ? extintor.recarga.split('T')[0]  : '';
-
             const htmlModal = `
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
       <div>
@@ -8687,68 +8715,26 @@ Responda APENAS com JSON: {"c1":"CODIGO1","c2":"CODIGO2","codU":"CODIGO1-CODIGO2
       <div>
         <label style="font-size:.76rem;font-weight:700;color:#4a5b6e;display:block;margin-bottom:3px;">Tipo *</label>
         <select id="edt_tipo" style="margin:0;">
-          <option value="">Selecione...</option>
+          <option value="">Tipo</option>
           ${estado.tiposExtintor.map(t => `<option value="${escHtml(t)}" ${extintor.tipo === t ? 'selected' : ''}>${escHtml(t)}</option>`).join('')}
         </select>
       </div>
 
       <div>
-        <label style="font-size:.76rem;font-weight:700;color:#4a5b6e;display:block;margin-bottom:3px;">Nível de Manutenção</label>
-        <select id="edt_nivelManutencao" style="margin:0;">
-          <option value="">Selecione...</option>
-          <option value="1" ${extintor.nivel_manutencao == 1 ? 'selected' : ''}>Nível 1 — Inspeção</option>
-          <option value="2" ${extintor.nivel_manutencao == 2 ? 'selected' : ''}>Nível 2 — Manutenção</option>
-          <option value="3" ${extintor.nivel_manutencao == 3 ? 'selected' : ''}>Nível 3 — Recarga</option>
-          <option value="4" ${extintor.nivel_manutencao == 4 ? 'selected' : ''}>Nível 4 — Teste Hidráulico</option>
-        </select>
-      </div>
-      <div>
         <label style="font-size:.76rem;font-weight:700;color:#4a5b6e;display:block;margin-bottom:3px;">Nº do Cilindro</label>
         <input type="text" id="edt_numCilindro" value="${escHtml(extintor.num_cilindro || '')}" placeholder="Nº do Cilindro" style="margin:0;">
       </div>
-
       <div>
         <label style="font-size:.76rem;font-weight:700;color:#4a5b6e;display:block;margin-bottom:3px;">Norma de Fabricação</label>
-        <input type="text" id="edt_normaFab" value="${escHtml(extintor.norma_fab || '')}" placeholder="Ex: 15808, 15809" style="margin:0;">
+        <input type="text" id="edt_normaFab" value="${escHtml(extintor.norma_fab || '')}" placeholder="Ex: ABNT 10721" style="margin:0;">
       </div>
       <div>
         <label style="font-size:.76rem;font-weight:700;color:#4a5b6e;display:block;margin-bottom:3px;">Fabricante</label>
         <input type="text" id="edt_fabricante" value="${escHtml(extintor.fabricante || '')}" placeholder="Fabricante" style="margin:0;">
       </div>
-
       <div>
         <label style="font-size:.76rem;font-weight:700;color:#4a5b6e;display:block;margin-bottom:3px;">Fab/Teste</label>
         <input type="text" id="edt_fabTeste" value="${escHtml(extintor.fab_teste || '')}" placeholder="Ex: 01/26" style="margin:0;">
-      </div>
-      <div>
-        <label style="font-size:.76rem;font-weight:700;color:#4a5b6e;display:block;margin-bottom:3px;">Aprovado / Reprovado</label>
-        <select id="edt_aproRepro" style="margin:0;">
-          <option value="">Selecione...</option>
-          <option value="Aprovado" ${extintor.apro_repro === 'Aprovado' ? 'selected' : ''}>✅ Aprovado</option>
-          <option value="Reprovado" ${extintor.apro_repro === 'Reprovado' ? 'selected' : ''}>❌ Reprovado</option>
-        </select>
-      </div>
-
-      <div>
-        <label style="font-size:.76rem;font-weight:700;color:#4a5b6e;display:block;margin-bottom:3px;">Nº Selo INMETRO</label>
-        <input type="text" id="edt_codSelo" value="${escHtml(extintor.cod_selo || '')}" placeholder="Ex: D1277" style="margin:0;">
-      </div>
-      <div>
-        <label style="font-size:.76rem;font-weight:700;color:#4a5b6e;display:block;margin-bottom:3px;">Status Operacional</label>
-        <select id="edt_statusOp" style="margin:0;">
-          <option value="operacional" ${extintor.status_op === 'operacional' ? 'selected' : ''}>🟢 Operacional</option>
-          <option value="atencao" ${extintor.status_op === 'atencao' ? 'selected' : ''}>🟡 Atenção</option>
-          <option value="irregular" ${extintor.status_op === 'irregular' ? 'selected' : ''}>🔴 Irregular</option>
-        </select>
-      </div>
-
-      <div>
-        <label style="font-size:.76rem;font-weight:700;color:#4a5b6e;display:block;margin-bottom:3px;">Validade</label>
-        <input type="date" id="edt_validade" value="${valDate}" style="margin:0;">
-      </div>
-      <div>
-        <label style="font-size:.76rem;font-weight:700;color:#4a5b6e;display:block;margin-bottom:3px;">Última Recarga</label>
-        <input type="date" id="edt_recarga" value="${recDate}" style="margin:0;">
       </div>
     </div>`;
 
@@ -8860,33 +8846,17 @@ Responda APENAS com JSON: {"c1":"CODIGO1","c2":"CODIGO2","codU":"CODIGO1-CODIGO2
                 let dados = {};
 
                 if (ctx.tipo === 'extintor') {
-                    const edt_valStr = document.getElementById('edt_validade')?.value || '';
-                    const edt_recStr = document.getElementById('edt_recarga')?.value  || '';
-                    const edt_val    = edt_valStr ? new Date(edt_valStr) : null;
-                    const edt_hoje   = new Date();
-                    const edt_dias   = edt_val ? Math.floor((edt_val - edt_hoje) / (1000*60*60*24)) : 999;
-                    let edt_statusOp = document.getElementById('edt_statusOp')?.value || 'operacional';
-                    // Recalcular status automaticamente se validade foi alterada
-                    if (edt_valStr) {
-                        if (edt_dias < 0) edt_statusOp = 'irregular';
-                        else if (edt_dias <= 30) edt_statusOp = 'atencao';
-                        else edt_statusOp = 'operacional';
-                    }
                     dados = {
-                        tipo:             document.getElementById('edt_tipo')?.value              || '',
-                        nivel_manutencao: parseInt(document.getElementById('edt_nivelManutencao')?.value) || null,
-                        num_cilindro:     document.getElementById('edt_numCilindro')?.value       || '',
-                        norma_fab:        document.getElementById('edt_normaFab')?.value          || '',
-                        fabricante:       document.getElementById('edt_fabricante')?.value        || '',
-                        fab_teste:        document.getElementById('edt_fabTeste')?.value          || '',
-                        apro_repro:       document.getElementById('edt_aproRepro')?.value         || '',
-                        cod_selo:         document.getElementById('edt_codSelo')?.value           || '',
-                        validade:         edt_valStr || null,
-                        recarga:          edt_recStr || null,
-                        status_op:        edt_statusOp,
+                        tipo:         document.getElementById('edt_tipo')?.value         || '',
+
+                        num_cilindro: document.getElementById('edt_numCilindro')?.value  || '',
+                        norma_fab:    document.getElementById('edt_normaFab')?.value     || '',
+                        fabricante:   document.getElementById('edt_fabricante')?.value   || '',
+                        fab_teste:    document.getElementById('edt_fabTeste')?.value     || '',
+                        apro_repro:   document.getElementById('edt_aproRepro')?.value    || '',
+                        cod_selo:     document.getElementById('edt_codSelo')?.value      || '',
                     };
                     await supa.update('extintores', ctx.id, dados);
-                    await marcarSeloComoUsado(dados.cod_selo);
                     await carregarExtintores();
                     renderizarExtintores();
                 } else if (ctx.tipo === 'cliente') {
@@ -9147,6 +9117,7 @@ Responda APENAS com JSON: {"c1":"CODIGO1","c2":"CODIGO2","codU":"CODIGO1-CODIGO2
             { id:'relcad',       label:'Relatórios',         icon:'fa-clipboard-list',     grupo:'Operações',   desc:'Cadastro e gestão de relatórios de extintores' },
             // Premium
             { id:'lotes',        label:'Lotes de Selos',   icon:'fa-tags',               grupo:'Premium',     desc:'Gerenciar lotes e ranges de selos' },
+            { id:'ajuda',        label:'Ajuda',           icon:'fa-life-ring',          grupo:'Admin',       desc:'Suporte, dúvidas e bot assistente' },
             { id:'logistica',    label:'Logística',         icon:'fa-truck',              grupo:'Premium',     desc:'Rotas e entregas' },
         ];
         // Abas PROTEGIDAS — sempre visíveis (não entram no controle)
@@ -10150,14 +10121,389 @@ Responda APENAS com JSON: {"c1":"CODIGO1","c2":"CODIGO2","codU":"CODIGO1-CODIGO2
 
 
         // Toggle do formulário de novo extintor (colapsável)
-        function toggleFormExtintor(forceOpen) {
-            const corpo = document.getElementById('corpoFormExt');
-            const icon  = document.getElementById('iconFormExt');
-            if (!corpo) return;
-            const isOpen = corpo.style.display !== 'none';
-            const open   = forceOpen !== undefined ? forceOpen : !isOpen;
-            corpo.style.display = open ? 'block' : 'none';
-            if (icon) icon.style.transform = open ? 'rotate(180deg)' : 'rotate(0deg)';
+        
+        // ── Excluir vistoria agendada ─────────────────────────────────
+        async function excluirVistoriaAgendada(id) {
+            if (!podeExcluir()) { notif('⛔ Sem permissão para excluir', 'warning'); return; }
+            if (!confirm('Excluir esta vistoria agendada?')) return;
+            try {
+                await supa.delete('vistorias_agendadas', id);
+                estado.vistoriasAgendadas = estado.vistoriasAgendadas.filter(v => String(v.id) !== String(id));
+                renderizarVistoriasAgendadas();
+                notif('Vistoria agendada excluída.', 'success');
+            } catch(e) { notif('Erro: ' + e.message, 'danger'); }
+        }
+
+        // ── Excluir vistoria para fazer ───────────────────────────────
+        async function excluirVistoriaParaFazer(id) {
+            if (!podeExcluir()) { notif('⛔ Sem permissão para excluir', 'warning'); return; }
+            if (!confirm('Excluir esta vistoria pendente?')) return;
+            try {
+                await supa.delete('vistorias_por_fazer', id);
+                estado.vistoriasParaFazer = estado.vistoriasParaFazer.filter(v => String(v.id) !== String(id));
+                renderizarVistoriasParaFazer();
+                notif('Vistoria pendente excluída.', 'success');
+            } catch(e) { notif('Erro: ' + e.message, 'danger'); }
+        }
+
+        // ── Excluir vistoria realizada ────────────────────────────────
+        async function excluirVistoriaRealizada(id) {
+            if (!podeExcluir()) { notif('⛔ Sem permissão para excluir', 'warning'); return; }
+            if (!confirm('Excluir este registro de vistoria realizada?')) return;
+            try {
+                await supa.delete('vistorias_realizadas', id);
+                estado.vistoriasRealizadas = estado.vistoriasRealizadas.filter(v => String(v.id) !== String(id));
+                renderizarVistoriasRealizadas();
+                notif('Vistoria realizada excluída.', 'success');
+            } catch(e) { notif('Erro: ' + e.message, 'danger'); }
+        }
+
+
+        // ══════════════════════════════════════════════════════════════
+        // ABA AJUDA — Bot IA + Report de Mensagens
+        // ══════════════════════════════════════════════════════════════
+
+        let _botHistorico = []; // histórico de mensagens do bot
+        let _botIniciado  = false;
+
+        // ── Sub-abas ─────────────────────────────────────────────────
+        function ajudaSubAba(aba) {
+            document.getElementById('ajudaBotView').style.display    = aba === 'bot'    ? 'block' : 'none';
+            document.getElementById('ajudaReportView').style.display = aba === 'report' ? 'block' : 'none';
+            const bBot    = document.getElementById('btnAjudaBot');
+            const bReport = document.getElementById('btnAjudaReport');
+            if (bBot) {
+                bBot.style.background  = aba === 'bot' ? '#fff' : 'none';
+                bBot.style.color       = aba === 'bot' ? '#7c3aed' : '#9ca3af';
+                bBot.style.fontWeight  = aba === 'bot' ? '800' : '600';
+                bBot.style.boxShadow   = aba === 'bot' ? '0 2px 6px rgba(0,0,0,.08)' : 'none';
+            }
+            if (bReport) {
+                bReport.style.background = aba === 'report' ? '#fff' : 'none';
+                bReport.style.color      = aba === 'report' ? '#7c3aed' : '#9ca3af';
+                bReport.style.fontWeight = aba === 'report' ? '800' : '600';
+                bReport.style.boxShadow  = aba === 'report' ? '0 2px 6px rgba(0,0,0,.08)' : 'none';
+            }
+            if (aba === 'bot' && !_botIniciado) botIniciar();
+            if (aba === 'report') { reportCarregar(); if (['superadmin','admin'].includes(estado.nivel)) reportAdminCarregar(); }
+        }
+
+        // ── Saudação baseada no horário ───────────────────────────────
+        function botSaudacao() {
+            const h = new Date().getHours();
+            const nome = estado.usuario?.nome || estado.usuario?.login || 'usuário';
+            const periodo = h < 12 ? 'Bom dia' : h < 18 ? 'Boa tarde' : 'Boa noite';
+            return `${periodo}, **${nome}**! 👋`;
+        }
+
+        // ── Iniciar bot com boas-vindas ────────────────────────────────
+        function botIniciar() {
+            _botIniciado = true;
+            const nome = estado.usuario?.nome || estado.usuario?.login || 'usuário';
+            const saudacao = botSaudacao();
+            botAdicionarMensagem('bot', `${saudacao}
+
+Sou o **PCI Assistente**, aqui para ajudar com dúvidas sobre o uso do sistema PCI Manager Pro.
+
+Posso te ajudar com:
+• 📋 Cadastro de extintores, clientes e empresas
+• 🏷️ Geração de etiquetas QR Code
+• 📊 Relatórios INMETRO (Anexo O e P)
+• 👥 Níveis de acesso e permissões
+• 📅 Vistorias e agendamentos
+• 📄 Ordens de Serviço
+
+Como posso te ajudar hoje?`);
+        }
+
+        // ── Palavras bloqueadas ────────────────────────────────────────
+        const BOT_PALAVRAS_BLOQUEADAS = [
+            // baixo calão
+            'merda','porra','caralho','buceta','puta','viado','babaca','idiota',
+            'imbecil','otário','arrombado','fdp','vsf','krl','fodase',
+            // anti-éticas
+            'hackear','hack','invadir','senha de outro','acesso indevido',
+            // técnicas sensíveis
+            'banco de dados','supabase url','anon key','api key','token',
+            'rls policy','sql injection','código fonte','javascript','função js',
+            'endpoint','rest api','fetch','payload','schema'
+        ];
+
+        function botVerificarBloqueio(msg) {
+            const lower = msg.toLowerCase().replace(/[^a-záàãéêíóõú ]/g,'');
+            return BOT_PALAVRAS_BLOQUEADAS.some(p => lower.includes(p));
+        }
+
+        // ── Enviar mensagem ─────────────────────────────────────────────
+        async function botEnviar() {
+            const input = document.getElementById('botInputMsg');
+            const msg   = input.value.trim();
+            if (!msg) return;
+
+            // Verificar bloqueio
+            if (botVerificarBloqueio(msg)) {
+                botAdicionarMensagem('user', msg);
+                input.value = '';
+                botAdicionarMensagem('bot', '⚠️ Não consigo ajudar com esse tipo de solicitação. Por favor, reformule sua dúvida sobre o uso do sistema.');
+                return;
+            }
+
+            // Verificar agradecimento
+            const temObrigado = /(obrigad[ao]|valeu|thanks|grat[ao])/i.test(msg);
+
+            botAdicionarMensagem('user', msg);
+            input.value = '';
+            document.getElementById('botSugestoes').style.display = 'none';
+
+            if (temObrigado) {
+                const nome = estado.usuario?.nome?.split(' ')[0] || 'usuário';
+                botAdicionarMensagem('bot', `Muito obrigado, **${nome}**! 😊 Fico feliz em ter ajudado. Se precisar de mais alguma coisa, é só perguntar!`);
+                return;
+            }
+
+            // Chamar API Groq
+            await botChamarGroq(msg);
+        }
+
+        function botEnviarSugestao(btn) {
+            const input = document.getElementById('botInputMsg');
+            input.value = btn.textContent.trim();
+            botEnviar();
+        }
+
+        // ── Chamada à API Groq ─────────────────────────────────────────
+        async function botChamarGroq(mensagemUsuario) {
+            const groqKey = document.getElementById('groqApiKey')?.value?.trim()
+                || localStorage.getItem('groq_api_key') || '';
+
+            if (!groqKey) {
+                botAdicionarMensagem('bot',
+                        'Para usar o assistente, configure sua chave Groq em Configuracao > Integracao com IA.' +
+                        '<br><br>Se tiver duvidas nao resolvidas, envie um Report para o admin usando a aba ao lado!');
+                return;
+            }
+
+            const typing = botAdicionarTyping();
+            const nome = estado.usuario?.nome?.split(' ')[0] || 'usuário';
+
+            // System prompt com contexto do PCI Manager
+            const systemPrompt = `Você é o PCI Assistente, um bot de suporte ao usuário do sistema PCI Manager Pro — sistema de gestão de extintores e selos INMETRO.
+
+REGRAS RÍGIDAS:
+- Responda SOMENTE sobre o uso do sistema PCI Manager Pro
+- NUNCA revele informações técnicas: código-fonte, banco de dados, APIs, tokens, chaves, SQL, JavaScript
+- NUNCA responda sobre hacking, invasão, vulnerabilidades ou segurança técnica
+- Se a pergunta não for sobre o sistema, diga educadamente que não pode ajudar
+- Use linguagem simples e amigável em português brasileiro
+- Comece sempre pelo nome do usuário quando releante: "${nome}"
+- Se não souber a resposta, oriente o usuário a enviar um Report para o admin
+
+FUNCIONALIDADES DO SISTEMA que você conhece:
+1. EXTINTORES: Cadastro com ID (ex: EXT001), tipo, Nº cilindro, norma fab, fabricante, fab/teste, aprovado/reprovado, Nº selo INMETRO. Edição posterior possível.
+2. CLIENTES: Cadastro com CPF/CNPJ (preenche dados automaticamente via BrasilAPI), nome, endereço. CPF/CNPJ é o primeiro campo.
+3. ETIQUETAS QR CODE: Gerar etiquetas 50×16mm com QR Code vinculando extintor ao cliente e selo INMETRO.
+4. ORDENS DE SERVIÇO: Criar OS com cliente, itens/serviços, valor total, condição de pagamento, NF.
+5. RELATÓRIOS (Aba 'Relatórios'): Cadastrar relatório com cliente + nº OS + data entrada. Adicionar extintores ao relatório. Extintores são classificados em: Não Manutenidos (campos incompletos), Manutenidos Aprovados e Manutenidos Reprovados. Fechar relatório quando completo.
+6. ANEXO O e P (INMETRO): Relatórios obrigatórios INMETRO. Gerar e exportar em PDF/Excel. Salvar no histórico.
+7. VISTORIAS: Agendar vistorias com cliente, extintor, data/hora. Registrar vistorias realizadas e pendentes.
+8. LOTES DE SELOS: Gerenciar ranges de selos INMETRO. Ver status: disponível/usado com extintor vinculado.
+9. NÍVEIS DE ACESSO: SuperAdmin (tudo), Admin (sem Supabase/IA/controle menu), Gerente (sem Config/Perfil/Usuários), Operador (somente visualização, sem Vendedores).
+10. CATÁLOGO: Itens e serviços usados nas OS.
+11. CONFIGURAÇÃO: Tipos de extintor, controle de abas visíveis no menu (admin+superadmin).
+
+HISTÓRICO DA CONVERSA (últimas 6 mensagens):
+${JSON.stringify(_botHistorico.slice(-6))}`;
+
+            try {
+                const resp = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${groqKey}`
+                    },
+                    body: JSON.stringify({
+                        model: 'llama3-8b-8192',
+                        messages: [
+                            { role: 'system', content: systemPrompt },
+                            { role: 'user',   content: mensagemUsuario }
+                        ],
+                        max_tokens: 600,
+                        temperature: 0.6,
+                    })
+                });
+                const data = await resp.json();
+                typing.remove();
+                if (data.choices?.[0]?.message?.content) {
+                    const resposta = data.choices[0].message.content.trim();
+                    _botHistorico.push({ role:'user', content: mensagemUsuario });
+                    _botHistorico.push({ role:'assistant', content: resposta });
+                    botAdicionarMensagem('bot', resposta);
+                } else {
+                    botAdicionarMensagem('bot', '⚠️ Não consegui processar sua dúvida no momento. Tente novamente ou envie um **Report** para o admin.');
+                }
+            } catch(e) {
+                typing.remove();
+                botAdicionarMensagem('bot', '⚠️ Erro ao conectar com o assistente. Verifique sua conexão ou a chave Groq em Configuração. Você também pode enviar um **Report** para o admin!');
+            }
+        }
+
+        // ── Adicionar mensagem no chat ────────────────────────────────
+        function botAdicionarMensagem(role, texto) {
+            const container = document.getElementById('botMensagens');
+            if (!container) return null;
+            const isBot = role === 'bot';
+            const div = document.createElement('div');
+            div.style.cssText = `display:flex;gap:10px;align-items:flex-start;${isBot ? '' : 'flex-direction:row-reverse;'}`;
+
+            const avatar = document.createElement('div');
+            avatar.style.cssText = `width:32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:.8rem;${isBot ? 'background:linear-gradient(135deg,#7c3aed,#5b21b6);color:#fff;' : 'background:linear-gradient(135deg,#1e3b5a,#0d2137);color:#fff;'}`;
+            avatar.innerHTML = isBot ? '<i class="fas fa-robot"></i>' : '<i class="fas fa-user"></i>';
+
+            const bubble = document.createElement('div');
+            bubble.style.cssText = `max-width:78%;padding:12px 15px;border-radius:${isBot ? '4px 14px 14px 14px' : '14px 4px 14px 14px'};font-size:.85rem;line-height:1.55;word-break:break-word;${isBot ? 'background:#fff;border:1px solid #e8eef5;color:#374151;' : 'background:linear-gradient(135deg,#1e3b5a,#0d2137);color:#fff;'}`;
+            // Converter markdown básico
+            bubble.innerHTML = texto
+                .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
+                .replace(/\*(.+?)\*/g,'<em>$1</em>')
+                .replace(/\n/g,'<br>');
+
+            div.appendChild(avatar);
+            div.appendChild(bubble);
+            container.appendChild(div);
+            container.scrollTop = container.scrollHeight;
+            return div;
+        }
+
+        function botAdicionarTyping() {
+            const container = document.getElementById('botMensagens');
+            const div = document.createElement('div');
+            div.style.cssText = 'display:flex;gap:10px;align-items:flex-start;';
+            div.innerHTML = `<div style="width:32px;height:32px;border-radius:10px;background:linear-gradient(135deg,#7c3aed,#5b21b6);color:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:.8rem;"><i class="fas fa-robot"></i></div>
+            <div style="background:#fff;border:1px solid #e8eef5;border-radius:4px 14px 14px 14px;padding:12px 15px;">
+                <span style="display:inline-flex;gap:4px;">
+                    <span style="width:7px;height:7px;background:#9ca3af;border-radius:50%;animation:typingDot .8s infinite;"></span>
+                    <span style="width:7px;height:7px;background:#9ca3af;border-radius:50%;animation:typingDot .8s .2s infinite;"></span>
+                    <span style="width:7px;height:7px;background:#9ca3af;border-radius:50%;animation:typingDot .8s .4s infinite;"></span>
+                </span>
+            </div>`;
+            container.appendChild(div);
+            container.scrollTop = container.scrollHeight;
+            return div;
+        }
+
+        function botLimparConversa() {
+            _botHistorico = [];
+            const c = document.getElementById('botMensagens');
+            if (c) c.innerHTML = '';
+            document.getElementById('botSugestoes').style.display = 'flex';
+            _botIniciado = false;
+            botIniciar();
+        }
+
+        // ═══════════════════════════════════════════════════════════
+        // REPORT / MENSAGENS
+        // ═══════════════════════════════════════════════════════════
+        async function reportEnviar() {
+            const tipo     = document.getElementById('reportTipo')?.value;
+            const assunto  = document.getElementById('reportAssunto')?.value?.trim();
+            const mensagem = document.getElementById('reportMensagem')?.value?.trim();
+            if (!assunto) { notif('Informe o assunto da mensagem', 'warning'); return; }
+            if (!mensagem || mensagem.length < 10) { notif('Descreva melhor sua mensagem', 'warning'); return; }
+            try {
+                await supa.insert('ajuda_reports', {
+                    usuario_id:   estado.usuario?.id,
+                    usuario_nome: estado.usuario?.nome || estado.usuario?.login,
+                    tipo, assunto, mensagem,
+                    status: 'aberto',
+                    resposta: null,
+                });
+                document.getElementById('reportAssunto').value = '';
+                document.getElementById('reportMensagem').value = '';
+                await reportCarregar();
+                notif('✅ Mensagem enviada! O admin responderá em breve.', 'success');
+            } catch(e) { notif('Erro ao enviar: ' + e.message, 'danger'); }
+        }
+
+        async function reportCarregar() {
+            const lista = document.getElementById('reportLista');
+            if (!lista) return;
+            try {
+                const uid = estado.usuario?.id;
+                const rows = await supa.getAll('ajuda_reports',
+                    `usuario_id=eq.${uid}&order=created_at.desc&limit=20`);
+                if (!rows.length) {
+                    lista.innerHTML = '<div style="text-align:center;padding:28px;color:#9ca3af;font-size:.84rem;"><i class="fas fa-inbox" style="display:block;font-size:1.8rem;margin-bottom:8px;opacity:.3;"></i>Nenhuma mensagem ainda.</div>';
+                    return;
+                }
+                const tipoBadge = { duvida:'❓', sugestao:'💡', problema:'🚨', outro:'📝' };
+                lista.innerHTML = rows.map(r => `
+                <div style="border:1px solid #e8eef5;border-radius:12px;padding:14px 16px;margin-bottom:10px;background:#fff;">
+                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap;">
+                        <span style="font-size:.8rem;">${tipoBadge[r.tipo]||'📝'}</span>
+                        <span style="font-weight:700;font-size:.86rem;color:#0d2137;">${escHtml(r.assunto)}</span>
+                        <span style="margin-left:auto;font-size:.74rem;background:${r.status==='respondido'?'#dcfce7':'#fef9c3'};color:${r.status==='respondido'?'#15803d':'#92400e'};padding:2px 8px;border-radius:20px;font-weight:700;">${r.status==='respondido'?'✅ Respondido':'⏳ Aguardando'}</span>
+                    </div>
+                    <div style="font-size:.82rem;color:#6b7280;margin-bottom:8px;">${escHtml(r.mensagem)}</div>
+                    ${r.resposta ? `<div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:10px 12px;font-size:.82rem;color:#15803d;"><strong>💬 Resposta do admin:</strong><br>${escHtml(r.resposta)}</div>` : ''}
+                    <div style="font-size:.72rem;color:#9ca3af;margin-top:6px;">${r.created_at ? new Date(r.created_at).toLocaleString('pt-BR') : ''}</div>
+                </div>`).join('');
+            } catch(e) { lista.innerHTML = '<div style="color:#9ca3af;padding:20px;text-align:center;">Erro ao carregar mensagens.</div>'; }
+        }
+
+        async function reportAdminCarregar() {
+            const panel = document.getElementById('reportAdminPanel');
+            const lista = document.getElementById('reportAdminLista');
+            const badge = document.getElementById('reportAdminBadge');
+            if (!panel || !lista) return;
+            panel.style.display = 'block';
+            try {
+                const rows = await supa.getAll('ajuda_reports','order=created_at.desc&limit=50');
+                const pendentes = rows.filter(r => r.status !== 'respondido').length;
+                if (badge) badge.textContent = `${pendentes} pendente(s)`;
+                lista.innerHTML = rows.map(r => `
+                <div style="border:1px solid #e8eef5;border-radius:12px;padding:14px 16px;margin-bottom:10px;background:#fff;" id="report-${r.id}">
+                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap;">
+                        <span style="font-weight:700;font-size:.84rem;color:#0d2137;">${escHtml(r.usuario_nome||'—')}</span>
+                        <span style="font-size:.8rem;color:#7c3aed;">${escHtml(r.assunto)}</span>
+                        <span style="margin-left:auto;font-size:.74rem;background:${r.status==='respondido'?'#dcfce7':'#fee2e2'};color:${r.status==='respondido'?'#15803d':'#dc2626'};padding:2px 8px;border-radius:20px;font-weight:700;">${r.status==='respondido'?'✅ Respondido':'⏳ Pendente'}</span>
+                    </div>
+                    <div style="font-size:.82rem;color:#6b7280;margin-bottom:10px;">${escHtml(r.mensagem)}</div>
+                    ${r.resposta ? `<div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:8px 12px;font-size:.82rem;color:#15803d;margin-bottom:8px;">✅ ${escHtml(r.resposta)}</div>` : ''}
+                    ${r.status !== 'respondido' ? `
+                    <div style="display:flex;gap:8px;margin-top:8px;">
+                        <input type="text" id="resp-${r.id}" placeholder="Digite a resposta..." style="flex:1;margin:0;font-size:.82rem;border-radius:8px;">
+                        <button onclick="reportResponder('${r.id}')" style="background:linear-gradient(135deg,#0e8a3e,#065f46);border:none;border-radius:8px;padding:7px 14px;color:#fff;cursor:pointer;font-size:.8rem;font-weight:700;margin:0;width:auto;">Responder</button>
+                    </div>` : ''}
+                    <div style="font-size:.72rem;color:#9ca3af;margin-top:6px;">${r.created_at ? new Date(r.created_at).toLocaleString('pt-BR') : ''}</div>
+                </div>`).join('') || '<div style="text-align:center;padding:20px;color:#9ca3af;">Nenhuma mensagem.</div>';
+            } catch(e) { lista.innerHTML = '<div style="color:#9ca3af;padding:20px;text-align:center;">Erro ao carregar.</div>'; }
+        }
+
+        async function reportResponder(id) {
+            const inp = document.getElementById(`resp-${id}`);
+            const resp = inp?.value?.trim();
+            if (!resp) { notif('Digite a resposta', 'warning'); return; }
+            try {
+                await supa.update('ajuda_reports', id, { resposta: resp, status: 'respondido' });
+                await reportAdminCarregar();
+                notif('✅ Resposta enviada!', 'success');
+            } catch(e) { notif('Erro: ' + e.message, 'danger'); }
+        }
+
+        // ═══════════════════════════════════════════════════════════
+        // HISTÓRICO DE RELATÓRIOS (Anexo P e O)
+        // ═══════════════════════════════════════════════════════════
+        async function salvarHistoricoRelatorio(tipo, dados) {
+            try {
+                await supa.insert('historico_relatorios', {
+                    tipo,           // 'anexo_p' ou 'anexo_o'
+                    dados_json: JSON.stringify(dados),
+                    usuario_id:   estado.usuario?.id,
+                    usuario_nome: estado.usuario?.nome || estado.usuario?.login,
+                    gerado_em:    new Date().toISOString(),
+                });
+                notif('📁 Relatório salvo no histórico!', 'success');
+            } catch(e) { console.warn('[histórico]', e.message); }
         }
 
         // ══════════════════════════════════════════════════════════════
@@ -10766,6 +11112,33 @@ Responda APENAS com JSON: {"c1":"CODIGO1","c2":"CODIGO2","codU":"CODIGO1-CODIGO2
                 return;
             }
 
+
+            // ── Vistorias agendadas ──
+            if (action === 'del-vag') {
+                if (!podeExcluir()) { notif('⛔ Sem permissão para excluir', 'warning'); return; }
+                excluirVistoriaAgendada(id); return;
+            }
+            if (action === 'edit-vag') {
+                if (!podeEditar()) { notif('⛔ Sem permissão para editar', 'warning'); return; }
+                editarVistoriaAgendada(id); return;
+            }
+
+            // ── Vistorias para fazer ──
+            if (action === 'del-vpf') {
+                if (!podeExcluir()) { notif('⛔ Sem permissão para excluir', 'warning'); return; }
+                excluirVistoriaParaFazer(id); return;
+            }
+            if (action === 'edit-vpf') {
+                if (!podeEditar()) { notif('⛔ Sem permissão para editar', 'warning'); return; }
+                editarVistoriaParaFazer(id); return;
+            }
+
+            // ── Vistorias realizadas ──
+            if (action === 'del-vreal') {
+                if (!podeExcluir()) { notif('⛔ Sem permissão para excluir', 'warning'); return; }
+                excluirVistoriaRealizada(id); return;
+            }
+
             // ── Dropdown OS: selecionar item do catálogo ──
             if (action === 'sel-cat-os') {
                 const idx = parseInt(btn.dataset.idx);
@@ -11263,7 +11636,7 @@ Responda APENAS com JSON: {"c1":"CODIGO1","c2":"CODIGO2","codU":"CODIGO1-CODIGO2
       if(typeof renderExtintores==='function') renderExtintores();
     };
 
-    console.log('[PCI PATCH v2026-04-14] Patches aplicados: nivel_manutencao | senha_hash | obs/observacoes | extintor_id');
+    // patches aplicados com sucesso
   });
 })();
 </script>
