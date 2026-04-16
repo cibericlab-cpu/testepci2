@@ -1,6 +1,3 @@
-
-
-
 <!DOCTYPE html>
 <html lang="pt-br">
 
@@ -3087,6 +3084,18 @@
                                     </div>
                                 </div>
 
+                                <!-- Nível de Manutenção -->
+                                <div>
+                                    <label style="font-size:.75rem;font-weight:700;color:#4a5b6e;display:block;margin-bottom:4px;">Nível de Manutenção</label>
+                                    <select id="nivelManutencao" style="margin:0;">
+                                        <option value="">Selecione...</option>
+                                        <option value="1">Nível 1 — Inspeção</option>
+                                        <option value="2">Nível 2 — Manutenção</option>
+                                        <option value="3">Nível 3 — Recarga</option>
+                                        <option value="4">Nível 4 — Teste Hidráulico</option>
+                                    </select>
+                                </div>
+
                                 <!-- Nº do Cilindro -->
                                 <div>
                                     <label style="font-size:.75rem;font-weight:700;color:#4a5b6e;display:block;margin-bottom:4px;">Nº do Cilindro</label>
@@ -3130,6 +3139,18 @@
                                 <div>
                                     <label style="font-size:.75rem;font-weight:700;color:#4a5b6e;display:block;margin-bottom:4px;">Nº do Selo INMETRO</label>
                                     <input type="text" id="codSelo" placeholder="Ex: D1277, D1278..." style="margin:0;max-width:200px;">
+                                </div>
+
+                                <!-- Linha 6: Validade + Recarga -->
+                                <div class="grid-2">
+                                    <div>
+                                        <label style="font-size:.75rem;font-weight:700;color:#4a5b6e;display:block;margin-bottom:4px;">Validade</label>
+                                        <input type="date" id="validade" style="margin:0;">
+                                    </div>
+                                    <div>
+                                        <label style="font-size:.75rem;font-weight:700;color:#4a5b6e;display:block;margin-bottom:4px;">Última Recarga</label>
+                                        <input type="date" id="recarga" style="margin:0;">
+                                    </div>
                                 </div>
 
                                 <!-- Botões -->
@@ -6031,6 +6052,16 @@
         // ══════════════════════════════════════════════════════════════
         // SALVADORES
         // ══════════════════════════════════════════════════════════════
+        async function marcarSeloComoUsado(codSelo) {
+            if (!codSelo) return;
+            try {
+                const rows = await supa.getAll('selos_inmetro', `codigo_unificado=eq.${codSelo}&status=eq.disponivel`);
+                if (rows && rows.length > 0) {
+                    await supa.update('selos_inmetro', rows[0].id, { status: 'usado' });
+                }
+            } catch (e) { console.warn('Aviso: não foi possível marcar selo como usado:', e.message); }
+        }
+
         async function salvarExtintor(dados) { return supa.insert('extintores', dados); }
         async function salvarCliente(dados) { return supa.insert('clientes', dados); }
         async function salvarEmpresa(dados) { return supa.insert('empresas', dados); }
@@ -7262,7 +7293,9 @@
                     else if (dias <= 30) statusOp = 'atencao';
                     const dados = {
                         id: idGerado,
+                        classe: 'N/A',
                         tipo: document.getElementById('tipo').value,
+                        nivel_manutencao: parseInt(document.getElementById('nivelManutencao')?.value) || null,
                         validade: valStr || null,
                         recarga: recStr || null,
                         num_cilindro: document.getElementById('numCilindro').value || '',
@@ -7274,6 +7307,7 @@
                         status_op: statusOp
                     };
                     await salvarExtintor(dados);
+                    await marcarSeloComoUsado(dados.cod_selo);
                     this.reset();
                     // Pré-preencher próximo ID sugerido
                     const proxId = 'EXT' + String(estado.extintores.length + 2).padStart(3, '0');
@@ -8641,6 +8675,9 @@ Responda APENAS com JSON: {"c1":"CODIGO1","c2":"CODIGO2","codU":"CODIGO1-CODIGO2
             const extintor = estado.extintores.find(e => e.id === id);
             if (!extintor) { notif('Extintor não encontrado', 'warning'); return; }
 
+            const valDate = extintor.validade ? extintor.validade.split('T')[0] : '';
+            const recDate = extintor.recarga  ? extintor.recarga.split('T')[0]  : '';
+
             const htmlModal = `
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
       <div>
@@ -8650,26 +8687,68 @@ Responda APENAS com JSON: {"c1":"CODIGO1","c2":"CODIGO2","codU":"CODIGO1-CODIGO2
       <div>
         <label style="font-size:.76rem;font-weight:700;color:#4a5b6e;display:block;margin-bottom:3px;">Tipo *</label>
         <select id="edt_tipo" style="margin:0;">
-          <option value="">Tipo</option>
+          <option value="">Selecione...</option>
           ${estado.tiposExtintor.map(t => `<option value="${escHtml(t)}" ${extintor.tipo === t ? 'selected' : ''}>${escHtml(t)}</option>`).join('')}
         </select>
       </div>
 
       <div>
+        <label style="font-size:.76rem;font-weight:700;color:#4a5b6e;display:block;margin-bottom:3px;">Nível de Manutenção</label>
+        <select id="edt_nivelManutencao" style="margin:0;">
+          <option value="">Selecione...</option>
+          <option value="1" ${extintor.nivel_manutencao == 1 ? 'selected' : ''}>Nível 1 — Inspeção</option>
+          <option value="2" ${extintor.nivel_manutencao == 2 ? 'selected' : ''}>Nível 2 — Manutenção</option>
+          <option value="3" ${extintor.nivel_manutencao == 3 ? 'selected' : ''}>Nível 3 — Recarga</option>
+          <option value="4" ${extintor.nivel_manutencao == 4 ? 'selected' : ''}>Nível 4 — Teste Hidráulico</option>
+        </select>
+      </div>
+      <div>
         <label style="font-size:.76rem;font-weight:700;color:#4a5b6e;display:block;margin-bottom:3px;">Nº do Cilindro</label>
         <input type="text" id="edt_numCilindro" value="${escHtml(extintor.num_cilindro || '')}" placeholder="Nº do Cilindro" style="margin:0;">
       </div>
+
       <div>
         <label style="font-size:.76rem;font-weight:700;color:#4a5b6e;display:block;margin-bottom:3px;">Norma de Fabricação</label>
-        <input type="text" id="edt_normaFab" value="${escHtml(extintor.norma_fab || '')}" placeholder="Ex: ABNT 10721" style="margin:0;">
+        <input type="text" id="edt_normaFab" value="${escHtml(extintor.norma_fab || '')}" placeholder="Ex: 15808, 15809" style="margin:0;">
       </div>
       <div>
         <label style="font-size:.76rem;font-weight:700;color:#4a5b6e;display:block;margin-bottom:3px;">Fabricante</label>
         <input type="text" id="edt_fabricante" value="${escHtml(extintor.fabricante || '')}" placeholder="Fabricante" style="margin:0;">
       </div>
+
       <div>
         <label style="font-size:.76rem;font-weight:700;color:#4a5b6e;display:block;margin-bottom:3px;">Fab/Teste</label>
         <input type="text" id="edt_fabTeste" value="${escHtml(extintor.fab_teste || '')}" placeholder="Ex: 01/26" style="margin:0;">
+      </div>
+      <div>
+        <label style="font-size:.76rem;font-weight:700;color:#4a5b6e;display:block;margin-bottom:3px;">Aprovado / Reprovado</label>
+        <select id="edt_aproRepro" style="margin:0;">
+          <option value="">Selecione...</option>
+          <option value="Aprovado" ${extintor.apro_repro === 'Aprovado' ? 'selected' : ''}>✅ Aprovado</option>
+          <option value="Reprovado" ${extintor.apro_repro === 'Reprovado' ? 'selected' : ''}>❌ Reprovado</option>
+        </select>
+      </div>
+
+      <div>
+        <label style="font-size:.76rem;font-weight:700;color:#4a5b6e;display:block;margin-bottom:3px;">Nº Selo INMETRO</label>
+        <input type="text" id="edt_codSelo" value="${escHtml(extintor.cod_selo || '')}" placeholder="Ex: D1277" style="margin:0;">
+      </div>
+      <div>
+        <label style="font-size:.76rem;font-weight:700;color:#4a5b6e;display:block;margin-bottom:3px;">Status Operacional</label>
+        <select id="edt_statusOp" style="margin:0;">
+          <option value="operacional" ${extintor.status_op === 'operacional' ? 'selected' : ''}>🟢 Operacional</option>
+          <option value="atencao" ${extintor.status_op === 'atencao' ? 'selected' : ''}>🟡 Atenção</option>
+          <option value="irregular" ${extintor.status_op === 'irregular' ? 'selected' : ''}>🔴 Irregular</option>
+        </select>
+      </div>
+
+      <div>
+        <label style="font-size:.76rem;font-weight:700;color:#4a5b6e;display:block;margin-bottom:3px;">Validade</label>
+        <input type="date" id="edt_validade" value="${valDate}" style="margin:0;">
+      </div>
+      <div>
+        <label style="font-size:.76rem;font-weight:700;color:#4a5b6e;display:block;margin-bottom:3px;">Última Recarga</label>
+        <input type="date" id="edt_recarga" value="${recDate}" style="margin:0;">
       </div>
     </div>`;
 
@@ -8781,17 +8860,33 @@ Responda APENAS com JSON: {"c1":"CODIGO1","c2":"CODIGO2","codU":"CODIGO1-CODIGO2
                 let dados = {};
 
                 if (ctx.tipo === 'extintor') {
+                    const edt_valStr = document.getElementById('edt_validade')?.value || '';
+                    const edt_recStr = document.getElementById('edt_recarga')?.value  || '';
+                    const edt_val    = edt_valStr ? new Date(edt_valStr) : null;
+                    const edt_hoje   = new Date();
+                    const edt_dias   = edt_val ? Math.floor((edt_val - edt_hoje) / (1000*60*60*24)) : 999;
+                    let edt_statusOp = document.getElementById('edt_statusOp')?.value || 'operacional';
+                    // Recalcular status automaticamente se validade foi alterada
+                    if (edt_valStr) {
+                        if (edt_dias < 0) edt_statusOp = 'irregular';
+                        else if (edt_dias <= 30) edt_statusOp = 'atencao';
+                        else edt_statusOp = 'operacional';
+                    }
                     dados = {
-                        tipo:         document.getElementById('edt_tipo')?.value         || '',
-
-                        num_cilindro: document.getElementById('edt_numCilindro')?.value  || '',
-                        norma_fab:    document.getElementById('edt_normaFab')?.value     || '',
-                        fabricante:   document.getElementById('edt_fabricante')?.value   || '',
-                        fab_teste:    document.getElementById('edt_fabTeste')?.value     || '',
-                        apro_repro:   document.getElementById('edt_aproRepro')?.value    || '',
-                        cod_selo:     document.getElementById('edt_codSelo')?.value      || '',
+                        tipo:             document.getElementById('edt_tipo')?.value              || '',
+                        nivel_manutencao: parseInt(document.getElementById('edt_nivelManutencao')?.value) || null,
+                        num_cilindro:     document.getElementById('edt_numCilindro')?.value       || '',
+                        norma_fab:        document.getElementById('edt_normaFab')?.value          || '',
+                        fabricante:       document.getElementById('edt_fabricante')?.value        || '',
+                        fab_teste:        document.getElementById('edt_fabTeste')?.value          || '',
+                        apro_repro:       document.getElementById('edt_aproRepro')?.value         || '',
+                        cod_selo:         document.getElementById('edt_codSelo')?.value           || '',
+                        validade:         edt_valStr || null,
+                        recarga:          edt_recStr || null,
+                        status_op:        edt_statusOp,
                     };
                     await supa.update('extintores', ctx.id, dados);
+                    await marcarSeloComoUsado(dados.cod_selo);
                     await carregarExtintores();
                     renderizarExtintores();
                 } else if (ctx.tipo === 'cliente') {
