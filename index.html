@@ -2235,6 +2235,62 @@
         .perm-no    { color: #92400e; background: rgba(245,158,11,.08); }
         .perm-no::before { background: #f59e0b; }
 
+        
+        /* ── ABA RELATÓRIOS ── */
+        .relcad-wrapper { max-width: 860px; }
+        .relcad-card {
+            background: #fff;
+            border: 1px solid #e8eef5;
+            border-radius: 16px;
+            padding: 18px 20px;
+            margin-bottom: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,.04);
+            transition: box-shadow .18s, transform .18s;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        .relcad-card::before {
+            content: '';
+            position: absolute;
+            left: 0; top: 0; bottom: 0;
+            width: 4px;
+            background: #7c3aed;
+            border-radius: 0 4px 4px 0;
+        }
+        .relcad-card.fechado::before { background: #10b981; }
+        .relcad-card:hover { box-shadow: 0 6px 20px rgba(0,0,0,.1); transform: translateY(-1px); }
+        .relcad-card-header { display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:12px; }
+        .relcad-os-num { font-family:monospace; font-weight:900; font-size:1.05rem; color:#0d2137; }
+        .relcad-badge {
+            font-size:.72rem; font-weight:800; padding:3px 10px; border-radius:20px;
+            text-transform:uppercase; letter-spacing:.5px;
+        }
+        .relcad-badge.aberto  { background:#ede9fe; color:#7c3aed; }
+        .relcad-badge.fechado { background:#dcfce7; color:#15803d; }
+        .relcad-cliente { font-size:.88rem; font-weight:700; color:#1e3b5a; margin-bottom:6px; }
+        .relcad-meta { display:flex; gap:16px; flex-wrap:wrap; font-size:.78rem; color:#9ca3af; }
+        .relcad-meta span { display:inline-flex; align-items:center; gap:4px; }
+        .relcad-actions { display:flex; gap:8px; margin-top:14px; padding-top:12px; border-top:1px solid #f0f4f8; flex-wrap:wrap; }
+        .relcad-empty {
+            text-align:center; padding:48px 24px; color:#9ca3af;
+        }
+        .relcad-empty i { font-size:2.5rem; display:block; margin-bottom:12px; opacity:.25; }
+        .relcad-empty h3 { font-size:.95rem; color:#6b7280; margin-bottom:6px; font-weight:700; }
+        .relcad-empty p { font-size:.82rem; }
+        /* Detalhe */
+        .relcad-info-grid {
+            display:grid; grid-template-columns:repeat(3,1fr); gap:16px;
+            background:#f8fafd; border-radius:12px; padding:16px; margin-bottom:16px;
+        }
+        .relcad-info-label { font-size:.7rem; font-weight:800; color:#9ca3af; text-transform:uppercase; letter-spacing:.8px; margin-bottom:4px; }
+        .relcad-info-value { font-size:.92rem; font-weight:700; color:#0d2137; }
+        .relcad-ext-wrap {
+            background:#f8fafd; border:1.5px solid #e8eef5; border-radius:12px;
+            padding:14px 16px; margin-bottom:16px;
+        }
+        .relcad-ext-header { font-size:.8rem; font-weight:700; color:#4a5b6e; margin-bottom:10px; display:flex; align-items:center; gap:6px; }
+
         </style>
 </head>
 
@@ -2851,10 +2907,10 @@
                 </div>
                 <nav class="sidebar-nav" id="sidebarNav">
                     <div class="nav-group-label">Cadastros</div>
-                    <div class="nav-item" data-tab="extintores"><i class="fas fa-fire-extinguisher"></i><span>
-                            Extintores</span></div>
                     <div class="nav-item" data-tab="clientes"><i class="fas fa-user-tie"></i><span> Clientes</span>
                     </div>
+                    <div class="nav-item" data-tab="extintores"><i class="fas fa-fire-extinguisher"></i><span>
+                            Extintores</span></div>
                     <div class="nav-item" data-tab="empresas"><i class="fas fa-building"></i><span> Executoras</span>
                     </div>
                     <div class="nav-item" data-tab="vendedores"><i class="fas fa-handshake"></i><span> Vendedores</span>
@@ -2877,7 +2933,9 @@
                             Etiquetas</span></div>
                     <div class="nav-item" data-tab="consultas"><i class="fas fa-search"></i><span> Consultas</span>
                     </div>
-                    <div class="nav-item" data-tab="relatorios"><i class="fas fa-chart-bar"></i><span> Relatórios</span>
+                    <div class="nav-item" data-tab="relatorios"><i class="fas fa-file-alt"></i><span> Anexo O e P</span>
+                    </div>
+                    <div class="nav-item" data-tab="relcad"><i class="fas fa-clipboard-list"></i><span> Relatórios</span>
                     </div>
                     <div class="nav-group-label" id="navGroupAdmin" style="display:none;">Admin</div>
                     <div class="nav-item" id="navItemUsuarios" data-tab="usuarios" style="display:none;"><i
@@ -2961,88 +3019,37 @@
 
                 <!-- ══ EXTINTORES ══ -->
                 <div id="extintoresTab" class="tab-content">
-                    <div class="row">
-                        <div class="card">
+                    <div style="display:flex;flex-direction:column;gap:16px;">
+
+                        <!-- ════ FORMULÁRIO NOVO EXTINTOR ════ -->
+                        <div class="card" style="margin-bottom:16px;">
+                            <h2><i class="fas fa-plus-circle"></i> Novo Extintor</h2>
                             <h2><i class="fas fa-plus-circle"></i> Novo Extintor</h2>
                             <form id="formExtintor">
+                                <!-- Linha 1: ID + Tipo -->
                                 <div class="grid-2">
-                                    <input type="text" id="extintorId" placeholder="Nº Extintor (ex: EXT001)"
-                                        style="text-transform:uppercase;font-family:monospace;font-weight:700;"
-                                        oninput="this.value=this.value.toUpperCase().replace(/[^A-Z0-9\-]/g,'')">
-                                    <select id="classe" required>
-                                        <option value="">Classe</option>
-                                        <option>A</option>
-                                        <option>B</option>
-                                        <option>C</option>
-                                        <option>AB</option>
-                                        <option>ABC</option>
-                                        <option>D</option>
-                                        <option>K</option>
-                                    </select>
-                                    <div style="display:flex;gap:6px;align-items:center;">
-                                        <select id="tipo" required onchange="onTipoChange(this)" style="flex:1;">
-                                            <option value="">Tipo *</option>
-                                        </select>
-                                        <button type="button" id="btnAddTipoInline" onclick="mostrarAddTipoInline()"
-                                            title="Adicionar novo tipo"
-                                            style="background:#f0f4f8;border:1.5px solid #c5d8ee;border-radius:10px;padding:9px 10px;cursor:pointer;color:#2a5c9a;flex-shrink:0;margin:0;box-shadow:none;width:auto;"><i
-                                                class="fas fa-plus"></i></button>
+                                    <div>
+                                        <label style="font-size:.75rem;font-weight:700;color:#4a5b6e;display:block;margin-bottom:4px;">Nº Extintor</label>
+                                        <input type="text" id="extintorId" placeholder="EXT001 (auto se vazio)"
+                                            style="text-transform:uppercase;font-family:monospace;font-weight:700;margin:0;"
+                                            oninput="this.value=this.value.toUpperCase().replace(/[^A-Z0-9\-]/g,'')">
                                     </div>
-                                    <div id="addTipoInlineWrap"
-                                        style="display:none;background:#eff6ff;border:1.5px solid #bfdbfe;border-radius:10px;padding:10px;margin-top:-4px;">
-                                        <div style="font-size:.78rem;font-weight:700;color:#1d4ed8;margin-bottom:6px;">
-                                            <i class="fas fa-plus-circle"></i> Novo tipo de extintor
-                                        </div>
-                                        <div style="display:flex;gap:6px;">
-                                            <input type="text" id="novoTipoInput"
-                                                placeholder="Ex: Pó Químico ABC Especial"
-                                                style="flex:1;margin:0;font-size:.84rem;"
-                                                oninput="this.value=this.value.toUpperCase().replace(/[^A-Z0-9\s\-\.\/]/g,'')">
-                                            <button type="button" onclick="confirmarNovoTipo()"
-                                                style="background:#1d4ed8;color:#fff;border:none;border-radius:8px;padding:8px 12px;cursor:pointer;font-size:.8rem;font-weight:700;white-space:nowrap;margin:0;width:auto;">Adicionar</button>
-                                            <button type="button"
-                                                onclick="document.getElementById('addTipoInlineWrap').style.display='none'"
-                                                style="background:#f0f4f8;border:1px solid #e2e8f0;border-radius:8px;padding:8px 10px;cursor:pointer;margin:0;width:auto;font-size:.8rem;">✕</button>
+                                    <div>
+                                        <label style="font-size:.75rem;font-weight:700;color:#4a5b6e;display:block;margin-bottom:4px;">Tipo *</label>
+                                        <div style="display:flex;gap:6px;align-items:center;">
+                                            <select id="tipo" onchange="onTipoChange(this)" style="flex:1;margin:0;">
+                                                <option value="">Selecione o tipo...</option>
+                                            </select>
+                                            <button type="button" id="btnAddTipoInline" onclick="mostrarAddTipoInline()"
+                                                title="Novo tipo"
+                                                style="background:#f0f4f8;border:1.5px solid #c5d8ee;border-radius:10px;padding:9px 10px;cursor:pointer;color:#2a5c9a;flex-shrink:0;margin:0;box-shadow:none;width:auto;">
+                                                <i class="fas fa-plus"></i>
+                                            </button>
                                         </div>
                                     </div>
-                                    <input type="text" id="kg" placeholder="Kg (ex: 4kg)" required>
-                                </div>
-                                <div class="grid-2">
-                                    <div><label>Data Validade</label><input type="date" id="validade" required></div>
-                                    <div><label>Data Recarga</label><input type="date" id="recarga" required></div>
-                                </div>
-                                <div
-                                    style="margin:8px 0 6px;padding:6px 10px;background:#f0f4f8;border-radius:8px;font-size:.75rem;font-weight:700;color:#4a5b6e;letter-spacing:.5px;">
-                                    <i class="fas fa-tools" style="color:#0080C7;margin-right:5px;"></i>DADOS TÉCNICOS
-                                </div>
-                                <div class="grid-2">
-                                    <input type="text" id="numCilindro" placeholder="Nº do Cilindro">
-                                    <input type="text" id="normaFab" placeholder="Norma (ex: ABNT 10721)">
-                                </div>
-                                <div class="grid-2">
-                                    <input type="text" id="fabricante" placeholder="Fabricante">
-                                    <input type="text" id="fabTeste" placeholder="Fab/Teste (ex: 01/26)">
-                                </div>
-                                <div class="grid-2">
-                                    <select id="nivelManut">
-                                        <option value="">Nível de Manutenção</option>
-                                        <option value="1">N1 — Inspeção Visual</option>
-                                        <option value="2">N2 — Manutenção Periódica</option>
-                                        <option value="3">N3 — Manutenção Hidrostática</option>
-                                    </select>
-                                    <select id="aproRepro">
-                                        <option value="">Aprovado / Reprovado</option>
-                                        <option value="Aprovado">✅ Aprovado</option>
-                                        <option value="Reprovado">❌ Reprovado</option>
-                                    </select>
-                                </div>
-                                <div style="display:flex;gap:12px;">
-                                    <button type="submit"><i class="fas fa-save"></i> Salvar</button>
-                                    <button type="button" class="secondary small"
-                                        id="limparFormExtintor">Limpar</button>
-                                </div>
-                            </form>
                         </div>
+
+                        <!-- ════ TABELA DE EXTINTORES (abaixo, sempre visível) ════ -->
                         <div class="card">
                             <div
                                 style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
@@ -3063,30 +3070,28 @@
                             <div class="table-responsive" style="max-height:460px;overflow-y:auto;">
                                 <table id="tabelaExtintores">
                                     <thead>
-                                        <tr>
-                                            <th style="width:32px;"><input type="checkbox" id="chkAllExtH"
+                                        <tr style="background:linear-gradient(135deg,#1e3b5a,#0d2137);">
+                                            <th style="width:32px;padding:11px 10px;"><input type="checkbox" id="chkAllExtH"
                                                     onchange="toggleSelectAll('ext',this.checked)"
-                                                    style="width:14px;margin:0;"></th>
-                                            <th>ID</th>
-                                            <th>Classe</th>
-                                            <th>Tipo</th>
-                                            <th>Kg</th>
-                                            <th>Nº Cilindro</th>
-                                            <th>Fabricante</th>
-                                            <th>Fab/Teste</th>
-                                            <th>Nível</th>
-                                            <th>Apro/Repro</th>
-                                            <th>Selo</th>
-                                            <th>Validade</th>
-                                            <th>Recarga</th>
-                                            <th>Status</th>
-                                            <th>Ações</th>
+                                                    style="width:14px;margin:0;accent-color:#7c3aed;"></th>
+                                            <th style="padding:11px 14px;font-size:.72rem;font-weight:700;letter-spacing:.6px;color:#e2e8f0;white-space:nowrap;">ID</th>
+                                            <th style="padding:11px 14px;font-size:.72rem;font-weight:700;letter-spacing:.6px;color:#e2e8f0;">TIPO</th>
+                                            <th style="padding:11px 14px;font-size:.72rem;font-weight:700;letter-spacing:.6px;color:#e2e8f0;">KG</th>
+                                            <th style="padding:11px 14px;font-size:.72rem;font-weight:700;letter-spacing:.6px;color:#e2e8f0;white-space:nowrap;">Nº CILINDRO</th>
+                                            <th style="padding:11px 14px;font-size:.72rem;font-weight:700;letter-spacing:.6px;color:#e2e8f0;">FABRICANTE</th>
+                                            <th style="padding:11px 14px;font-size:.72rem;font-weight:700;letter-spacing:.6px;color:#e2e8f0;white-space:nowrap;">FAB/TESTE</th>
+                                            <th style="padding:11px 14px;font-size:.72rem;font-weight:700;letter-spacing:.6px;color:#e2e8f0;white-space:nowrap;">APRO/REPRO</th>
+                                            <th style="padding:11px 14px;font-size:.72rem;font-weight:700;letter-spacing:.6px;color:#e2e8f0;">SELO</th>
+                                            <th style="padding:11px 14px;font-size:.72rem;font-weight:700;letter-spacing:.6px;color:#e2e8f0;">VALIDADE</th>
+                                            <th style="padding:11px 14px;font-size:.72rem;font-weight:700;letter-spacing:.6px;color:#e2e8f0;">STATUS</th>
+                                            <th style="padding:11px 10px;width:80px;"></th>
                                         </tr>
                                     </thead>
                                     <tbody id="extintoresBody"></tbody>
                                 </table>
                             </div>
                         </div>
+
                     </div>
                 </div>
 
@@ -3096,13 +3101,13 @@
                         <div class="card">
                             <h2><i class="fas fa-user-plus"></i> Novo Cliente</h2>
                             <form id="formCliente">
-                                <input type="text" id="clienteNome" placeholder="Nome do Cliente *" required>
                                 <div class="cep-wrap" style="margin-bottom:16px;">
-                                    <input type="text" id="clienteDocumento" placeholder="CPF ou CNPJ"
+                                    <input type="text" id="clienteDocumento" placeholder="CPF ou CNPJ (preenche dados automaticamente)"
                                         oninput="mascaraCpfCnpj(this)" onblur="buscarCnpjCliente(this.value)"
                                         maxlength="18">
                                     <i class="fas fa-spinner fa-spin cep-spin" id="cnpjSpin" style="display:none;"></i>
                                 </div>
+                                <input type="text" id="clienteNome" placeholder="Nome do Cliente *" required>
                                 <input type="text" id="clienteEndereco" placeholder="Logradouro e número *" required>
                                 <div class="grid-2">
                                     <input type="text" id="clienteCidade" placeholder="Cidade">
@@ -3135,9 +3140,9 @@
                                     <div style="position:relative;">
                                         <i class="fas fa-search"
                                             style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:#9ca3af;font-size:.8rem;"></i>
-                                        <input type="text" id="buscaClienteTabela" placeholder="Buscar por nome..."
+                                        <input type="text" id="buscaClienteTabela" placeholder="Buscar por nome, CPF ou CNPJ..."
                                             oninput="filtrarTabelaClientes(this.value)"
-                                            style="padding-left:32px;margin-bottom:0;font-size:.82rem;width:220px;">
+                                            style="padding-left:32px;margin-bottom:0;font-size:.82rem;width:280px;">
                                     </div>
                                     <button type="button" onclick="abrirImportCSVClientes()"
                                         style="background:linear-gradient(135deg,#0e8a3e,#0a6b30);padding:8px 14px;font-size:.8rem;white-space:nowrap;margin:0;"><i
@@ -3358,17 +3363,20 @@
                                     class="fas fa-info-circle"></i> Selos expandidos dinamicamente dos ranges
                                 armazenados no banco.</div>
                             <div class="table-responsive">
-                                <table>
+                                <div id="loteSelosResumo"></div>
+                                <div style="overflow-x:auto;border-radius:10px;border:1px solid #e8eef5;">
+                                <table style="width:100%;border-collapse:collapse;">
                                     <thead>
-                                        <tr>
-                                            <th>Código do Selo</th>
-                                            <th>Status</th>
-                                            <th>Etiqueta Vinculada</th>
-                                            <th>Data Vinculação</th>
+                                        <tr style="background:linear-gradient(135deg,#1e3b5a,#0d2137);color:#fff;">
+                                            <th style="padding:10px 14px;text-align:left;font-size:.74rem;font-weight:700;letter-spacing:.5px;">CÓDIGO DO SELO</th>
+                                            <th style="padding:10px 14px;text-align:left;font-size:.74rem;font-weight:700;letter-spacing:.5px;">STATUS</th>
+                                            <th style="padding:10px 14px;text-align:left;font-size:.74rem;font-weight:700;letter-spacing:.5px;">ETIQUETA / EXTINTOR VINCULADO</th>
+                                            <th style="padding:10px 14px;text-align:left;font-size:.74rem;font-weight:700;letter-spacing:.5px;">DATA VINCULAÇÃO</th>
                                         </tr>
                                     </thead>
                                     <tbody id="loteSelosBody"></tbody>
                                 </table>
+                                </div>
                             </div>
                             <div id="loteSelosPaginador"
                                 style="display:none;justify-content:center;align-items:center;gap:8px;margin-top:12px;padding:8px;">
@@ -5089,6 +5097,136 @@
                     </div>
                 </div>
 
+                
+                <!-- ══ ABA: RELATÓRIOS (Cadastro) ══ -->
+                <div id="relcadTab" class="tab-content">
+                    <div class="relcad-wrapper">
+
+                        <!-- ── LISTA DE RELATÓRIOS ── -->
+                        <div id="relcadListaView">
+                            <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:20px;">
+                                <div>
+                                    <h2 style="margin:0 0 2px;"><i class="fas fa-clipboard-list" style="color:#7c3aed;"></i> Relatórios</h2>
+                                    <div style="font-size:.78rem;color:#9ca3af;" id="relcadContador">Carregando...</div>
+                                </div>
+                                <button onclick="relcadAbrirForm()" style="margin:0;background:linear-gradient(135deg,#7c3aed,#5b21b6);color:#fff;border:none;border-radius:10px;padding:10px 18px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:7px;font-size:.85rem;">
+                                    <i class="fas fa-plus"></i> Novo Relatório
+                                </button>
+                            </div>
+
+                            <!-- Sub-abas -->
+                            <div id="relcadSubAbas" style="display:flex;gap:0;margin-bottom:20px;background:#f0f4f8;border-radius:12px;padding:4px;">
+                                <button id="btnRelAbertos" onclick="relcadFiltrar('aberto')"
+                                    style="flex:1;background:#fff;border:none;border-radius:9px;color:#7c3aed;font-weight:800;font-size:.84rem;padding:9px 16px;cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,.08);transition:all .18s;margin:0;">
+                                    📋 Abertos
+                                </button>
+                                <button id="btnRelFechados" onclick="relcadFiltrar('fechado')"
+                                    style="flex:1;background:none;border:none;border-radius:9px;color:#9ca3af;font-weight:600;font-size:.84rem;padding:9px 16px;cursor:pointer;transition:all .18s;margin:0;">
+                                    ✅ Fechados
+                                </button>
+                            </div>
+
+                            <!-- Cards de relatórios -->
+                            <div id="relcadCards"></div>
+                        </div>
+
+                        <!-- ── FORMULÁRIO DE CADASTRO ── -->
+                        <div id="relcadFormView" style="display:none;">
+                            <div style="display:flex;align-items:center;gap:10px;margin-bottom:22px;">
+                                <button onclick="relcadVoltarLista()" style="background:#f0f4f8;border:none;border-radius:10px;padding:9px 12px;cursor:pointer;color:#4a5b6e;margin:0;width:auto;">
+                                    <i class="fas fa-arrow-left"></i>
+                                </button>
+                                <div>
+                                    <h2 style="margin:0 0 1px;" id="relcadFormTitulo"><i class="fas fa-plus-circle" style="color:#7c3aed;"></i> Novo Relatório</h2>
+                                    <div style="font-size:.76rem;color:#9ca3af;">Preencha os dados e clique em Cadastrar</div>
+                                </div>
+                            </div>
+
+                            <div class="card" style="margin-bottom:16px;">
+                                <div style="font-size:.72rem;font-weight:800;color:#9ca3af;text-transform:uppercase;letter-spacing:1px;margin-bottom:16px;padding-bottom:10px;border-bottom:1px solid #f0f4f8;">
+                                    <i class="fas fa-info-circle" style="color:#7c3aed;"></i> Dados do Relatório
+                                </div>
+
+                                <!-- Cliente -->
+                                <div style="margin-bottom:14px;">
+                                    <label style="font-size:.76rem;font-weight:700;color:#4a5b6e;display:block;margin-bottom:5px;">
+                                        <i class="fas fa-user-tie" style="color:#7c3aed;font-size:.7rem;"></i> Cliente *
+                                    </label>
+                                    <div style="position:relative;">
+                                        <input type="text" id="relcadBuscaCliente"
+                                            placeholder="🔍 Buscar por nome, CPF ou CNPJ..."
+                                            oninput="relcadFiltrarCliente(this.value)"
+                                            autocomplete="off" style="margin:0;">
+                                        <div id="relcadDropCliente"
+                                            style="display:none;position:absolute;top:calc(100% + 4px);left:0;right:0;background:#fff;border:1.5px solid #c5d8ee;border-radius:12px;max-height:220px;overflow-y:auto;z-index:999;box-shadow:0 8px 24px rgba(0,0,0,.14);">
+                                        </div>
+                                        <input type="hidden" id="relcadClienteId">
+                                    </div>
+                                    <div id="relcadClienteSelecionado"
+                                        style="display:none;background:linear-gradient(135deg,#eff6ff,#dbeafe);border:1.5px solid #bfdbfe;border-radius:10px;padding:10px 14px;margin-top:8px;display:flex;align-items:center;gap:10px;">
+                                        <i class="fas fa-user-check" style="color:#2563eb;font-size:.9rem;"></i>
+                                        <div style="flex:1;">
+                                            <div style="font-weight:700;font-size:.85rem;color:#0d2137;" id="relcadClienteNome"></div>
+                                            <div style="font-size:.75rem;color:#6b7280;" id="relcadClienteDoc"></div>
+                                        </div>
+                                        <button type="button" onclick="relcadLimparCliente()"
+                                            style="background:none;border:none;color:#dc2626;cursor:pointer;padding:4px;box-shadow:none;width:auto;font-size:.85rem;flex-shrink:0;">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- OS + Data em grid -->
+                                <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px;">
+                                    <div>
+                                        <label style="font-size:.76rem;font-weight:700;color:#4a5b6e;display:block;margin-bottom:5px;">
+                                            <i class="fas fa-file-invoice" style="color:#7c3aed;font-size:.7rem;"></i> Nº O.S. *
+                                        </label>
+                                        <div style="position:relative;">
+                                            <input type="text" id="relcadNumOS"
+                                                placeholder="Digite ou selecione a OS..."
+                                                oninput="relcadFiltrarOS(this.value)"
+                                                autocomplete="off" style="margin:0;">
+                                            <div id="relcadDropOS"
+                                                style="display:none;position:absolute;top:calc(100% + 4px);left:0;right:0;background:#fff;border:1.5px solid #c5d8ee;border-radius:12px;max-height:180px;overflow-y:auto;z-index:999;box-shadow:0 8px 24px rgba(0,0,0,.14);">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label style="font-size:.76rem;font-weight:700;color:#4a5b6e;display:block;margin-bottom:5px;">
+                                            <i class="fas fa-calendar-alt" style="color:#7c3aed;font-size:.7rem;"></i> Data de Entrada *
+                                        </label>
+                                        <input type="date" id="relcadDataEntrada" style="margin:0;">
+                                    </div>
+                                </div>
+
+                                <button onclick="relcadCadastrar()"
+                                    style="width:100%;background:linear-gradient(135deg,#7c3aed,#5b21b6);color:#fff;border:none;border-radius:10px;padding:12px;font-weight:700;cursor:pointer;font-size:.88rem;display:flex;align-items:center;justify-content:center;gap:8px;">
+                                    <i class="fas fa-save"></i> Cadastrar Relatório
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- ── DETALHE DO RELATÓRIO ── -->
+                        <div id="relcadDetalheView" style="display:none;">
+                            <div style="display:flex;align-items:center;gap:10px;margin-bottom:22px;">
+                                <button onclick="relcadVoltarLista()"
+                                    style="background:#f0f4f8;border:none;border-radius:10px;padding:9px 12px;cursor:pointer;color:#4a5b6e;margin:0;width:auto;">
+                                    <i class="fas fa-arrow-left"></i>
+                                </button>
+                                <div>
+                                    <h2 style="margin:0;" id="relcadDetalheTitulo"></h2>
+                                    <div style="font-size:.76rem;color:#9ca3af;" id="relcadDetalheSubtitle"></div>
+                                </div>
+                            </div>
+                            <div id="relcadDetalheConteudo"></div>
+                        </div>
+
+                    </div>
+                </div><!-- /relcadTab -->
+<!-- /relcadTab -->
+
+
                 <!-- ══ PERFIL ══ -->
                 <div id="perfilTab" class="tab-content">
                     <div class="row">
@@ -5609,6 +5747,7 @@
             etiquetas: [], lotes: [], lotesInmetro: [], selosInmetro: [],
             catalogoItens: [], usuarios: [], tiposExtintor: [],
             vistoriasAgendadas: [], vistoriasRealizadas: [], vistoriasParaFazer: [],
+            relcad: [],
             perfil: {}, permissoes: {}, os: [],
             supaUrl: '', supaKey: '',
             groqKey: '', groqModel: 'llama-3.3-70b-versatile',
@@ -5778,7 +5917,7 @@
                 await Promise.all([
                     carregarExtintores(), carregarClientes(), carregarEmpresas(),
                     carregarVendedores(), carregarEtiquetas(), carregarCatalogo(),
-                    carregarPerfil(), carregarTiposExtintor(),
+                    carregarPerfil(), carregarTiposExtintor(), carregarRelcad(),
                     carregarVistoriasAgendadas(), carregarVistoriasRealizadas(), carregarVistoriasParaFazer()
                 ]);
                 if (estado.versao === 'premium') {
@@ -6104,6 +6243,7 @@
             }
             if (aba === 'lotes' && estado.versao === 'premium') carregarTodosSelosInm();
             if (aba === 'os') renderizarOS();
+            if (aba === 'relcad') { relcadFiltrar('aberto'); }
             if (aba === 'config') {
                     // Garantir que todos os cards de config sejam visíveis para superadmin
                     if (estado.nivel === 'superadmin') {
@@ -6498,7 +6638,7 @@
         function renderizarExtintores() {
             const tbody = document.getElementById('extintoresBody');
             if (!tbody) return;
-            if (!estado.extintores.length) { tbody.innerHTML = '<tr><td colspan="15" style="text-align:center;padding:24px;color:#9ca3af;">Nenhum extintor cadastrado</td></tr>'; return; }
+            if (!estado.extintores.length) { tbody.innerHTML = '<tr><td colspan="12" style="text-align:center;padding:32px;color:#9ca3af;">Nenhum extintor cadastrado</td></tr>'; return; }
             tbody.innerHTML = estado.extintores.map((e, i) => {
                 const hoje = new Date(); const val = new Date(e.validade);
                 const dias = Math.floor((val - hoje) / (1000 * 60 * 60 * 24));
@@ -6512,19 +6652,24 @@
                 const seloHtml = seloVinc && seloVinc !== '-'
                     ? `<span style="background:#0d2137;color:#fff;padding:2px 7px;border-radius:5px;font-family:monospace;font-weight:700;font-size:.75rem;">${escHtml(seloVinc)}</span>`
                     : '<span style="color:#9ca3af;">—</span>';
-                return `<tr class="${rowCls}">
-      <td><input type="checkbox" class="ext-chk etiqueta-checkbox" data-idx="${i}" onchange="atualizarContExt()"></td>
-      <td style="font-family:monospace;font-weight:700;">${e.id || '-'}</td>
-      <td>${e.classe || '-'}</td><td>${e.tipo || '-'}</td><td>${e.kg || '-'}</td>
-      <td style="font-family:monospace;">${e.num_cilindro || '-'}</td>
-      <td>${e.fabricante || '-'}</td><td>${e.fab_teste || '-'}</td>
-      <td>${e.nivel_manutencao || '-'}</td>
-      <td><span class="${e.apro_repro === 'Aprovado' ? 'badge-status badge-concluido' : 'badge-status badge-irregular'}">${e.apro_repro || '-'}</span></td>
-      <td>${seloHtml}</td>
-      <td>${e.validade ? new Date(e.validade).toLocaleDateString('pt-BR') : '-'}</td>
-      <td>${e.recarga ? new Date(e.recarga).toLocaleDateString('pt-BR') : '-'}</td>
-      <td><span class="badge-status ${statusCls}">${statusTxt}</span></td>
-      <td>${botoesAcao("edit-ext",e.id,"del-ext",e.id)}</td>
+                const aproHtml = e.apro_repro === 'Aprovado'
+                    ? '<span style="background:#dcfce7;color:#15803d;padding:3px 10px;border-radius:20px;font-size:.76rem;font-weight:700;">✅ Aprovado</span>'
+                    : e.apro_repro === 'Reprovado'
+                        ? '<span style="background:#fee2e2;color:#dc2626;padding:3px 10px;border-radius:20px;font-size:.76rem;font-weight:700;">❌ Reprovado</span>'
+                        : '<span style="color:#d1d5db;font-size:.8rem;">—</span>';
+                return `<tr class="${rowCls}" style="border-bottom:1px solid #f0f4f8;">
+      <td style="padding:10px 8px;"><input type="checkbox" class="ext-chk etiqueta-checkbox" data-idx="${i}" onchange="atualizarContExt()" style="width:14px;margin:0;"></td>
+      <td style="padding:10px 12px;font-family:monospace;font-weight:800;color:#0d2137;">${e.id || '-'}</td>
+      <td style="padding:10px 12px;font-size:.85rem;">${e.tipo || '-'}</td>
+      <td style="padding:10px 12px;font-size:.85rem;color:#6b7280;">${e.kg || '-'}</td>
+      <td style="padding:10px 12px;font-family:monospace;font-size:.82rem;color:#374151;">${e.num_cilindro || '—'}</td>
+      <td style="padding:10px 12px;font-size:.85rem;">${e.fabricante || '—'}</td>
+      <td style="padding:10px 12px;font-size:.85rem;text-align:center;">${e.fab_teste || '—'}</td>
+      <td style="padding:10px 12px;">${aproHtml}</td>
+      <td style="padding:10px 12px;">${seloHtml}</td>
+      <td style="padding:10px 12px;font-size:.82rem;color:#6b7280;white-space:nowrap;">${e.validade ? new Date(e.validade+'T12:00:00').toLocaleDateString('pt-BR') : '—'}</td>
+      <td style="padding:10px 12px;"><span class="badge-status ${statusCls}">${statusTxt}</span></td>
+      <td style="padding:10px 8px;">${botoesAcao("edit-ext",e.id,"del-ext",e.id)}</td>
     </tr>`;
             }).join('');
         }
@@ -7019,17 +7164,16 @@
                     else if (dias <= 30) statusOp = 'atencao';
                     const dados = {
                         id: idGerado,
-                        classe: document.getElementById('classe').value,
                         tipo: document.getElementById('tipo').value,
-                        kg: document.getElementById('kg').value,
+
                         validade: valStr || null,
                         recarga: document.getElementById('recarga').value || null,
                         num_cilindro: document.getElementById('numCilindro').value || '',
                         norma_fab: document.getElementById('normaFab').value || '',
                         fabricante: document.getElementById('fabricante').value || '',
                         fab_teste: document.getElementById('fabTeste').value || '',
-                        nivel_manutencao: parseInt(document.getElementById('nivelManut').value) || null,
-                        apro_repro: document.getElementById('aproRepro').value || '',
+                        apro_repro: document.getElementById('aproRepro')?.value || '',
+                        cod_selo: document.getElementById('codSelo')?.value || '',
                         status_op: statusOp
                     };
                     await salvarExtintor(dados);
@@ -7324,10 +7468,18 @@
         function filtrarClienteEtiqueta(busca) {
             const drop = document.getElementById('dropdownClienteEtiqueta');
             if (!busca || busca.length < 2) { drop.style.display = 'none'; return; }
-            const encontrados = estado.clientes.filter(c => c.nome.toLowerCase().includes(busca.toLowerCase())).slice(0, 8);
+            const q = busca.toLowerCase().replace(/[.\-\/]/g,'');
+            const encontrados = estado.clientes.filter(c => {
+                const nome = (c.nome||'').toLowerCase();
+                const doc  = (c.documento||'').replace(/[.\-\/]/g,'').toLowerCase();
+                return nome.includes(busca.toLowerCase()) || doc.includes(q);
+            }).slice(0, 10);
             if (!encontrados.length) { drop.style.display = 'none'; return; }
             drop.innerHTML = encontrados.map(c =>
-                `<div data-action="sel-cli-etq" data-id="${c.id}" data-nome="${escAttr(c.nome)}" style="padding:10px 14px;cursor:pointer;font-size:.84rem;border-bottom:1px solid #f0f4f8;" onmouseover="this.style.background='#f0f4f8'" onmouseout="this.style.background=''">${escHtml(c.nome)}${c.cidade ? ' — ' + escHtml(c.cidade) : ''}</div>`
+                `<div data-action="sel-cli-etq" data-id="${c.id}" data-nome="${escAttr(c.nome)}" style="padding:10px 14px;cursor:pointer;font-size:.84rem;border-bottom:1px solid #f0f4f8;" onmouseover="this.style.background='#f0f4f8'" onmouseout="this.style.background=''">
+                    <div style="font-weight:700;">${escHtml(c.nome)}</div>
+                    <div style="font-size:.76rem;color:#9ca3af;">${c.documento ? escHtml(c.documento) : ''}${c.cidade ? ' — '+escHtml(c.cidade) : ''}</div>
+                </div>`
             ).join('');
             drop.style.display = 'block';
         }
@@ -8088,14 +8240,105 @@ Responda APENAS com JSON: {"c1":"CODIGO1","c2":"CODIGO2","codU":"CODIGO1-CODIGO2
         async function verSelosLote(loteId) {
             const lote = estado.lotes.find(l => l.id === loteId);
             if (!lote) return;
-            const div = document.getElementById('loteSelos');
+            const div   = document.getElementById('loteSelos');
             const tbody = document.getElementById('loteSelosBody');
             if (!div || !tbody) return;
             document.getElementById('loteSelosNome').textContent = lote.nome;
-            const ranges = typeof lote.ranges_disponiveis === 'string' ? JSON.parse(lote.ranges_disponiveis) : (lote.ranges_disponiveis || []);
-            const selos = LotesSelos.expandirRanges(ranges, (lote.prefixo || '').toUpperCase()).slice(0, 500);
-            tbody.innerHTML = selos.map(s => `<td><td style="font-family:monospace;font-weight:700;">${s}</td><td><span class="badge success">Disponível</span></td><td>-</td><td>-</td></tr>`).join('');
-            div.style.display = 'block'; div.scrollIntoView({ behavior: 'smooth' });
+
+            // ── Expandir todos os selos do range ─────────────────────
+            const prefixo = (lote.prefixo || '').toUpperCase();
+            // Selos disponíveis (de ranges_disponiveis)
+            const rangesDisp = typeof lote.ranges_disponiveis === 'string'
+                ? JSON.parse(lote.ranges_disponiveis || '[]')
+                : (lote.ranges_disponiveis || []);
+            const selosDisp = new Set(LotesSelos.expandirRanges(rangesDisp, prefixo));
+
+            // Selos usados (de ranges_usados)
+            const rangesUsados = typeof lote.ranges_usados === 'string'
+                ? JSON.parse(lote.ranges_usados || '[]')
+                : (lote.ranges_usados || []);
+            const selosUsados = new Set(LotesSelos.expandirRanges(rangesUsados, prefixo));
+
+            // Todos os selos do range original (inicio→fim)
+            const todosRange = [];
+            for (let n = lote.inicio; n <= lote.fim; n++) {
+                todosRange.push(prefixo + n);
+            }
+
+            tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;padding:20px;"><span class="loading-spinner"></span> Carregando...</td></tr>';
+            div.style.display = 'block';
+            div.scrollIntoView({ behavior: 'smooth' });
+
+            // Cruzar com etiquetas para saber a qual extintor está vinculado
+            await new Promise(r => setTimeout(r, 50)); // deixar o spinner aparecer
+
+            // Mapear selo → etiqueta vinculada
+            const seloParaEtq = {};
+            (estado.etiquetas || []).forEach(etq => {
+                const s = etq.codigo_selo || etq.selo_inmetro_codigo;
+                if (s) seloParaEtq[s] = etq;
+            });
+            // Mapear pelo cod_selo dos extintores
+            const seloParaExt = {};
+            (estado.extintores || []).forEach(ext => {
+                if (ext.cod_selo) seloParaExt[ext.cod_selo] = ext;
+            });
+
+            // Contar estatísticas
+            const totalSelos  = todosRange.length;
+            const qtdDisp     = selosDisp.size;
+            const qtdUsados   = selosUsados.size;
+
+            // Atualizar resumo no topo (se existir)
+            const seloResumo = document.getElementById('loteSelosResumo');
+            if (seloResumo) {
+                seloResumo.innerHTML = `
+                <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px;padding:10px 14px;background:#f8fafd;border-radius:10px;border:1px solid #e8eef5;">
+                    <span style="font-size:.8rem;color:#6b7280;">Total: <strong>${totalSelos}</strong></span>
+                    <span style="font-size:.8rem;color:#15803d;background:#dcfce7;padding:2px 8px;border-radius:20px;font-weight:700;">✅ Disponíveis: ${qtdDisp}</span>
+                    <span style="font-size:.8rem;color:#dc2626;background:#fee2e2;padding:2px 8px;border-radius:20px;font-weight:700;">🔴 Usados: ${qtdUsados}</span>
+                </div>`;
+            }
+
+            // Renderizar tabela com status de cada selo
+            const PAGINA = 300; // limitar para performance
+            const selasParaMostrar = todosRange.slice(0, PAGINA);
+
+            tbody.innerHTML = selasParaMostrar.map(selo => {
+                const isDisp  = selosDisp.has(selo);
+                const isUsado = selosUsados.has(selo);
+                const etq     = seloParaEtq[selo];
+                const ext     = seloParaExt[selo] || (etq ? estado.extintores.find(e => e.id === etq.extintor_id) : null);
+
+                let statusHtml, etqHtml, dataHtml;
+                if (isUsado || etq || ext) {
+                    statusHtml = `<span style="background:#fee2e2;color:#dc2626;padding:3px 10px;border-radius:20px;font-size:.76rem;font-weight:700;">🔴 Usado</span>`;
+                    etqHtml    = etq
+                        ? `<span style="font-family:monospace;font-size:.8rem;color:#0d2137;">${escHtml(etq.etiqueta_id||'')} ${ext?'— '+escHtml(ext.id):''}${ext?.tipo?' ('+escHtml(ext.tipo)+')':''}</span>`
+                        : ext
+                            ? `<span style="font-family:monospace;font-size:.8rem;color:#0d2137;">Extintor: ${escHtml(ext.id)} ${ext.tipo?'('+escHtml(ext.tipo)+')':''}</span>`
+                            : '<span style="color:#9ca3af;font-size:.8rem;">—</span>';
+                    dataHtml   = etq?.data_hora
+                        ? `<span style="font-size:.78rem;color:#6b7280;">${new Date(etq.data_hora).toLocaleDateString('pt-BR')}</span>`
+                        : '<span style="color:#9ca3af;">—</span>';
+                } else {
+                    statusHtml = `<span style="background:#dcfce7;color:#15803d;padding:3px 10px;border-radius:20px;font-size:.76rem;font-weight:700;">✅ Disponível</span>`;
+                    etqHtml    = '<span style="color:#9ca3af;font-size:.8rem;">—</span>';
+                    dataHtml   = '<span style="color:#9ca3af;">—</span>';
+                }
+
+                return `<tr style="border-bottom:1px solid #f0f4f8;">
+                    <td style="padding:9px 14px;font-family:monospace;font-weight:700;font-size:.85rem;color:#0d2137;">${escHtml(selo)}</td>
+                    <td style="padding:9px 14px;">${statusHtml}</td>
+                    <td style="padding:9px 14px;">${etqHtml}</td>
+                    <td style="padding:9px 14px;">${dataHtml}</td>
+                </tr>`;
+            }).join('');
+
+            if (todosRange.length > PAGINA) {
+                const extra = document.getElementById('loteSelosPaginador');
+                if (extra) extra.innerHTML = `<div style="text-align:center;padding:12px;color:#9ca3af;font-size:.82rem;">Mostrando ${PAGINA} de ${todosRange.length} selos.</div>`;
+            }
         }
 
         async function verSelosInmLote(loteId, nomeStr) {
@@ -8299,52 +8542,43 @@ Responda APENAS com JSON: {"c1":"CODIGO1","c2":"CODIGO2","codU":"CODIGO1-CODIGO2
         // ══════════════════════════════════════════════════════════════
         async function editarExtintor(id) {
             const extintor = estado.extintores.find(e => e.id === id);
-            if (!extintor) {
-                notif('Extintor não encontrado', 'warning');
-                return;
-            }
+            if (!extintor) { notif('Extintor não encontrado', 'warning'); return; }
 
-            let html = `
-    <div class="grid-2" style="gap:8px;">
-      <input type="text" id="edt_extintorId" value="${escHtml(extintor.id)}" placeholder="Nº Extintor" readonly style="background:#f3f4f6;cursor:not-allowed;">
-      <select id="edt_classe">
-        <option value="">Classe</option>
-        <option value="A" ${extintor.classe === 'A' ? 'selected' : ''}>A</option>
-        <option value="B" ${extintor.classe === 'B' ? 'selected' : ''}>B</option>
-        <option value="C" ${extintor.classe === 'C' ? 'selected' : ''}>C</option>
-        <option value="AB" ${extintor.classe === 'AB' ? 'selected' : ''}>AB</option>
-        <option value="ABC" ${extintor.classe === 'ABC' ? 'selected' : ''}>ABC</option>
-        <option value="D" ${extintor.classe === 'D' ? 'selected' : ''}>D</option>
-        <option value="K" ${extintor.classe === 'K' ? 'selected' : ''}>K</option>
-      </select>
-      <select id="edt_tipo">
-        <option value="">Tipo</option>
-        ${estado.tiposExtintor.map(t => `<option value="${escHtml(t)}" ${extintor.tipo === t ? 'selected' : ''}>${escHtml(t)}</option>`).join('')}
-      </select>
-      <input type="text" id="edt_kg" value="${escHtml(extintor.kg || '')}" placeholder="Kg">
-      <input type="text" id="edt_numCilindro" value="${escHtml(extintor.num_cilindro || '')}" placeholder="Nº do Cilindro">
-      <input type="text" id="edt_fabricante" value="${escHtml(extintor.fabricante || '')}" placeholder="Fabricante">
-      <input type="text" id="edt_fabTeste" value="${escHtml(extintor.fab_teste || '')}" placeholder="Fab/Teste">
-      <input type="date" id="edt_validade" value="${extintor.validade ? extintor.validade.split('T')[0] : ''}" placeholder="Data Validade">
-      <input type="date" id="edt_recarga" value="${extintor.recarga ? extintor.recarga.split('T')[0] : ''}" placeholder="Data Recarga">
-      <select id="edt_nivelManut">
-        <option value="">Nível de Manutenção</option>
-        <option value="1" ${extintor.nivel_manutencao === 1 || extintor.nivel_manutencao === '1' ? 'selected' : ''}>N1 — Inspeção Visual</option>
-        <option value="2" ${extintor.nivel_manutencao === 2 || extintor.nivel_manutencao === '2' ? 'selected' : ''}>N2 — Manutenção Periódica</option>
-        <option value="3" ${extintor.nivel_manutencao === 3 || extintor.nivel_manutencao === '3' ? 'selected' : ''}>N3 — Manutenção Hidrostática</option>
-      </select>
-      <select id="edt_aproRepro">
-        <option value="">Aprovado / Reprovado</option>
-        <option value="Aprovado" ${extintor.apro_repro === 'Aprovado' ? 'selected' : ''}>✅ Aprovado</option>
-        <option value="Reprovado" ${extintor.apro_repro === 'Reprovado' ? 'selected' : ''}>❌ Reprovado</option>
-      </select>
-    </div>
-  `;
+            const htmlModal = `
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+      <div>
+        <label style="font-size:.76rem;font-weight:700;color:#4a5b6e;display:block;margin-bottom:3px;">Nº Extintor</label>
+        <input type="text" id="edt_extintorId" value="${escHtml(extintor.id)}" readonly style="background:#f3f4f6;cursor:not-allowed;margin:0;">
+      </div>
+      <div>
+        <label style="font-size:.76rem;font-weight:700;color:#4a5b6e;display:block;margin-bottom:3px;">Tipo *</label>
+        <select id="edt_tipo" style="margin:0;">
+          <option value="">Tipo</option>
+          ${estado.tiposExtintor.map(t => `<option value="${escHtml(t)}" ${extintor.tipo === t ? 'selected' : ''}>${escHtml(t)}</option>`).join('')}
+        </select>
+      </div>
+
+      <div>
+        <label style="font-size:.76rem;font-weight:700;color:#4a5b6e;display:block;margin-bottom:3px;">Nº do Cilindro</label>
+        <input type="text" id="edt_numCilindro" value="${escHtml(extintor.num_cilindro || '')}" placeholder="Nº do Cilindro" style="margin:0;">
+      </div>
+      <div>
+        <label style="font-size:.76rem;font-weight:700;color:#4a5b6e;display:block;margin-bottom:3px;">Norma de Fabricação</label>
+        <input type="text" id="edt_normaFab" value="${escHtml(extintor.norma_fab || '')}" placeholder="Ex: ABNT 10721" style="margin:0;">
+      </div>
+      <div>
+        <label style="font-size:.76rem;font-weight:700;color:#4a5b6e;display:block;margin-bottom:3px;">Fabricante</label>
+        <input type="text" id="edt_fabricante" value="${escHtml(extintor.fabricante || '')}" placeholder="Fabricante" style="margin:0;">
+      </div>
+      <div>
+        <label style="font-size:.76rem;font-weight:700;color:#4a5b6e;display:block;margin-bottom:3px;">Fab/Teste</label>
+        <input type="text" id="edt_fabTeste" value="${escHtml(extintor.fab_teste || '')}" placeholder="Ex: 01/26" style="margin:0;">
+      </div>
+    </div>`;
 
             document.getElementById('editModalTitle').textContent = 'Editar Extintor: ' + escHtml(id);
-            document.getElementById('editModalContent').innerHTML = html;
+            document.getElementById('editModalContent').innerHTML = htmlModal;
             document.getElementById('editModal').classList.remove('hidden');
-
             window._editContext = { tipo: 'extintor', id: id };
         }
 
@@ -8451,16 +8685,14 @@ Responda APENAS com JSON: {"c1":"CODIGO1","c2":"CODIGO2","codU":"CODIGO1-CODIGO2
 
                 if (ctx.tipo === 'extintor') {
                     dados = {
-                        classe: document.getElementById('edt_classe').value,
-                        tipo: document.getElementById('edt_tipo').value,
-                        kg: document.getElementById('edt_kg').value,
-                        num_cilindro: document.getElementById('edt_numCilindro').value,
-                        fabricante: document.getElementById('edt_fabricante').value,
-                        fab_teste: document.getElementById('edt_fabTeste').value,
-                        validade: document.getElementById('edt_validade').value,
-                        recarga: document.getElementById('edt_recarga').value,
-                        nivel_manutencao: parseInt(document.getElementById('edt_nivelManut').value) || null,
-                        apro_repro: document.getElementById('edt_aproRepro').value
+                        tipo:         document.getElementById('edt_tipo')?.value         || '',
+
+                        num_cilindro: document.getElementById('edt_numCilindro')?.value  || '',
+                        norma_fab:    document.getElementById('edt_normaFab')?.value     || '',
+                        fabricante:   document.getElementById('edt_fabricante')?.value   || '',
+                        fab_teste:    document.getElementById('edt_fabTeste')?.value     || '',
+                        apro_repro:   document.getElementById('edt_aproRepro')?.value    || '',
+                        cod_selo:     document.getElementById('edt_codSelo')?.value      || '',
                     };
                     await supa.update('extintores', ctx.id, dados);
                     await carregarExtintores();
@@ -8719,7 +8951,8 @@ Responda APENAS com JSON: {"c1":"CODIGO1","c2":"CODIGO2","codU":"CODIGO1-CODIGO2
             { id:'catalogo',     label:'Catálogo',          icon:'fa-book-open',          grupo:'Operações',   desc:'Itens e serviços' },
             { id:'idsetiquetas', label:'IDs Etiquetas',     icon:'fa-fingerprint',        grupo:'Operações',   desc:'Consultar IDs gerados' },
             { id:'consultas',    label:'Consultas',         icon:'fa-search',             grupo:'Operações',   desc:'Filtros avançados de extintores' },
-            { id:'relatorios',   label:'Relatórios',        icon:'fa-chart-bar',          grupo:'Operações',   desc:'Relatórios INMETRO Anexo P e O' },
+            { id:'relatorios',   label:'Anexo O e P',        icon:'fa-file-alt',           grupo:'Operações',   desc:'Relatórios INMETRO Anexo P e O' },
+            { id:'relcad',       label:'Relatórios',         icon:'fa-clipboard-list',     grupo:'Operações',   desc:'Cadastro e gestão de relatórios de extintores' },
             // Premium
             { id:'lotes',        label:'Lotes de Selos',   icon:'fa-tags',               grupo:'Premium',     desc:'Gerenciar lotes e ranges de selos' },
             { id:'logistica',    label:'Logística',         icon:'fa-truck',              grupo:'Premium',     desc:'Rotas e entregas' },
@@ -9074,7 +9307,658 @@ Responda APENAS com JSON: {"c1":"CODIGO1","c2":"CODIGO2","codU":"CODIGO1-CODIGO2
             }).join('');
         }
 
+
+
         // ══════════════════════════════════════════════════════════════
+        // RELATÓRIOS — Cadastro, Listagem, Adição de Extintores
+        // ══════════════════════════════════════════════════════════════
+
+        let _relcadFiltroAtual = 'aberto';
+        let _relcadEditId      = null;
+        let _relcadExtintores  = [];
+
+        // ── Carregar do Supabase ─────────────────────────────────────
+        async function carregarRelcad() {
+            try {
+                const r = await supa.getAll('relatorios','order=created_at.desc');
+                estado.relcad = Array.isArray(r) ? r : [];
+            } catch(e) { estado.relcad = []; }
+        }
+
+        // ── Sub-abas (Abertos / Fechados) ────────────────────────────
+        function relcadFiltrar(status) {
+            _relcadFiltroAtual = status;
+            const isAberto = status === 'aberto';
+            const bA = document.getElementById('btnRelAbertos');
+            const bF = document.getElementById('btnRelFechados');
+            if (bA) {
+                bA.style.background    = isAberto  ? '#fff' : 'none';
+                bA.style.color         = isAberto  ? '#7c3aed' : '#9ca3af';
+                bA.style.fontWeight    = isAberto  ? '800' : '600';
+                bA.style.boxShadow     = isAberto  ? '0 2px 6px rgba(0,0,0,.08)' : 'none';
+            }
+            if (bF) {
+                bF.style.background    = !isAberto ? '#fff' : 'none';
+                bF.style.color         = !isAberto ? '#7c3aed' : '#9ca3af';
+                bF.style.fontWeight    = !isAberto ? '800' : '600';
+                bF.style.boxShadow     = !isAberto ? '0 2px 6px rgba(0,0,0,.08)' : 'none';
+            }
+            relcadRenderLista();
+        }
+
+        // ── Renderizar cards da lista ────────────────────────────────
+        function relcadRenderLista() {
+            const container = document.getElementById('relcadCards');
+            const contador  = document.getElementById('relcadContador');
+            if (!container) return;
+            const todos  = estado.relcad || [];
+            const lista  = todos.filter(r => r.status === _relcadFiltroAtual);
+            const total  = todos.length;
+            if (contador) contador.textContent = `${lista.length} ${_relcadFiltroAtual === 'aberto' ? 'aberto(s)' : 'fechado(s)'} · ${total} total`;
+
+            if (!lista.length) {
+                container.innerHTML = `
+                <div class="relcad-empty">
+                    <i class="fas fa-clipboard"></i>
+                    <h3>Nenhum relatório ${_relcadFiltroAtual === 'aberto' ? 'aberto' : 'fechado'}</h3>
+                    <p>${_relcadFiltroAtual === 'aberto' ? 'Clique em "Novo Relatório" para começar.' : 'Relatórios fechados aparecerão aqui.'}</p>
+                </div>`;
+                return;
+            }
+
+            container.innerHTML = lista.map(r => {
+                const cli = estado.clientes.find(c => String(c.id) === String(r.cliente_id));
+                const nomeCliente = cli ? cli.nome : (r.nome_cliente || '—');
+                const exts = typeof r.extintores === 'string' ? JSON.parse(r.extintores||'[]') : (r.extintores||[]);
+                const extQtd = exts.length;
+                const dataFmt = r.data_entrada ? new Date(r.data_entrada+'T12:00:00').toLocaleDateString('pt-BR') : '—';
+                const isFechado = r.status === 'fechado';
+                return `
+                <div class="relcad-card ${r.status}" onclick="relcadVerDetalhe('${r.id}')">
+                    <div class="relcad-card-header">
+                        <div>
+                            <div class="relcad-os-num">OS ${escHtml(r.num_os||'—')}</div>
+                            <div class="relcad-cliente">${escHtml(nomeCliente)}</div>
+                        </div>
+                        <span class="relcad-badge ${r.status}">${isFechado ? '✅ Fechado' : '🔵 Aberto'}</span>
+                    </div>
+                    <div class="relcad-meta">
+                        <span><i class="fas fa-calendar-alt"></i> ${dataFmt}</span>
+                        <span><i class="fas fa-fire-extinguisher"></i> ${extQtd} extintor(es)</span>
+                    </div>
+                    <div class="relcad-actions" onclick="event.stopPropagation()">
+                        <button onclick="relcadVerDetalhe('${r.id}')" style="background:#f0f4f8;border:none;border-radius:8px;padding:7px 14px;font-size:.8rem;font-weight:700;cursor:pointer;color:#374151;margin:0;width:auto;display:inline-flex;align-items:center;gap:5px;">
+                            <i class="fas fa-eye"></i> Ver / Editar
+                        </button>
+                        ${!isFechado
+                            ? `<button onclick="relcadFechar('${r.id}')" style="background:#dcfce7;border:none;border-radius:8px;padding:7px 14px;font-size:.8rem;font-weight:700;cursor:pointer;color:#15803d;margin:0;width:auto;display:inline-flex;align-items:center;gap:5px;"><i class="fas fa-check"></i> Fechar</button>`
+                            : `<button onclick="relcadReabrir('${r.id}')" style="background:#f0f4f8;border:none;border-radius:8px;padding:7px 14px;font-size:.8rem;font-weight:700;cursor:pointer;color:#6b7280;margin:0;width:auto;display:inline-flex;align-items:center;gap:5px;"><i class="fas fa-redo"></i> Reabrir</button>`
+                        }
+                        <button onclick="relcadExcluir('${r.id}')" style="background:#fee2e2;border:none;border-radius:8px;padding:7px 14px;font-size:.8rem;font-weight:700;cursor:pointer;color:#dc2626;margin:0;width:auto;display:inline-flex;align-items:center;gap:5px;margin-left:auto;">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        // ── Abrir formulário de cadastro ─────────────────────────────
+        function relcadAbrirForm() {
+            _relcadEditId = null;
+            _relcadExtintores = [];
+            document.getElementById('relcadListaView').style.display = 'none';
+            document.getElementById('relcadFormView').style.display  = 'block';
+            document.getElementById('relcadDetalheView').style.display = 'none';
+            // Limpar campos
+            ['relcadBuscaCliente','relcadNumOS'].forEach(id => {
+                const el = document.getElementById(id); if (el) el.value = '';
+            });
+            document.getElementById('relcadClienteId').value = '';
+            document.getElementById('relcadClienteSelecionado').style.display = 'none';
+            document.getElementById('relcadDropCliente').style.display = 'none';
+            document.getElementById('relcadDropOS').style.display = 'none';
+            document.getElementById('relcadDataEntrada').value = new Date().toISOString().split('T')[0];
+        }
+
+        // ── Voltar para lista ────────────────────────────────────────
+        function relcadVoltarLista() {
+            document.getElementById('relcadListaView').style.display  = 'block';
+            document.getElementById('relcadFormView').style.display   = 'none';
+            document.getElementById('relcadDetalheView').style.display= 'none';
+            relcadRenderLista();
+        }
+
+        // ── Busca de cliente no form ─────────────────────────────────
+        function relcadFiltrarCliente(busca) {
+            const drop = document.getElementById('relcadDropCliente');
+            if (!busca || busca.length < 2) { drop.style.display = 'none'; return; }
+            const q = busca.toLowerCase().replace(/[.\-\/]/g,'');
+            const found = estado.clientes.filter(c => {
+                const nome = (c.nome||'').toLowerCase();
+                const doc  = (c.documento||'').replace(/[.\-\/]/g,'').toLowerCase();
+                return nome.includes(busca.toLowerCase()) || doc.includes(q);
+            }).slice(0,10);
+            if (!found.length) {
+                drop.innerHTML = '<div style="padding:14px;text-align:center;color:#9ca3af;font-size:.84rem;">Nenhum cliente encontrado</div>';
+                drop.style.display = 'block'; return;
+            }
+            drop.innerHTML = found.map(c => `
+                <div onclick="relcadSelecionarCliente('${c.id}','${escAttr(c.nome)}','${escAttr(c.documento||'')}')"
+                    style="padding:11px 14px;cursor:pointer;border-bottom:1px solid #f0f4f8;"
+                    onmouseover="this.style.background='#f0f7ff'" onmouseout="this.style.background=''">
+                    <div style="font-weight:700;font-size:.85rem;color:#0d2137;">${escHtml(c.nome)}</div>
+                    <div style="font-size:.76rem;color:#9ca3af;">${escHtml(c.documento||'')}${c.cidade?' — '+escHtml(c.cidade):''}</div>
+                </div>`).join('');
+            drop.style.display = 'block';
+        }
+
+        function relcadSelecionarCliente(id, nome, doc) {
+            document.getElementById('relcadClienteId').value = id;
+            document.getElementById('relcadBuscaCliente').value = nome;
+            document.getElementById('relcadClienteNome').textContent = nome;
+            document.getElementById('relcadClienteDoc').textContent  = doc;
+            document.getElementById('relcadClienteSelecionado').style.display = 'flex';
+            document.getElementById('relcadDropCliente').style.display = 'none';
+        }
+
+        function relcadLimparCliente() {
+            document.getElementById('relcadClienteId').value = '';
+            document.getElementById('relcadBuscaCliente').value = '';
+            document.getElementById('relcadClienteSelecionado').style.display = 'none';
+        }
+
+        // ── Busca de OS no form ──────────────────────────────────────
+        function relcadFiltrarOS(busca) {
+            const drop = document.getElementById('relcadDropOS');
+            if (!busca || busca.length < 1) { drop.style.display = 'none'; return; }
+            const q = busca.toLowerCase();
+            const found = (estado.os||[]).filter(o =>
+                (o.numero||'').toLowerCase().includes(q) ||
+                (o.cidade||'').toLowerCase().includes(q)
+            ).slice(0,8);
+            if (!found.length) { drop.style.display = 'none'; return; }
+            drop.innerHTML = found.map(o => `
+                <div onclick="relcadSelecionarOS('${escAttr(o.numero||'')}','${o.id}')"
+                    style="padding:11px 14px;cursor:pointer;border-bottom:1px solid #f0f4f8;"
+                    onmouseover="this.style.background='#f0f7ff'" onmouseout="this.style.background=''">
+                    <div style="font-weight:700;font-size:.85rem;">OS ${escHtml(o.numero||'')}</div>
+                    <div style="font-size:.76rem;color:#9ca3af;">${o.cidade||''}${o.data?' — '+new Date(o.data+'T12:00:00').toLocaleDateString('pt-BR'):''}</div>
+                </div>`).join('');
+            drop.style.display = 'block';
+        }
+
+        function relcadSelecionarOS(numero, id) {
+            document.getElementById('relcadNumOS').value = numero;
+            document.getElementById('relcadDropOS').style.display = 'none';
+            const os = (estado.os||[]).find(o => o.id === id);
+            if (os && os.data && !document.getElementById('relcadDataEntrada').value) {
+                document.getElementById('relcadDataEntrada').value = os.data;
+            }
+        }
+
+        // ── Cadastrar relatório (com verificação de OS duplicada) ────
+        async function relcadCadastrar() {
+            const clienteId   = document.getElementById('relcadClienteId').value.trim();
+            const numOS       = document.getElementById('relcadNumOS').value.trim();
+            const dataEntrada = document.getElementById('relcadDataEntrada').value;
+            const nomeCliente = document.getElementById('relcadClienteNome').textContent.trim();
+
+            if (!clienteId)  { notif('⚠️ Selecione um cliente', 'warning'); return; }
+            if (!numOS)      { notif('⚠️ Informe o número da O.S.', 'warning'); return; }
+            if (!dataEntrada){ notif('⚠️ Informe a data de entrada', 'warning'); return; }
+
+            // ── Verificar OS duplicada ───────────────────────────────
+            const duplicado = (estado.relcad||[]).find(r => r.num_os === numOS);
+            if (duplicado) {
+                const cli = estado.clientes.find(c => String(c.id) === String(duplicado.cliente_id));
+                const nomeDup = cli ? cli.nome : (duplicado.nome_cliente||'—');
+                const dataDup = duplicado.data_entrada
+                    ? new Date(duplicado.data_entrada+'T12:00:00').toLocaleDateString('pt-BR') : '—';
+                notif(`⛔ OS "${numOS}" já está cadastrada para "${nomeDup}" (entrada: ${dataDup})`, 'danger');
+                return;
+            }
+
+            const btn = event?.target;
+            if (btn) { btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Salvando...'; }
+
+            try {
+                const dados = {
+                    cliente_id:   clienteId,
+                    nome_cliente: nomeCliente,
+                    num_os:       numOS,
+                    data_entrada: dataEntrada,
+                    extintores:   JSON.stringify([]),
+                    status:       'aberto',
+                };
+                const res = await supa.insert('relatorios', dados);
+                const novo = Array.isArray(res) ? res[0] : res;
+                _relcadEditId     = novo?.id;
+                _relcadExtintores = [];
+                estado.relcad = estado.relcad || [];
+                estado.relcad.unshift({ ...dados, id: _relcadEditId, extintores: [] });
+                notif('✅ Relatório cadastrado!', 'success');
+                // Ir direto para o detalhe
+                relcadVerDetalhe(_relcadEditId);
+            } catch(e) {
+                notif('Erro ao cadastrar: ' + e.message, 'danger');
+            } finally {
+                if (btn) { btn.disabled = false; btn.innerHTML = '<i class="fas fa-save"></i> Cadastrar Relatório'; }
+            }
+        }
+
+        // ── Ver detalhe — injeta tudo via JS em um único lugar ───────
+        function relcadVerDetalhe(id) {
+            const rel = (estado.relcad||[]).find(r => String(r.id) === String(id));
+            if (!rel) { notif('Relatório não encontrado', 'warning'); return; }
+            _relcadEditId = id;
+            const exts = typeof rel.extintores === 'string'
+                ? JSON.parse(rel.extintores||'[]') : (rel.extintores||[]);
+            _relcadExtintores = exts.map(e => ({...e}));
+
+            document.getElementById('relcadListaView').style.display   = 'none';
+            document.getElementById('relcadFormView').style.display    = 'none';
+            document.getElementById('relcadDetalheView').style.display = 'block';
+
+            const cli = estado.clientes.find(c => String(c.id) === String(rel.cliente_id));
+            const nomeCliente = cli ? cli.nome : (rel.nome_cliente||'—');
+            const docCliente  = cli?.documento || '';
+            const dataFmt     = rel.data_entrada
+                ? new Date(rel.data_entrada+'T12:00:00').toLocaleDateString('pt-BR') : '—';
+            const isFechado   = rel.status === 'fechado';
+
+            document.getElementById('relcadDetalheTitulo').innerHTML =
+                `<i class="fas fa-clipboard-list" style="color:#7c3aed;"></i> OS ${escHtml(rel.num_os||'—')}`;
+            document.getElementById('relcadDetalheSubtitle').textContent =
+                `${isFechado ? '✅ Fechado' : '🔵 Aberto'} · ${nomeCliente}`;
+
+            document.getElementById('relcadDetalheConteudo').innerHTML = `
+
+            <!-- ── Cabeçalho do relatório ── -->
+            <div class="card" style="margin-bottom:16px;padding:20px 22px;">
+
+                <!-- Info grid -->
+                <div style="display:grid;grid-template-columns:2fr 1fr 1fr;gap:0;margin-bottom:20px;background:#f8fafd;border-radius:12px;overflow:hidden;border:1px solid #e8eef5;">
+                    <div style="padding:14px 18px;border-right:1px solid #e8eef5;">
+                        <div style="font-size:.68rem;font-weight:800;color:#9ca3af;text-transform:uppercase;letter-spacing:1px;margin-bottom:5px;">Cliente</div>
+                        <div style="font-size:.94rem;font-weight:800;color:#0d2137;line-height:1.3;">${escHtml(nomeCliente)}</div>
+                        ${docCliente ? `<div style="font-size:.76rem;color:#9ca3af;margin-top:3px;">${escHtml(docCliente)}</div>` : ''}
+                    </div>
+                    <div style="padding:14px 18px;border-right:1px solid #e8eef5;">
+                        <div style="font-size:.68rem;font-weight:800;color:#9ca3af;text-transform:uppercase;letter-spacing:1px;margin-bottom:5px;">Nº O.S.</div>
+                        <div style="font-size:.94rem;font-weight:800;color:#0d2137;font-family:monospace;">${escHtml(rel.num_os||'—')}</div>
+                    </div>
+                    <div style="padding:14px 18px;">
+                        <div style="font-size:.68rem;font-weight:800;color:#9ca3af;text-transform:uppercase;letter-spacing:1px;margin-bottom:5px;">Data Entrada</div>
+                        <div style="font-size:.94rem;font-weight:800;color:#0d2137;">${dataFmt}</div>
+                    </div>
+                </div>
+
+                <!-- Ações -->
+                <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+                    <!-- Salvar e Voltar (sempre disponível) -->
+                    <button onclick="relcadSalvarEVoltar()" style="background:linear-gradient(135deg,#1e3b5a,#0d2137);color:#fff;border:none;border-radius:10px;padding:10px 18px;font-size:.84rem;font-weight:700;cursor:pointer;margin:0;width:auto;display:inline-flex;align-items:center;gap:7px;">
+                        <i class="fas fa-save"></i> Salvar e Voltar
+                    </button>
+                    ${!isFechado
+                        ? `<button id="btnDetAddExt" onclick="relcadToggleBuscaExt()" style="background:#f0f4f8;border:1.5px solid #e2eaf2;border-radius:10px;padding:10px 18px;font-size:.84rem;font-weight:700;cursor:pointer;color:#1e3b5a;margin:0;width:auto;display:inline-flex;align-items:center;gap:7px;">
+                                <i class="fas fa-plus"></i> Adicionar Extintor
+                           </button>
+                           <button onclick="relcadFechar('${id}')" style="background:linear-gradient(135deg,#0e8a3e,#065f46);color:#fff;border:none;border-radius:10px;padding:10px 18px;font-size:.84rem;font-weight:700;cursor:pointer;margin:0;width:auto;display:inline-flex;align-items:center;gap:7px;margin-left:auto;">
+                                <i class="fas fa-check"></i> Fechar Relatório
+                           </button>`
+                        : `<button onclick="relcadReabrir('${id}')" style="background:#f0f4f8;border:1.5px solid #e2eaf2;border-radius:10px;padding:10px 18px;font-size:.84rem;font-weight:700;cursor:pointer;color:#6b7280;margin:0;width:auto;display:inline-flex;align-items:center;gap:7px;margin-left:auto;">
+                                <i class="fas fa-redo"></i> Reabrir Relatório
+                           </button>`
+                    }
+                </div>
+            </div>
+
+            <!-- ── Busca de extintor (toggle) ── -->
+            <div id="detBuscaExtWrap" style="display:none;margin-bottom:16px;">
+                <div style="background:linear-gradient(135deg,#f0f7ff,#e8f2fb);border:1.5px solid #c5d8ee;border-radius:14px;padding:16px 18px;">
+                    <div style="font-size:.8rem;font-weight:800;color:#1e3b5a;margin-bottom:10px;display:flex;align-items:center;gap:7px;">
+                        <i class="fas fa-search" style="color:#2a5c9a;"></i> Selecionar Extintor
+                        <button onclick="relcadToggleBuscaExt()" style="margin-left:auto;background:none;border:none;color:#9ca3af;cursor:pointer;padding:0;box-shadow:none;width:auto;font-size:.85rem;">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div style="position:relative;">
+                        <input type="text" id="detBuscaExtInput"
+                            placeholder="🔍 Buscar por ID, tipo, Nº cilindro..."
+                            oninput="relcadFiltrarExt(this.value)"
+                            autocomplete="off"
+                            style="margin:0;background:#fff;border:1.5px solid #c5d8ee;">
+                        <div id="detDropExt"
+                            style="display:none;position:absolute;top:calc(100% + 4px);left:0;right:0;background:#fff;border:1.5px solid #c5d8ee;border-radius:12px;max-height:220px;overflow-y:auto;z-index:999;box-shadow:0 8px 24px rgba(0,0,0,.14);">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ── Tabelas de extintores ── -->
+            <div class="card" style="padding:20px 22px;">
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
+                    <div style="font-size:.9rem;font-weight:800;color:#0d2137;display:flex;align-items:center;gap:8px;">
+                        <i class="fas fa-fire-extinguisher" style="color:#dc2626;"></i>
+                        Extintores do Relatório
+                    </div>
+                    <span id="detExtContador" style="background:#f0f4f8;border-radius:20px;padding:4px 14px;font-size:.78rem;font-weight:700;color:#6b7280;"></span>
+                </div>
+                <div id="detExtList"></div>
+            </div>`;
+
+            relcadRenderExtintores();
+        }
+
+        // ── Toggle painel de busca de extintor ───────────────────────
+        function relcadToggleBuscaExt() {
+            const wrap = document.getElementById('detBuscaExtWrap');
+            if (!wrap) return;
+            const isVisible = wrap.style.display !== 'none';
+            wrap.style.display = isVisible ? 'none' : 'block';
+            if (!isVisible) {
+                const inp = document.getElementById('detBuscaExtInput');
+                if (inp) { inp.value = ''; inp.focus(); }
+                const drop = document.getElementById('detDropExt');
+                if (drop) drop.style.display = 'none';
+            }
+        }
+
+        // ── Filtrar extintores na busca ──────────────────────────────
+        function relcadFiltrarExt(busca) {
+            const drop = document.getElementById('detDropExt');
+            if (!drop) return;
+            if (!busca || busca.length < 1) { drop.style.display = 'none'; return; }
+            const q = busca.toLowerCase();
+            const found = estado.extintores.filter(e => {
+                const id   = (e.id||'').toLowerCase();
+                const tipo = (e.tipo||'').toLowerCase();
+                const kg   = (e.kg||'').toLowerCase();
+                const cil  = (e.num_cilindro||'').toLowerCase();
+                return id.includes(q) || tipo.includes(q) || kg.includes(q) || cil.includes(q);
+            }).filter(e => !_relcadExtintores.find(x => x.id === e.id)) // sem duplicatas
+              .slice(0,12);
+            if (!found.length) {
+                drop.innerHTML = '<div style="padding:14px;text-align:center;color:#9ca3af;font-size:.84rem;">Nenhum extintor encontrado</div>';
+                drop.style.display = 'block'; return;
+            }
+            drop.innerHTML = found.map(e => `
+                <div onclick="relcadAddExtintor('${escAttr(e.id)}')"
+                    style="padding:10px 14px;cursor:pointer;border-bottom:1px solid #f0f4f8;display:flex;align-items:center;gap:10px;"
+                    onmouseover="this.style.background='#f0f7ff'" onmouseout="this.style.background=''">
+                    <i class="fas fa-fire-extinguisher" style="color:#dc2626;font-size:.85rem;flex-shrink:0;"></i>
+                    <div>
+                        <div style="font-weight:800;font-size:.84rem;font-family:monospace;color:#0d2137;">${escHtml(e.id)}</div>
+                        <div style="font-size:.75rem;color:#9ca3af;">${escHtml(e.tipo||'')} ${escHtml(e.kg||'')}${e.num_cilindro?' · Cil: '+escHtml(e.num_cilindro):''}</div>
+                    </div>
+                </div>`).join('');
+            drop.style.display = 'block';
+        }
+
+        // ── Adicionar extintor ao relatório ──────────────────────────
+        async function relcadAddExtintor(extId) {
+            const ext = estado.extintores.find(e => e.id === extId);
+            if (!ext) return;
+            // Fechar busca
+            const wrap = document.getElementById('detBuscaExtWrap');
+            if (wrap) wrap.style.display = 'none';
+            const inp  = document.getElementById('detBuscaExtInput');
+            if (inp)  inp.value = '';
+            const drop = document.getElementById('detDropExt');
+            if (drop) drop.style.display = 'none';
+            // Capturar todos os campos relevantes para o relatório
+            _relcadExtintores.push({
+                id:           ext.id,
+                tipo:         ext.tipo         || '',
+                kg:           ext.kg           || '',
+                num_cilindro: ext.num_cilindro || '',
+                norma_fab:    ext.norma_fab    || '',
+                fabricante:   ext.fabricante   || '',
+                fab_teste:    ext.fab_teste    || '',
+                apro_repro:   ext.apro_repro   || '',   // Aprovado / Reprovado
+                cod_selo:     ext.cod_selo     || '',   // Nº Selo INMETRO
+                status_op:    ext.status_op    || '',
+            });
+            relcadRenderExtintores();
+            await relcadSalvarExtintores();
+            notif('✅ ' + ext.id + ' adicionado ao relatório', 'success');
+        }
+
+        // ── Remover extintor ──────────────────────────────────────────
+        async function relcadRemoverExtintor(idx) {
+            _relcadExtintores.splice(idx, 1);
+            relcadRenderExtintores();
+            await relcadSalvarExtintores();
+        }
+
+        // ── Renderizar tabela de extintores no detalhe ───────────────
+        function relcadRenderExtintores() {
+            const el = document.getElementById('detExtList');
+            const contador = document.getElementById('detExtContador');
+            if (!el) return;
+            if (contador) contador.textContent = `${_relcadExtintores.length} extintor(es)`;
+
+            if (!_relcadExtintores.length) {
+                el.innerHTML = `<div style="text-align:center;padding:32px;color:#9ca3af;">
+                    <i class="fas fa-fire-extinguisher" style="font-size:2rem;display:block;margin-bottom:10px;opacity:.2;color:#dc2626;"></i>
+                    <div style="font-weight:700;font-size:.9rem;margin-bottom:4px;color:#6b7280;">Nenhum extintor adicionado</div>
+                    <div style="font-size:.8rem;">Clique em "Adicionar Extintor" para incluir.</div>
+                </div>`;
+                return;
+            }
+
+            // ── Classificar: Não Manutenido se faltar campo crítico ──
+            function isManutenido(e) {
+                return !!(e.apro_repro && e.fab_teste && e.fabricante &&
+                          e.tipo && e.norma_fab && e.num_cilindro && e.cod_selo);
+            }
+            const aprovados     = _relcadExtintores.filter(e => isManutenido(e) && (e.apro_repro||'').toLowerCase() !== 'reprovado');
+            const reprovados    = _relcadExtintores.filter(e => isManutenido(e) && (e.apro_repro||'').toLowerCase() === 'reprovado');
+            const naoManutenidos= _relcadExtintores.filter(e => !isManutenido(e));
+
+            function tabelaExtintores(lista, tipo) {
+                if (!lista.length) return `
+                <div style="padding:14px 16px;text-align:center;color:#9ca3af;font-size:.82rem;font-style:italic;background:#fafafa;border-radius:8px;border:1px dashed #e8eef5;">
+                    Nenhum extintor ${tipo === 'nao' ? 'não manutenido' : tipo === 'aprovado' ? 'aprovado' : 'reprovado'}.
+                </div>`;
+
+                const isNao = tipo === 'nao';
+                const headerBg = isNao
+                    ? 'background:linear-gradient(135deg,#374151,#1f2937);'
+                    : tipo === 'aprovado'
+                        ? 'background:linear-gradient(135deg,#1e3b5a,#0d2137);'
+                        : 'background:linear-gradient(135deg,#7f1d1d,#991b1b);';
+
+                return `
+                <div style="overflow-x:auto;border-radius:12px;border:1px solid #e8eef5;margin-bottom:4px;">
+                <table style="width:100%;border-collapse:collapse;font-size:.81rem;min-width:720px;">
+                    <thead>
+                        <tr style="${headerBg}color:#fff;">
+                            <th style="padding:10px 10px;text-align:center;font-size:.7rem;font-weight:700;letter-spacing:.5px;width:28px;color:#e2e8f0;">#</th>
+                            <th style="padding:10px 10px;text-align:left;font-size:.7rem;font-weight:700;letter-spacing:.5px;white-space:nowrap;color:#e2e8f0;">ID EXT.</th>
+                            <th style="padding:10px 10px;text-align:left;font-size:.7rem;font-weight:700;letter-spacing:.5px;white-space:nowrap;color:#e2e8f0;">Nº CILINDRO</th>
+                            <th style="padding:10px 10px;text-align:left;font-size:.7rem;font-weight:700;letter-spacing:.5px;white-space:nowrap;color:#e2e8f0;">NORMA FAB.</th>
+                            <th style="padding:10px 10px;text-align:left;font-size:.7rem;font-weight:700;letter-spacing:.5px;white-space:nowrap;color:#e2e8f0;">TIPO/CAP.</th>
+                            <th style="padding:10px 10px;text-align:left;font-size:.7rem;font-weight:700;letter-spacing:.5px;color:#e2e8f0;">FABRICANTE</th>
+                            <th style="padding:10px 10px;text-align:center;font-size:.7rem;font-weight:700;letter-spacing:.5px;white-space:nowrap;color:#e2e8f0;">FAB/TESTE</th>
+                            <th style="padding:10px 10px;text-align:center;font-size:.7rem;font-weight:700;letter-spacing:.5px;white-space:nowrap;color:#e2e8f0;">APRO/REPRO</th>
+                            <th style="padding:10px 10px;text-align:center;font-size:.7rem;font-weight:700;letter-spacing:.5px;color:#e2e8f0;">SELO</th>
+                            <th style="padding:10px 10px;width:32px;color:#e2e8f0;"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${lista.map((e, localIdx) => {
+                            const globalIdx = _relcadExtintores.indexOf(e);
+                            const rowBg = localIdx%2===0 ? '#fff' : '#f8fafd';
+                            const missing = [];
+                            if (!e.num_cilindro) missing.push('Nº Cil.');
+                            if (!e.norma_fab)    missing.push('Norma');
+                            if (!e.tipo)         missing.push('Tipo');
+                            if (!e.fabricante)   missing.push('Fabr.');
+                            if (!e.fab_teste)    missing.push('Fab/Teste');
+                            if (!e.apro_repro)   missing.push('Apro/Repro');
+                            if (!e.cod_selo)     missing.push('Selo');
+                            const missingHtml = missing.length ? `<div style="font-size:.68rem;color:#f59e0b;margin-top:2px;">⚠️ Falta: ${missing.join(', ')}</div>` : '';
+                            const isAprov = (e.apro_repro||'').toLowerCase() === 'aprovado';
+                            const isReprov= (e.apro_repro||'').toLowerCase() === 'reprovado';
+                            const aproEl = !e.apro_repro
+                                ? `<select onchange="relcadEditarCampoExt(${globalIdx},'apro_repro',this.value)"
+                                    style="font-size:.76rem;border:1px solid #fde68a;border-radius:7px;padding:4px 6px;background:#fffbeb;color:#92400e;font-weight:700;cursor:pointer;width:auto;outline:none;min-width:90px;">
+                                    <option value="">⚠️ Definir</option>
+                                    <option value="Aprovado">✅ Aprovado</option>
+                                    <option value="Reprovado">❌ Reprovado</option>
+                                </select>`
+                                : `<select onchange="relcadEditarCampoExt(${globalIdx},'apro_repro',this.value)"
+                                    style="font-size:.76rem;border:1px solid ${isAprov?'#bbf7d0':'#fecaca'};border-radius:7px;padding:4px 6px;background:${isAprov?'#f0fdf4':'#fef2f2'};color:${isAprov?'#15803d':'#dc2626'};font-weight:700;cursor:pointer;width:auto;outline:none;min-width:90px;">
+                                    <option value="Aprovado" ${isAprov?'selected':''}>✅ Aprovado</option>
+                                    <option value="Reprovado" ${isReprov?'selected':''}>❌ Reprovado</option>
+                                </select>`;
+                            return `
+                            <tr style="background:${rowBg};border-bottom:1px solid #f0f4f8;">
+                                <td style="padding:9px 10px;text-align:center;color:#d1d5db;font-size:.79rem;">${localIdx+1}</td>
+                                <td style="padding:9px 10px;">
+                                    <div style="font-family:monospace;font-weight:800;color:#0d2137;font-size:.84rem;">${escHtml(e.id)}</div>
+                                    ${missingHtml}
+                                <td style="padding:9px 10px;font-family:monospace;color:${e.num_cilindro?'#374151':'#f59e0b'};font-size:.83rem;">${escHtml(e.num_cilindro)||'—'}</td>
+                                </td>
+                                <td style="padding:9px 10px;color:${e.norma_fab?'#6b7280':'#f59e0b'};font-size:.82rem;">${escHtml(e.norma_fab)||'—'}</td>
+                                <td style="padding:9px 10px;font-size:.82rem;white-space:nowrap;">
+                                    <span style="font-weight:700;color:${e.tipo?'#374151':'#f59e0b'};">${escHtml(e.tipo)||'—'}</span>
+                                </td>
+                                <td style="padding:9px 10px;color:${e.fabricante?'#6b7280':'#f59e0b'};font-size:.82rem;">${escHtml(e.fabricante)||'—'}</td>
+                                <td style="padding:9px 10px;text-align:center;color:${e.fab_teste?'#6b7280':'#f59e0b'};font-size:.82rem;">${escHtml(e.fab_teste)||'—'}</td>
+                                <td style="padding:9px 10px;text-align:center;">${aproEl}</td>
+                                <td style="padding:9px 10px;text-align:center;">
+                                    <input type="text"
+                                        value="${escAttr(e.cod_selo||'')}"
+                                        placeholder="${e.cod_selo?'':'⚠️ Selo'}"
+                                        onchange="relcadEditarCampoExt(${globalIdx},'cod_selo',this.value)"
+                                        style="font-size:.78rem;border:1px solid ${e.cod_selo?'#e2eaf2':'#fde68a'};border-radius:7px;padding:5px 7px;width:72px;text-align:center;font-family:monospace;outline:none;margin:0;background:${e.cod_selo?'#fff':'#fffbeb'};">
+                                </td>
+                                <td style="padding:9px 10px;text-align:center;">
+                                    <button onclick="relcadRemoverExtintor(${globalIdx})"
+                                        style="background:#fee2e2;border:none;border-radius:7px;padding:5px 9px;cursor:pointer;color:#dc2626;font-size:.78rem;margin:0;width:auto;"
+                                        title="Remover"><i class="fas fa-times"></i>
+                                    </button>
+                                </td>
+                            </tr>`;
+                        }).join('')}
+                    </tbody>
+                </table>
+                </div>`;
+            }
+
+            el.innerHTML = `
+            <!-- Extintores Não Manutenidos -->
+            <div style="margin-bottom:22px;">
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+                    <div style="width:12px;height:12px;border-radius:3px;background:#6b7280;flex-shrink:0;"></div>
+                    <div style="font-size:.76rem;font-weight:800;color:#374151;text-transform:uppercase;letter-spacing:.8px;">
+                        Extintores Não Manutenidos
+                        <span style="background:#f3f4f6;color:#374151;border-radius:20px;padding:1px 8px;font-size:.72rem;margin-left:6px;">${naoManutenidos.length}</span>
+                    </div>
+                </div>
+                ${tabelaExtintores(naoManutenidos, 'nao')}
+            </div>
+
+            <!-- Extintores Manutenidos Aprovados -->
+            <div style="margin-bottom:22px;">
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+                    <div style="width:12px;height:12px;border-radius:3px;background:#15803d;flex-shrink:0;"></div>
+                    <div style="font-size:.76rem;font-weight:800;color:#15803d;text-transform:uppercase;letter-spacing:.8px;">
+                        Extintores Manutenidos Aprovados
+                        <span style="background:#dcfce7;color:#15803d;border-radius:20px;padding:1px 8px;font-size:.72rem;margin-left:6px;">${aprovados.length}</span>
+                    </div>
+                </div>
+                ${tabelaExtintores(aprovados, 'aprovado')}
+            </div>
+
+            <!-- Extintores Manutenidos Reprovados -->
+            <div>
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+                    <div style="width:12px;height:12px;border-radius:3px;background:#dc2626;flex-shrink:0;"></div>
+                    <div style="font-size:.76rem;font-weight:800;color:#dc2626;text-transform:uppercase;letter-spacing:.8px;">
+                        Extintores Manutenidos Reprovados
+                        <span style="background:#fee2e2;color:#dc2626;border-radius:20px;padding:1px 8px;font-size:.72rem;margin-left:6px;">${reprovados.length}</span>
+                    </div>
+                </div>
+                ${tabelaExtintores(reprovados, 'reprovado')}
+            </div>`;
+        }
+
+        // Edição inline de campos do extintor no relatório
+        async function relcadEditarCampoExt(idx, campo, valor) {
+            if (idx < 0 || idx >= _relcadExtintores.length) return;
+            _relcadExtintores[idx][campo] = valor;
+            // Atualizar o visual imediatamente sem re-renderizar toda a tabela
+            if (campo === 'apro_repro') {
+                // Re-render para mover para a seção correta
+                relcadRenderExtintores();
+            }
+            await relcadSalvarExtintores();
+        }
+
+        // ── Persistir extintores no banco ────────────────────────────
+        async function relcadSalvarExtintores() {
+            if (!_relcadEditId) return;
+            try {
+                await supa.update('relatorios', _relcadEditId, { extintores: JSON.stringify(_relcadExtintores) });
+                const idx = (estado.relcad||[]).findIndex(r => String(r.id) === String(_relcadEditId));
+                if (idx >= 0) estado.relcad[idx].extintores = [..._relcadExtintores];
+            } catch(e) { console.warn('[relcad]', e.message); }
+        }
+
+        // ── Fechar / Reabrir / Excluir ───────────────────────────────
+        // Salvar (já está sendo salvo automaticamente) e voltar para a lista
+        async function relcadSalvarEVoltar() {
+            // Os extintores já são salvos automaticamente ao adicionar/remover/editar
+            // Apenas garantir que o estado mais recente está persistido
+            if (_relcadEditId) {
+                try {
+                    await supa.update('relatorios', _relcadEditId, { extintores: JSON.stringify(_relcadExtintores) });
+                    // Atualizar estado local
+                    const idx = (estado.relcad||[]).findIndex(r => String(r.id) === String(_relcadEditId));
+                    if (idx >= 0) estado.relcad[idx].extintores = [..._relcadExtintores];
+                } catch(e) { console.warn('[relcad]', e.message); }
+            }
+            relcadVoltarLista();
+            notif('✅ Relatório salvo!', 'success');
+        }
+
+        async function relcadFechar(id) {
+            if (!confirm('Fechar este relatório?')) return;
+            try {
+                await supa.update('relatorios', id, { status: 'fechado' });
+                const r = (estado.relcad||[]).find(x => String(x.id) === String(id));
+                if (r) r.status = 'fechado';
+                relcadVoltarLista();
+                notif('✅ Relatório fechado!', 'success');
+            } catch(e) { notif('Erro: ' + e.message, 'danger'); }
+        }
+
+        async function relcadReabrir(id) {
+            try {
+                await supa.update('relatorios', id, { status: 'aberto' });
+                const r = (estado.relcad||[]).find(x => String(x.id) === String(id));
+                if (r) r.status = 'aberto';
+                relcadVoltarLista();
+                notif('✅ Relatório reaberto!', 'success');
+            } catch(e) { notif('Erro: ' + e.message, 'danger'); }
+        }
+
+        async function relcadExcluir(id) {
+            if (!confirm('Excluir este relatório permanentemente?')) return;
+            try {
+                await supa.delete('relatorios', id);
+                estado.relcad = (estado.relcad||[]).filter(r => String(r.id) !== String(id));
+                relcadRenderLista();
+                notif('Relatório excluído.', 'success');
+            } catch(e) { notif('Erro: ' + e.message, 'danger'); }
+        }
+
+
+        // Toggle do formulário de novo extintor (colapsável)
+                // ══════════════════════════════════════════════════════════════
         // PERFIL - LOGO
         // ══════════════════════════════════════════════════════════════
         function carregarLogo(input) {
@@ -9473,7 +10357,27 @@ Responda APENAS com JSON: {"c1":"CODIGO1","c2":"CODIGO2","codU":"CODIGO1-CODIGO2
         function atualizarContEmp() { const n = document.querySelectorAll('.emp-chk:checked').length; document.getElementById('countEmp').textContent = n + ' sel.'; }
         function atualizarContEtq() { const n = document.querySelectorAll('.etq-chk:checked').length; document.getElementById('countSelecionadas').textContent = n + ' sel.'; document.getElementById('btnImprimirSelecionadas').disabled = n === 0; }
         function atualizarContConsulta() { const n = document.querySelectorAll('.consulta-chk:checked').length; document.getElementById('countConsulta').textContent = n + ' sel.'; }
-        function filtrarTabelaClientes(busca) { const linhas = document.querySelectorAll('#clientesBody tr'); linhas.forEach(tr => { const txt = tr.textContent.toLowerCase(); tr.style.display = txt.includes(busca.toLowerCase()) ? '' : 'none'; }); }
+        function filtrarTabelaClientes(busca) {
+            const tbody = document.getElementById('clientesBody');
+            if (!tbody) return;
+            if (!busca || busca.length < 1) { renderizarClientes(); return; }
+            const q = busca.toLowerCase().replace(/[\.\-\/]/g,'');
+            const filtrados = estado.clientes.filter(c => {
+                const nome = (c.nome||'').toLowerCase();
+                const doc  = (c.documento||'').replace(/[\.\-\/]/g,'').toLowerCase();
+                return nome.includes(busca.toLowerCase()) || doc.includes(q);
+            });
+            if (!filtrados.length) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:24px;color:#9ca3af;">Nenhum resultado para "' + escHtml(busca) + '"</td></tr>';
+                return;
+            }
+            tbody.innerHTML = filtrados.map((c, i) => `
+    <tr><td><input type="checkbox" class="cli-chk etiqueta-checkbox" data-idx="${i}" onchange="atualizarContCli()"></td>
+    <td>${escHtml(c.nome)}</td><td>${escHtml(c.documento)}</td><td>${escHtml(c.cidade)}</td>
+    <td>${escHtml(c.telefone)}</td>
+    <td>${botoesAcao("edit-cli",c.id,"del-cli",c.id)}</td>
+  `).join('');
+        }
         function toggleSelecionarTodas() { const chk = document.getElementById('selecionarTodasEtiquetas'); document.querySelectorAll('.etq-chk').forEach(c => c.checked = chk.checked); atualizarContEtq(); }
         function imprimirSelecionadas() { notif('Impressão múltipla em breve', 'info'); }
         function buscarSeloInm(v) { if (!v) return; carregarTodosSelosInm(); }
