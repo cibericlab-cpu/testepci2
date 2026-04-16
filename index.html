@@ -6,13 +6,17 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <!-- PCI Manager Pro v2.5.1 build:20260416b -->
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="PCI Manager">
     <meta name="theme-color" content="#0d2137">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
-    <title>PCI Manager Pro - Gestão Completa de Extintores</title>
+    <title>PCI Manager Pro v2.5.1 - Gestão Completa de Extintores</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -6759,14 +6763,21 @@
             setTimeout(() => { try { (window.carregarTudo || carregarTudo)().catch(e => { console.error('[PCI] carregarTudo catch:', e); atualizarConexaoUI(false); }); } catch(e) { console.error('[PCI] carregarTudo sync error:', e); } }, 100);
             // Abrir aba padrão (extintores) após login
             setTimeout(() => irParaAba('extintores'), 50);
-            // Segundo refresh de segurança após dados carregarem
-            setTimeout(() => {
+            // Refresh de segurança: verifica a cada 2s por até 10s até dados carregarem
+            let _refreshCheck = 0;
+            const _refreshTimer = setInterval(() => {
+                _refreshCheck++;
                 if (estado.clientes.length > 0 || estado.extintores.length > 0) {
+                    clearInterval(_refreshTimer);
                     const abaAtiva = document.querySelector('.nav-item.active');
                     if (abaAtiva && abaAtiva.dataset.tab) irParaAba(abaAtiva.dataset.tab);
                     atualizarDashboard();
+                    console.log('[PCI] UI atualizada após dados carregarem');
+                } else if (_refreshCheck >= 5) {
+                    clearInterval(_refreshTimer);
+                    console.warn('[PCI] Dados não carregaram após 10s');
                 }
-            }, 4000);
+            }, 2000);
             // Aplicar visibilidade do menu
             setTimeout(() => menuAplicar().catch(() => {}), 700);
         }
@@ -11788,7 +11799,8 @@ ${JSON.stringify(_botHistorico.slice(-6))}`;
         estado.perfil.obs=estado.perfil.observacoes;
 
       /* Re-renderizar extintores com dados normalizados */
-      if(typeof renderExtintores==='function') renderExtintores();
+      if(typeof renderizarExtintores==='function') renderizarExtintores();
+      if(typeof atualizarDashboard==='function') atualizarDashboard();
     };
 
     // patches aplicados com sucesso
