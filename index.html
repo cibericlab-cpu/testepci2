@@ -1,6 +1,3 @@
-
-
-
 <!DOCTYPE html>
 <html lang="pt-br">
 
@@ -3035,10 +3032,9 @@
                         <!-- ════ FORMULÁRIO NOVO EXTINTOR ════ -->
                         <div class="card" style="margin-bottom:16px;">
                             <h2><i class="fas fa-plus-circle"></i> Novo Extintor</h2>
-                            <h2><i class="fas fa-plus-circle"></i> Novo Extintor</h2>
                             <form id="formExtintor">
                                 <!-- Linha 1: ID + Tipo -->
-                                <div class="grid-2">
+                                <div class="grid-2" style="margin-bottom:8px;">
                                     <div>
                                         <label style="font-size:.75rem;font-weight:700;color:#4a5b6e;display:block;margin-bottom:4px;">Nº Extintor</label>
                                         <input type="text" id="extintorId" placeholder="EXT001 (auto se vazio)"
@@ -3058,7 +3054,87 @@
                                             </button>
                                         </div>
                                     </div>
-                        </div>
+                                </div>
+                                <!-- Add tipo inline -->
+                                <div id="addTipoInlineWrap" style="display:none;background:#eff6ff;border:1.5px solid #bfdbfe;border-radius:10px;padding:10px 14px;margin-bottom:10px;">
+                                    <div style="display:flex;gap:8px;align-items:center;">
+                                        <input type="text" id="novoTipoInput" placeholder="Ex: PÓ QUÍMICO ABC"
+                                            style="flex:1;margin:0;font-family:monospace;font-weight:700;text-transform:uppercase;"
+                                            oninput="this.value=this.value.toUpperCase()">
+                                        <button type="button" onclick="confirmarNovoTipo()" style="margin:0;width:auto;padding:8px 14px;font-size:.82rem;">
+                                            <i class="fas fa-check"></i> Adicionar
+                                        </button>
+                                        <button type="button" onclick="document.getElementById('addTipoInlineWrap').style.display='none'" class="secondary small" style="margin:0;width:auto;">✕</button>
+                                    </div>
+                                </div>
+                                <!-- Linha 2: KG + Nível Manutenção -->
+                                <div class="grid-2" style="margin-bottom:8px;">
+                                    <div>
+                                        <label style="font-size:.75rem;font-weight:700;color:#4a5b6e;display:block;margin-bottom:4px;">Capacidade (Kg/L)</label>
+                                        <input type="text" id="kg" placeholder="Ex: 6kg" style="margin:0;">
+                                    </div>
+                                    <div>
+                                        <label style="font-size:.75rem;font-weight:700;color:#4a5b6e;display:block;margin-bottom:4px;">Nível de Manutenção</label>
+                                        <select id="nivelManut" style="margin:0;">
+                                            <option value="2">N2 — Manutenção de 2º Nível</option>
+                                            <option value="3">N3 — Manutenção de 3º Nível</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <!-- Linha 3: Nº Cilindro + Norma Fab -->
+                                <div class="grid-2" style="margin-bottom:8px;">
+                                    <div>
+                                        <label style="font-size:.75rem;font-weight:700;color:#4a5b6e;display:block;margin-bottom:4px;">Nº do Cilindro</label>
+                                        <input type="text" id="numCilindro" placeholder="Ex: BR12345" style="margin:0;font-family:monospace;">
+                                    </div>
+                                    <div>
+                                        <label style="font-size:.75rem;font-weight:700;color:#4a5b6e;display:block;margin-bottom:4px;">Norma de Fabricação</label>
+                                        <input type="text" id="normaFab" placeholder="Ex: ABNT NBR 10721" style="margin:0;">
+                                    </div>
+                                </div>
+                                <!-- Linha 4: Fabricante + Fab/Teste -->
+                                <div class="grid-2" style="margin-bottom:8px;">
+                                    <div>
+                                        <label style="font-size:.75rem;font-weight:700;color:#4a5b6e;display:block;margin-bottom:4px;">Fabricante</label>
+                                        <input type="text" id="fabricante" placeholder="Ex: Arextinpor" style="margin:0;">
+                                    </div>
+                                    <div>
+                                        <label style="font-size:.75rem;font-weight:700;color:#4a5b6e;display:block;margin-bottom:4px;">Fab/Teste (MM/AA)</label>
+                                        <input type="text" id="fabTeste" placeholder="Ex: 01/26" style="margin:0;">
+                                    </div>
+                                </div>
+                                <!-- Linha 5: Apro/Repro + Código Selo -->
+                                <div class="grid-2" style="margin-bottom:8px;">
+                                    <div>
+                                        <label style="font-size:.75rem;font-weight:700;color:#4a5b6e;display:block;margin-bottom:4px;">Apro / Repro</label>
+                                        <select id="aproRepro" style="margin:0;">
+                                            <option value="">— Selecione —</option>
+                                            <option value="Aprovado">✅ Aprovado</option>
+                                            <option value="Reprovado">❌ Reprovado</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label style="font-size:.75rem;font-weight:700;color:#4a5b6e;display:block;margin-bottom:4px;">Nº Selo INMETRO</label>
+                                        <input type="text" id="codSelo" placeholder="Ex: ZZVJ7FA63-9825X8237" style="margin:0;font-family:monospace;text-transform:uppercase;" oninput="this.value=this.value.toUpperCase()">
+                                    </div>
+                                </div>
+                                <!-- Linha 6: Validade + Recarga -->
+                                <div class="grid-2" style="margin-bottom:12px;">
+                                    <div>
+                                        <label style="font-size:.75rem;font-weight:700;color:#4a5b6e;display:block;margin-bottom:4px;">Validade *</label>
+                                        <input type="date" id="validade" style="margin:0;">
+                                    </div>
+                                    <div>
+                                        <label style="font-size:.75rem;font-weight:700;color:#4a5b6e;display:block;margin-bottom:4px;">Próxima Recarga</label>
+                                        <input type="date" id="recarga" style="margin:0;">
+                                    </div>
+                                </div>
+                                <!-- Botões -->
+                                <div style="display:flex;gap:10px;flex-wrap:wrap;">
+                                    <button type="submit"><i class="fas fa-save"></i> Salvar Extintor</button>
+                                    <button type="button" id="limparFormExtintor" class="secondary small"><i class="fas fa-eraser"></i> Limpar</button>
+                                </div>
+                            </form>
 
                         <!-- ════ TABELA DE EXTINTORES (abaixo, sempre visível) ════ -->
                         <div class="card">
@@ -7327,7 +7403,8 @@
                     const dados = {
                         id: idGerado,
                         tipo: document.getElementById('tipo').value,
-
+                        kg: document.getElementById('kg').value || '',
+                        nivel_manutencao: parseInt(document.getElementById('nivelManut').value) || 2,
                         validade: valStr || null,
                         recarga: document.getElementById('recarga').value || null,
                         num_cilindro: document.getElementById('numCilindro').value || '',
@@ -8719,7 +8796,17 @@ Responda APENAS com JSON: {"c1":"CODIGO1","c2":"CODIGO2","codU":"CODIGO1-CODIGO2
           ${estado.tiposExtintor.map(t => `<option value="${escHtml(t)}" ${extintor.tipo === t ? 'selected' : ''}>${escHtml(t)}</option>`).join('')}
         </select>
       </div>
-
+      <div>
+        <label style="font-size:.76rem;font-weight:700;color:#4a5b6e;display:block;margin-bottom:3px;">Capacidade (Kg/L)</label>
+        <input type="text" id="edt_kg" value="${escHtml(extintor.kg || '')}" placeholder="Ex: 6kg" style="margin:0;">
+      </div>
+      <div>
+        <label style="font-size:.76rem;font-weight:700;color:#4a5b6e;display:block;margin-bottom:3px;">Nível Manutenção</label>
+        <select id="edt_nivelManut" style="margin:0;">
+          <option value="2" ${(extintor.nivel_manutencao||2)==2?'selected':''}>N2</option>
+          <option value="3" ${(extintor.nivel_manutencao||2)==3?'selected':''}>N3</option>
+        </select>
+      </div>
       <div>
         <label style="font-size:.76rem;font-weight:700;color:#4a5b6e;display:block;margin-bottom:3px;">Nº do Cilindro</label>
         <input type="text" id="edt_numCilindro" value="${escHtml(extintor.num_cilindro || '')}" placeholder="Nº do Cilindro" style="margin:0;">
@@ -8735,6 +8822,26 @@ Responda APENAS com JSON: {"c1":"CODIGO1","c2":"CODIGO2","codU":"CODIGO1-CODIGO2
       <div>
         <label style="font-size:.76rem;font-weight:700;color:#4a5b6e;display:block;margin-bottom:3px;">Fab/Teste</label>
         <input type="text" id="edt_fabTeste" value="${escHtml(extintor.fab_teste || '')}" placeholder="Ex: 01/26" style="margin:0;">
+      </div>
+      <div>
+        <label style="font-size:.76rem;font-weight:700;color:#4a5b6e;display:block;margin-bottom:3px;">Apro/Repro</label>
+        <select id="edt_aproRepro" style="margin:0;">
+          <option value="">— Selecione —</option>
+          <option value="Aprovado" ${extintor.apro_repro==='Aprovado'?'selected':''}>✅ Aprovado</option>
+          <option value="Reprovado" ${extintor.apro_repro==='Reprovado'?'selected':''}>❌ Reprovado</option>
+        </select>
+      </div>
+      <div>
+        <label style="font-size:.76rem;font-weight:700;color:#4a5b6e;display:block;margin-bottom:3px;">Nº Selo INMETRO</label>
+        <input type="text" id="edt_codSelo" value="${escHtml(extintor.cod_selo || '')}" placeholder="Código Selo" style="margin:0;font-family:monospace;">
+      </div>
+      <div>
+        <label style="font-size:.76rem;font-weight:700;color:#4a5b6e;display:block;margin-bottom:3px;">Validade</label>
+        <input type="date" id="edt_validade" value="${extintor.validade||''}" style="margin:0;">
+      </div>
+      <div>
+        <label style="font-size:.76rem;font-weight:700;color:#4a5b6e;display:block;margin-bottom:3px;">Próxima Recarga</label>
+        <input type="date" id="edt_recarga" value="${extintor.recarga||''}" style="margin:0;">
       </div>
     </div>`;
 
@@ -8847,14 +8954,17 @@ Responda APENAS com JSON: {"c1":"CODIGO1","c2":"CODIGO2","codU":"CODIGO1-CODIGO2
 
                 if (ctx.tipo === 'extintor') {
                     dados = {
-                        tipo:         document.getElementById('edt_tipo')?.value         || '',
-
-                        num_cilindro: document.getElementById('edt_numCilindro')?.value  || '',
-                        norma_fab:    document.getElementById('edt_normaFab')?.value     || '',
-                        fabricante:   document.getElementById('edt_fabricante')?.value   || '',
-                        fab_teste:    document.getElementById('edt_fabTeste')?.value     || '',
-                        apro_repro:   document.getElementById('edt_aproRepro')?.value    || '',
-                        cod_selo:     document.getElementById('edt_codSelo')?.value      || '',
+                        tipo:              document.getElementById('edt_tipo')?.value         || '',
+                        kg:                document.getElementById('edt_kg')?.value           || '',
+                        nivel_manutencao:  parseInt(document.getElementById('edt_nivelManut')?.value) || 2,
+                        num_cilindro:      document.getElementById('edt_numCilindro')?.value  || '',
+                        norma_fab:         document.getElementById('edt_normaFab')?.value     || '',
+                        fabricante:        document.getElementById('edt_fabricante')?.value   || '',
+                        fab_teste:         document.getElementById('edt_fabTeste')?.value     || '',
+                        apro_repro:        document.getElementById('edt_aproRepro')?.value    || '',
+                        cod_selo:          document.getElementById('edt_codSelo')?.value      || '',
+                        validade:          document.getElementById('edt_validade')?.value     || null,
+                        recarga:           document.getElementById('edt_recarga')?.value      || null,
                     };
                     await supa.update('extintores', ctx.id, dados);
                     await carregarExtintores();
@@ -11643,13 +11753,7 @@ ${JSON.stringify(_botHistorico.slice(-6))}`;
 
 
     <script>
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./sw.js')
-                    .then(r  => console.log('[SW] OK:', r.scope))
-                    .catch(e => console.warn('[SW] Falhou:', e.message));
-            });
-        }
+        // Service Worker desativado
     </script>
 </body>
 
