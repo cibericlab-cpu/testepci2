@@ -6120,22 +6120,30 @@
                 if (url && key) { supa.init(url, key); }
                 else { atualizarConexaoUI(false); return; }
             }
+            // Testar conexão primeiro com ping rápido
             try {
-                await Promise.all([
+                await supa.getAll('extintores', 'limit=1');
+                atualizarConexaoUI(true); // já mostra Online assim que conecta
+            } catch(e) {
+                atualizarConexaoUI(false);
+                notif('Sem conexão com o banco: ' + e.message, 'danger');
+                return;
+            }
+            // Carregar todos os dados em paralelo — allSettled não falha se um erro
+            try {
+                await Promise.allSettled([
                     carregarExtintores(), carregarClientes(), carregarEmpresas(),
                     carregarVendedores(), carregarEtiquetas(), carregarCatalogo(),
                     carregarPerfil(), carregarTiposExtintor(), carregarRelcad(),
                     carregarVistoriasAgendadas(), carregarVistoriasRealizadas(), carregarVistoriasParaFazer()
                 ]);
                 if (estado.versao === 'premium') {
-                    await Promise.all([carregarLotes(), carregarLotesInmetro(), carregarUsuarios(), carregarOS()]);
+                    await Promise.allSettled([carregarLotes(), carregarLotesInmetro(), carregarUsuarios(), carregarOS()]);
                 }
-                atualizarConexaoUI(true);
                 renderizarTudo();
                 atualizarDashboard();
             } catch (e) {
                 console.error('Erro carregarTudo:', e);
-                atualizarConexaoUI(false);
                 notif('Erro ao carregar dados: ' + e.message, 'danger');
             }
         }
@@ -6742,8 +6750,8 @@
             const dot = document.getElementById('connDotIcon');
             const txt = document.getElementById('connText');
             const badge = document.getElementById('connBadge');
-            if (ok) { dot.style.color = '#22c55e'; txt.textContent = ''; badge.className = 'badge success'; badge.textContent = 'Online'; }
-            else { dot.style.color = '#ef4444'; txt.textContent = 'Offline'; badge.className = 'badge danger'; badge.textContent = 'Erro'; }
+            if (ok) { dot.style.color = '#22c55e'; dot.style.display = 'inline'; txt.textContent = ''; txt.style.display = 'none'; badge.style.display = 'inline-flex'; badge.className = 'badge success'; badge.textContent = 'Online'; }
+            else { dot.style.color = '#ef4444'; dot.style.display = 'inline'; txt.style.display = 'inline'; txt.textContent = 'Offline'; badge.style.display = 'inline-flex'; badge.className = 'badge danger'; badge.textContent = 'Erro'; }
         }
 
         // ── Credenciais embutidas (anon key — segura para frontend) ──
